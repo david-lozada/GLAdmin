@@ -1,0 +1,17 @@
+POST  http://localhost:9000/users/create
+Content-Type: application/json
+
+{
+    "userName": "David Lozada",
+    "password": "000000",
+    "email": "greuddydlp16@gmail.com"
+}
+
+###
+POST  http://localhost:9000/auth/login
+Content-Type: application/json
+
+{
+    "userName": "David Lozada",
+    "password": "$2b$10$0s35Rb2plFgrM34/YrLNO.NcVkVjSLp3QwmzJDS1hwDfE//7F/NAe"
+}
