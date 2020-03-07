@@ -19,12 +19,15 @@ exports.create = async function (req, res) {
         defaults: Object.assign(req.body, { password: hash })
       });
     if (created) {
+        let data = await user.authorize();
         return res.status(201).json({
+            data,
             en: 'User has been created',
             es: 'Usuario creado'
         });
     } else {
         return res.status(200).json({
+            user,
             en: 'User already exists',
             es: 'El usuario ya existe'
         });

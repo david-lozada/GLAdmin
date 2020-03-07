@@ -40,28 +40,23 @@ module.exports = (sequelize, DataTypes) => {
     // passwords. Check out the docs for more detail
     const match = await bcrypt.compare(password, user.password);
     if(match) {
-      console.log('Passed');
       return user.authorize();
     }
-    throw new Error('invalid password');
+    throw new Error('Contraseña incorrecta');
   }
   // in order to define an instance method, we have to access
   // the User model prototype. This can be found in the
   // sequelize documentation
   User.prototype.authorize = async function () {
     const { AuthToken } = sequelize.models;
-    const user = this
-    console.log(user);
-    
+    const user = this    
     // create a new auth token associated to 'this' user
     // by calling the AuthToken class method we created earlier
     // and passing it the user id
     const authToken = await AuthToken.generate(this.id);
-
     // addAuthToken is a generated method provided by
     // sequelize which is made for any 'hasMany' relationships
     await user.addAuthToken(authToken);
-
     return { user, authToken }
   };
 

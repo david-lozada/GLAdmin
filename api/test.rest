@@ -13,5 +13,5 @@ Content-Type: application/json
 
 {
     "userName": "David Lozada",
-    "password": "$2b$10$0s35Rb2plFgrM34/YrLNO.NcVkVjSLp3QwmzJDS1hwDfE//7F/NAe"
+    "password": "000000"
 }

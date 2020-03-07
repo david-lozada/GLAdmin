@@ -7,19 +7,17 @@ var { User } = require('../models');
 
 // Login User
 exports.login = async function (req, res) {
-  
-    const { userName, password } = req.body;
+  const { userName, password } = req.body;
   // if the username / password is missing, we use status code 400
   // indicating a bad request was made and send back a message
   if (!userName || !password) {
-    return res.status(400).send(
-      'Request missing username or password param'
-    );
+    return res.status(400).json({
+      en: 'Request missing username or password param',
+      es: 'Petición no cuenta con usuario o contraseña'
+    });
   }
   try {
     let user = await User.authenticate(userName, password)
-    console.log(user);
-    user = await user.authorize();
     return res.json(user);
   } catch (err) {
     return res.status(400).json({
