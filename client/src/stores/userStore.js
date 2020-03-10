@@ -9,12 +9,15 @@ class UserStore {
   updatingUser;
   updatingUserErrors;
 
-  pullUser(userId) {
+  pullUser() {
+    // console.log(globalStore.headers)
     this.loadingUser = true;
-    Axios.post(globalStore.apiURL + '/users/user', {
-      userId
+    Axios.get(globalStore.apiURL + '/users/user', {
+      headers: globalStore.headers
     })
-    .then(action(({ user }) => { this.currentUser = user; }))
+    .then(action(({ user }) => { 
+      this.currentUser = user; 
+    }))
     .catch(function (error) {
       console.log(error);
     })

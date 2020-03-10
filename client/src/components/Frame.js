@@ -4,16 +4,10 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 // Components
 import Dashboard from './dashboard/Dashboard'
-import NavBar from './layouts/NavBar'
+import NavBar from './utils/NavBar'
 
 
 class Frame extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-        isLoggedIn: true
-    }
-  }
   render() {
     return (
       <Router>

@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 import { observer, inject } from "mobx-react"
 import { withRouter } from 'react-router-dom'    
-import ListErrors from '../layouts/ListErrors';
+import ListErrors from '../utils/ListErrors';
 import alertify from 'alertifyjs'
 
 var Login = inject("authStore")(

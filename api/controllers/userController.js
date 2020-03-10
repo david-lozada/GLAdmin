@@ -4,24 +4,27 @@
 const bcrypt = require('bcrypt');
 
 // User Model
-var { User } = require('../models');
+var { User, AuthToken } = require('../models');
 
-exports.getUser = async function (req, res) {
-    let user = await User.findAll({
-        where: {id: req.body.userId}
-    })
-    if (user) {
+exports.current = async function (req, res) {
+    if (req.headers.authorization !== undefined) {
+        token = req.headers.authorization.split(' ')[1]
+        let user = await AuthToken.findAll({
+            where: {token},
+            include: 'User'
+        })
+        if (user) {
+            return res.status(200).json({
+                user,
+                en: 'User found',
+                es: 'Usuario encontrado'
+            });
+        }
         return res.status(200).json({
-            user,
-            en: 'User found',
-            es: 'Usuario encontrado'
+            en: 'User does not exists',
+            es: 'El usuario no existe'
         });
     }
-    return res.status(200).json({
-        en: 'User does not exists',
-        es: 'El usuario no existe'
-    });
-    
 }
 
 // Register User

@@ -8,6 +8,6 @@ var user_controller = require('../controllers/userController');
 router.post('/create', user_controller.create);
 
 /* POST create user */
-router.post('/user', user_controller.getUser);
+router.get('/user', user_controller.current);
 
 module.exports = router;

@@ -7,10 +7,12 @@ import { Provider } from "mobx-react";
 
 // Stores
 import authStore from "./stores/authStore";
+import userStore from "./stores/userStore";
 import globalStore from "./stores/globalStore";
 
 const stores = {
     authStore,
+    userStore,
     globalStore
 };
 // For easier debugging

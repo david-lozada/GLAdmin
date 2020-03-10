@@ -36,7 +36,7 @@ class AuthStore {
     })
     .then(( user ) => { 
         globalStore.setToken(user.data.authToken.token)
-        userStore.pullUser(user.data.user.id)
+        userStore.pullUser()
     })
     .catch(action((err) => {
         this.errors = err.response && err.response.body && err.response.body.errors;

@@ -17,4 +17,4 @@ Content-Type: application/json
 }
 
 ###
-GET https://conduit.productionready.io/api/user
+GET http://localhost:9000/users/user
