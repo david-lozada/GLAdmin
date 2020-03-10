@@ -15,3 +15,6 @@ Content-Type: application/json
     "userName": "David Lozada",
     "password": "000000"
 }
+
+###
+GET https://conduit.productionready.io/api/user

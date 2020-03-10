@@ -6,6 +6,24 @@ const bcrypt = require('bcrypt');
 // User Model
 var { User } = require('../models');
 
+exports.getUser = async function (req, res) {
+    let user = await User.findAll({
+        where: {id: req.body.userId}
+    })
+    if (user) {
+        return res.status(200).json({
+            user,
+            en: 'User found',
+            es: 'Usuario encontrado'
+        });
+    }
+    return res.status(200).json({
+        en: 'User does not exists',
+        es: 'El usuario no existe'
+    });
+    
+}
+
 // Register User
 exports.create = async function (req, res) {
     // hash the password provided by the user with bcrypt so that
@@ -26,7 +44,7 @@ exports.create = async function (req, res) {
             es: 'Usuario creado'
         });
     } else {
-        return res.status(200).json({
+        return res.status(301).json({
             user,
             en: 'User already exists',
             es: 'El usuario ya existe'

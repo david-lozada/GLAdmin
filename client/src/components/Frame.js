@@ -11,7 +11,7 @@ class Frame extends Component {
   constructor(props) {
     super(props);
     this.state = {
-        flag: ''
+        isLoggedIn: true
     }
   }
   render() {
@@ -21,7 +21,6 @@ class Frame extends Component {
           <NavBar/>
           <main className="mdl-layout__content mdl-color--grey-100">
             <div className="mdl-grid demo-content">
-              <h1>{ this.props.user }</h1>
               <Switch>
                   <Route exact path='/dashboard' component={Dashboard}/>
               </Switch>

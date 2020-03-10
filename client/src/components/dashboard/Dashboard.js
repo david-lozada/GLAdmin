@@ -13,7 +13,7 @@ class Dashboard extends Component {
                     Non dolore elit adipisicing ea reprehenderit consectetur culpa.
                     </div>
                     <div className="mdl-card__actions mdl-card--border">
-                    <a href="#" className="mdl-button mdl-js-button mdl-js-ripple-effect">Read More</a>
+                        <p>Read More</p>
                     </div>
                 </div>
             </Fragment>

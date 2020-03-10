@@ -7,16 +7,16 @@ import Welcome from './components/welcome/Welcome'
 import Frame from './components/Frame'
 
 
-class App extends Component {
 
+class App extends Component {
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Welcome} />
-          <Route path="/home" component={Frame} />
-        </Switch>
-      </Router>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Welcome} />
+            <Route path="/home" component={Frame} />
+          </Switch>
+        </Router>
     )
   }
 }
