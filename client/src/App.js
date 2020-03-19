@@ -6,7 +6,7 @@ import { ThemeProvider } from '@material-ui/core'
 import theme from './Theme';
 
 // Components
-import Dashboard from './pages/Dashboard';
+import Frame from './pages/Frame';
 import Welcome from './pages/Welcome';
 
 
@@ -29,7 +29,7 @@ class App extends Component {
         <Router>
           <Switch>
             <Route exact path="/" component={Welcome} />
-            <Route path="/home" component={Dashboard} />
+            <Route path="/home" component={Frame} />
           </Switch>
         </Router>
       </ThemeProvider>
