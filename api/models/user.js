@@ -22,12 +22,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
+    idRole: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    available: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+    }
   });
 
   // set up the associations so we can make queries that include
   // the related objects
-  User.associate = function ({ AuthToken }) {
+  User.associate = async function ({ AuthToken, Role }) {
     User.hasMany(AuthToken);
+    User.belongsTo(Role,  {as: 'role',foreignKey: 'idRole'});
   };
 
   // This is a class method, it is not called on an individual

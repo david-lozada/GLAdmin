@@ -2,9 +2,12 @@ POST  http://localhost:9000/users/create
 Content-Type: application/json
 
 {
+    "firstName": "David",
+    "lastName": "Lozada",
     "userName": "David Lozada",
     "password": "000000",
-    "email": "greuddydlp16@gmail.com"
+    "email": "greuddydlp16@gmail.com",
+    "idRole": 1
 }
 
 ###
@@ -18,3 +21,4 @@ Content-Type: application/json
 
 ###
 GET http://localhost:9000/users/user
+Authorization: Bearer pN3l3V2dNBnHCVXHiaSTR312Q4A9aq

@@ -1,5 +1,3 @@
-/* App Controllers */
-
 // Dependencies
 const bcrypt = require('bcrypt');
 
@@ -7,10 +5,11 @@ const bcrypt = require('bcrypt');
 var { User, AuthToken } = require('../models');
 
 exports.current = async function (req, res) {
+    console.log(req)    
     if (req.headers.authorization !== undefined) {
         token = req.headers.authorization.split(' ')[1]
-        let user = await AuthToken.findAll({
-            where: {token},
+        let user = await AuthToken.findOne({
+            where: { token },
             include: 'User'
         })
         if (user) {
@@ -34,25 +33,28 @@ exports.create = async function (req, res) {
     // for keeping your db clean of sensitive data
     const hash = bcrypt.hashSync(req.body.password, 10);
     try {
-    // create a new user with the password hash from bcrypt
-    let [user, created] = await User.findOrCreate({
-        where: { userName: req.body.userName },
-        defaults: Object.assign(req.body, { password: hash })
-      });
-    if (created) {
-        let data = await user.authorize();
-        return res.status(201).json({
-            data,
-            en: 'User has been created',
-            es: 'Usuario creado'
-        });
-    } else {
-        return res.status(301).json({
-            user,
-            en: 'User already exists',
-            es: 'El usuario ya existe'
-        });
-    }
+        // create a new user with the password hash from bcrypt
+        let [user, created] = await User.findOrCreate({
+            where: { userName: req.body.userName },
+            defaults: Object.assign(req.body, { password: hash })
+            });
+        if (created) {
+            // console.log(user)
+            // .then((res) => console.log(res))
+            // .catch((err) => console.log(err))
+            // let data = await user.authorize();
+            return res.status(201).json({
+                // data,
+                en: 'User has been created',
+                es: 'Usuario creado'
+            });
+        } else {
+            return res.status(301).json({
+                user,
+                en: 'User already exists',
+                es: 'El usuario ya existe'
+            });
+        }
     } catch(err) {
     return res.status(400).send(err);
     }

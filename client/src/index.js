@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import './index.min.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from "mobx-react";
+import { HashRouter } from "react-router-dom";
 
 // Stores
 import authStore from "./stores/authStore";
@@ -22,7 +23,9 @@ export const StoreContext = React.createContext();
 
 ReactDOM.render(
     <Provider {...stores}>
-        <App />
+        <HashRouter>
+            <App />
+        </HashRouter>
     </Provider>
     , document.getElementById('root'));
 

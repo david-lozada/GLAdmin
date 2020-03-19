@@ -23,6 +23,12 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
+      idRole: {
+        type: Sequelize.INTEGER
+      },
+      available: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

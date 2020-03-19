@@ -5,7 +5,6 @@ class GlobalStore {
   appName = 'Administrative';
   apiURL = 'http://localhost:9000'
   token = window.localStorage.getItem('token');
-  headers = this.token ? { Authorization: `Bearer ${this.token}` } : ''
   appLoaded = false;
 
   tags = [];
@@ -18,7 +17,7 @@ class GlobalStore {
         if (token) {
           window.localStorage.setItem('token', token);
         } else {
-          window.localStorage.removeItem('token');
+          window.localStorage.clear()
         }
       }
     );

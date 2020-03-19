@@ -9,8 +9,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-var dbconnection = require('./models/index')
-var appRoutes = require('./appRoutes')
+var dbconnection = require('./models/index');
+var appRoutes = require('./appRoutes');
 var app = express();
 
 // view engine setup
@@ -23,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 // Use Middleware
 app.use(customAuthMiddleware);

@@ -1,54 +1,50 @@
 import { decorate, observable, action } from "mobx";
 
 // Stores
-import userStore from './userStore';
 import globalStore from "./globalStore";
-import Axios from "axios";
+import axios from "../axios";
+import userStore from "./userStore";
 
 class AuthStore {
   inProgress = false;
   errors = undefined;
-
   values = {
     username: '',
     password: '',
   };
-
   setUserName(username) {
     this.values.username = username;
   }
-
   setPassword(password) {
     this.values.password = password;
   }
-
   reset() {
     this.values.username = '';
     this.values.password = '';
   }
-
   login() {
     this.inProgress = true;
     this.errors = undefined;
-    return Axios.post(globalStore.apiURL+'/auth/login', {
-        userName: this.values.username,
-        password: this.values.password
-    })
-    .then(( user ) => { 
-        globalStore.setToken(user.data.authToken.token)
+    return axios.Auth.login(this.values.username, this.values.password)
+      .then(( res ) => {
+        globalStore.setToken(res.authToken.token)
         userStore.pullUser()
+      })
+      .catch(action((err) => {
+        this.errors = err.response && err.response.body && err.response.body.errors;
+        throw err;
+      }))
+      .finally(action(() => { this.inProgress = false; }));
+  }
+  logout() {
+    return axios.Auth.logout()
+    .then(( res ) =>  {
+      console.log(res)
     })
     .catch(action((err) => {
         this.errors = err.response && err.response.body && err.response.body.errors;
         throw err;
     }))
-    .finally(action(() => { this.inProgress = false; }))
-  }
-
-  logout() {
-    globalStore.setToken(undefined);
-    userStore.forgetUser();
-    return Promise.resolve();
   }
   
 }

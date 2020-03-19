@@ -2,7 +2,7 @@
 const bcrypt = require('bcrypt');
 
 // User Model
-var { User } = require('../models');
+var { User, AuthToken } = require('../models');
 
 
 // Login User
@@ -29,27 +29,17 @@ exports.login = async function (req, res) {
 
 // Logout User
 exports.logout = async function(req, res) {
-    // because the logout request needs to be send with
-  // authorization we should have access to the user
-  // on the req object, so we will try to find it and
-  // call the model method logout
-  const { user, cookies: { auth_token: authToken } } = req
-
-  // we only want to attempt a logout if the user is
-  // present in the req object, meaning it already
-  // passed the authentication middleware. There is no reason
-  // the authToken should be missing at this point, check anyway
-  if (user && authToken) {
-    await req.user.logout(authToken);
-    return res.status(204).send()
+  const token = req.headers.authorization.split(' ')[1]
+  if (token) {
+    try {
+      const authToken = await AuthToken.findOne({
+        where: { token }
+      })
+      await authToken.destroy()
+    } catch (error) {
+      console.log(error)
+    }
   }
-
-  // if the user missing, the user is not logged in, hence we
-  // use status code 400 indicating a bad request was made
-  // and send back a message
-  return res.status(400).send(
-    { errors: [{ message: 'not authenticated' }] }
-  );
 }
 
 // Get User Info

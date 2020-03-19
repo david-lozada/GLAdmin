@@ -1,6 +1,5 @@
-import { observable, action, decorate } from 'mobx';
-import Axios from 'axios';
-import globalStore from './globalStore';
+import { observable, action, decorate, computed } from 'mobx';
+import axios from '../axios';
 
 class UserStore {
 
@@ -9,18 +8,13 @@ class UserStore {
   updatingUser;
   updatingUserErrors;
 
+  get getCurrentUser() {
+    return this.currentUser.firstName + ' ' + this.currentUser.lastName
+  }
   pullUser() {
-    // console.log(globalStore.headers)
     this.loadingUser = true;
-    Axios.get(globalStore.apiURL + '/users/user', {
-      headers: globalStore.headers
-    })
-    .then(action(({ user }) => { 
-      this.currentUser = user; 
-    }))
-    .catch(function (error) {
-      console.log(error);
-    })
+    return axios.Auth.current()
+    .then(action(( res ) => { this.currentUser = res.user.User;}))
     .finally(action(() => { this.loadingUser = false; }))
   }
 
@@ -42,6 +36,7 @@ decorate(UserStore, {
   loadingUser: observable,
   updatingUser: observable,
   updatingUserErrors: observable,
+  getCurrentUser: computed,
   pullUser: action,
   updateUser: action,
   forgetUser: action
