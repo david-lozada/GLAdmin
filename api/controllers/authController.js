@@ -1,8 +1,10 @@
 // Dependencies
 const bcrypt = require('bcrypt');
+const Sequelize = require('sequelize');
 
 // User Model
 var { User, AuthToken } = require('../models');
+
 
 
 // Login User

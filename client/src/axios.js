@@ -1,5 +1,4 @@
 import Axios from 'axios';
-import authStore from './stores/authStore';
 import globalStore from './stores/globalStore';
 
 
@@ -14,7 +13,7 @@ const requests = {
       return res.data
     })
     .catch((err) => {
-        authStore.errors = err.response && err.response.body && err.response.body.errors;
+        err = err.response && err.response.body && err.response.body.errors;
         throw err;
     }),
   get: url =>
@@ -25,7 +24,7 @@ const requests = {
       return res.data
     })
     .catch((err) => {
-        authStore.errors = err.response && err.response.body && err.response.body.errors;
+        err = err.response && err.response.body && err.response.body.errors;
         throw err;
     }),
   put: (url, body) =>
@@ -36,7 +35,7 @@ const requests = {
       return res.data
     })
     .catch((err) => {
-      authStore.errors = err.response && err.response.body && err.response.body.errors;
+      err = err.response && err.response.body && err.response.body.errors;
         throw err;
     }),
   post: (url, body) =>
@@ -47,24 +46,30 @@ const requests = {
       return res.data
     })
     .catch((err) => {
-      authStore.errors = err.response && err.response.body && err.response.body.errors;
+      err = err.response && err.response.body && err.response.body.errors;
         throw err;
     })
 };
 
 const Auth = {
-  current: () =>
-    requests.get('/users/user'),
   login: (userName, password) =>
     requests.post('/auth/login', { userName, password }),
-  register: (userName, email, password) =>
-    requests.post('/users', {  userName, email, password }),
-  save: user =>
-    requests.put('/user', { user }),
   logout: () =>
     requests.delete('/auth/logout')
 };
 
+const User = {
+  current: () =>
+    requests.get('/users/user'),
+  getAllUsers: () =>
+    requests.get('/users/all'),
+  register: (data) =>
+    requests.post('/users', { data }),
+  save: user =>
+    requests.put('/user', { user })
+};
+
 export default {
   Auth,
+  User,
 };

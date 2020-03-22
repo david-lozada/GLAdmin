@@ -1,4 +1,4 @@
-import { observable, action, decorate, computed } from 'mobx';
+import { observable, action, decorate } from 'mobx';
 import axios from '../axios';
 
 class UserStore {
@@ -8,16 +8,20 @@ class UserStore {
   updatingUser;
   updatingUserErrors;
 
-  get getCurrentUser() {
-    return this.currentUser.firstName + ' ' + this.currentUser.lastName
-  }
   pullUser() {
     this.loadingUser = true;
-    return axios.Auth.current()
+    return axios.User.current()
     .then(action(( res ) => { this.currentUser = res.user.User;}))
     .finally(action(() => { this.loadingUser = false; }))
   }
-
+  getAllUsers() {
+    this.loadingUser = true;
+    return axios.User.getAllUsers()
+    .then(( res ) => {
+      return res
+    })
+    .finally(action(() => { this.loadingUser = false; }))
+  }
   updateUser(newUser) {
     this.updatingUser = true;
     /* return agent.Auth.save(newUser)
@@ -36,7 +40,7 @@ decorate(UserStore, {
   loadingUser: observable,
   updatingUser: observable,
   updatingUserErrors: observable,
-  getCurrentUser: computed,
+  getAllUsers: action,
   pullUser: action,
   updateUser: action,
   forgetUser: action

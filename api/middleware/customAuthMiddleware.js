@@ -1,7 +1,6 @@
 const { User, AuthToken } = require('../models');
 
 module.exports = async function(req, res, next) {
-  
   // look for an authorization header or auth_token in the cookies
   const token =
   req.cookies.auth_token || 

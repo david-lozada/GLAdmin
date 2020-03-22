@@ -11,14 +11,18 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
+const link = { textDecoration: 'none', color: 'inherit' }
+
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
+    <Link to="/home/dashboard" style={link}>
+      <ListItem button>
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </Link>
     <ListItem button>
       <ListItemIcon>
         <ShoppingCartIcon />
@@ -37,7 +41,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItem>
-    <Link to={"/users"}>
+    <Link to="/home/users"  color="inherit" style={link}>
       <ListItem button>
         <ListItemIcon>
           <LayersIcon />
@@ -50,7 +54,7 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
+    <ListSubheader inset>Reportes</ListSubheader>
     <ListItem button>
       <ListItemIcon>
         <AssignmentIcon />

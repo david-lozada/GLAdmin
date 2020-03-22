@@ -1,12 +1,20 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import cyan from '@material-ui/core/colors/cyan';
 
 const theme = createMuiTheme({
+  typography: {
+    fontFamily: 'Ubuntu Condensed, sans-serif',
+  },
   palette: {
-    primary: {
-      main: '#90a4ae',
+  	primary: {
+      light: '#bfcbd0',
+      main: '#b0bec5',
+      dark: '#7b8589',
     },
-    secondary: cyan,
+    secondary: {
+      light: '#33eaff',
+      main: '#00e5ff',
+      dark: '#00a0b2',
+    },
   },
 });
 

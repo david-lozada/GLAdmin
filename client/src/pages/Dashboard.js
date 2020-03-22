@@ -1,14 +1,32 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom'
+import { observer, inject } from "mobx-react"
 import clsx from 'clsx';
-import useStyles from '../useStyles'
+import { makeStyles } from '@material-ui/core/styles';
 // import Chart from '../components/Chart';
 import Deposits from '../components/Deposits';
 import Orders from '../components/Orders';
 import { Container, Grid, Paper } from '@material-ui/core'
 
-/*const Login = inject("userStore", "authStore")(
-  observer(({ authStore, userStore }) => {*/
-  const Dashboard = () => {
+const useStyles = makeStyles(theme => ({
+  container: {
+    paddingTop: theme.spacing(4),
+    paddingBottom: theme.spacing(4),
+  },
+  paper: {
+    padding: theme.spacing(2),
+    display: 'flex',
+    overflow: 'auto',
+    flexDirection: 'column',
+  },
+  fixedHeight: {
+    height: 240,
+  },
+}));
+
+const Dashboard = inject("globalStore")(
+  observer(({ globalStore }) => {
+    globalStore.module = 'Dashboard'
   	const classes = useStyles();
   	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (
@@ -38,7 +56,7 @@ import { Container, Grid, Paper } from '@material-ui/core'
                     </Box>*/}
         </Container>
     )
-}/*)
-)*/
+})
+)
 
-export default Dashboard;
+export default withRouter(Dashboard)

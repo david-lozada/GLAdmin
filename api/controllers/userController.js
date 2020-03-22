@@ -56,6 +56,20 @@ exports.create = async function (req, res) {
             });
         }
     } catch(err) {
-    return res.status(400).send(err);
+        return res.status(400).send(err);
+    }
+}
+
+// Get all users
+exports.getAllUsers = async function(req, res) {
+    try {
+        let users = await User.findAll({
+            attributes: ['firstName', 'lastName', 'email', 'idRole', 'available']
+        });
+        if (users) {
+            return res.status(302).json(users);
+        }
+    } catch(err) {
+        return res.status(400).send(err);
     }
 }

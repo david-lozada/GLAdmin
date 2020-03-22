@@ -2,7 +2,6 @@
 const customAuthMiddleware = require('./middleware/customAuthMiddleware');
 // End Middleware
 
-
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -10,7 +9,6 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
 var dbconnection = require('./models/index');
-var appRoutes = require('./appRoutes');
 var app = express();
 
 // view engine setup

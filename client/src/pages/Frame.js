@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
 import { BrowserRouter as Router, Route, Switch, withRouter, useHistory } from 'react-router-dom'
-import useStyles from '../useStyles'
 import { observer, inject } from "mobx-react"
 import { CssBaseline, Drawer, AppBar, Toolbar, List, Typography, 
   Divider, IconButton, Badge, Menu, MenuItem } from '@material-ui/core'
@@ -12,6 +12,76 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { mainListItems, secondaryListItems } from '../components/ListLinks';
 // Components
 import Dashboard from './Dashboard'
+import User from './User'
+import Page404 from './Page404'
+
+const drawerWidth = 240;
+const useStyles = makeStyles(theme => ({ 
+  root: {
+    display: 'flex',
+  },
+  toolbar: {
+    paddingRight: 24, // keep right padding when drawer closed
+  },
+  toolbarIcon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    padding: '0 8px',
+    ...theme.mixins.toolbar,
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+  },
+  appBarShift: {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  menuButton: {
+    marginRight: 36,
+  },
+  menuButtonHidden: {
+    display: 'none',
+  },
+  title: {
+    flexGrow: 1,
+  },
+  drawerPaper: {
+    backgroundColor: theme.palette.secondary.dark,
+    position: 'relative',
+    whiteSpace: 'nowrap',
+    width: drawerWidth,
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  },
+  drawerPaperClose: {
+    overflowX: 'hidden',
+    transition: theme.transitions.create('width', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    width: theme.spacing(7),
+    [theme.breakpoints.up('sm')]: {
+      width: theme.spacing(9),
+    },
+  },
+  appBarSpacer: theme.mixins.toolbar,
+  content: {
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+  },
+}));
 
 /*function Copyright() {
   return (
@@ -25,14 +95,13 @@ import Dashboard from './Dashboard'
     </Typography>
   );
 }*/
-
-
 const Frame = inject("userStore", "authStore", "globalStore")(
   observer(({ authStore, userStore, globalStore }) => {
   const history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const user = JSON.parse(window.localStorage.getItem('userData'))
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   }
@@ -49,74 +118,78 @@ const Frame = inject("userStore", "authStore", "globalStore")(
     authStore.logout()
     globalStore.setToken(undefined);
     userStore.forgetUser();
-    history.replace('/')
+    history.push('/')
   }
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-            Dashboard
-          </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
-          <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-            <MoreVertIcon />
-          </IconButton>
-          <Menu
-            id="simple-menu"
-            anchorEl={anchorEl}
-            keepMounted
-            open={Boolean(anchorEl)}
-            onClose={handleClose}
-          >
-            {/*<MenuItem onClick={handleClose}>Profile</MenuItem>
-                        <MenuItem onClick={handleClose}>My account</MenuItem>*/}
-            <MenuItem onClick={handleLogout}>Logout</MenuItem>
-          </Menu>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            { /*userStore.getCurrentUser*/ }
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-        <Divider />
-        <List>{secondaryListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Router>
-          <Switch>
-            <Route path="/home" component={Dashboard} />
-            {/*<Route path="/users" component={User} />*/}
-          </Switch>
-        </Router>
-      </main>
-    </div>
+    <Router>
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
+          <Toolbar className={classes.toolbar}>
+            <IconButton
+              edge="start"
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              {globalStore.module}
+            </Typography>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
+            <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
+              <MoreVertIcon />
+            </IconButton>
+            <Menu
+              id="simple-menu"
+              anchorEl={anchorEl}
+              keepMounted
+              open={Boolean(anchorEl)}
+              onClose={handleClose}
+            >
+              {/*<MenuItem onClick={handleClose}>Profile</MenuItem>
+                          <MenuItem onClick={handleClose}>My account</MenuItem>*/}
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+            </Menu>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          variant="permanent"
+          classes={{
+            paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
+          }}
+          open={open}
+        >
+          <div className={classes.toolbarIcon}>
+          &nbsp;&nbsp;&nbsp;
+            <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
+              { user.firstName + ' ' + user.lastName }
+            </Typography>
+            <IconButton onClick={handleDrawerClose}>
+              <ChevronLeftIcon />
+            </IconButton>
+          </div>
+          <Divider />
+          <List>{mainListItems}</List>
+          <Divider />
+          <List>{secondaryListItems}</List>
+        </Drawer>
+        <main className={classes.content}>
+          <div className={classes.appBarSpacer} />
+            <Switch>
+              <Route path="/home/dashboard" component={Dashboard} />
+              <Route path="/home/users" component={User} />
+              <Route component={Page404} />
+            </Switch>
+        </main>
+      </div>
+    </Router>
   )
 })
 )

@@ -6,7 +6,6 @@ import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import alertify from 'alertifyjs'
@@ -32,7 +31,9 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   avatar: {
-    margin: theme.spacing(1),
+    height: '70px',
+    width: '70px',
+    margin: theme.spacing(3),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
@@ -44,11 +45,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Login = inject("userStore", "authStore")(
-  observer(({ authStore, userStore }) => {
+const Login = inject("userStore", "authStore", "globalStore")(
+  observer(({ authStore, userStore, globalStore }) => {
   const history = useHistory();
   const classes = useStyles();
-  const { values, errors, inProgress } = authStore;
+  const { values, inProgress } = authStore;
   const handleUserNameChange = e => {
       authStore.setUserName(e.target.value);
   };
@@ -64,7 +65,7 @@ const Login = inject("userStore", "authStore")(
       }
       authStore.login()
       .then(() => {
-          history.push("/home")
+        history.push("/home")
       })
   }
   return (
@@ -72,11 +73,8 @@ const Login = inject("userStore", "authStore")(
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
-          <LockOutlinedIcon />
+          <LockOutlinedIcon fontSize="large"/>
         </Avatar>
-        <Typography component="h1" variant="h5">
-          Entrar
-        </Typography>
         <form className={classes.form} noValidate onSubmit={handleSubmit}>
           <TextField
             variant="outlined"
@@ -110,8 +108,9 @@ const Login = inject("userStore", "authStore")(
             variant="contained"
             color="primary"
             className={classes.submit}
+            disabled={inProgress}
           >
-            Ingresar
+            INGRESAR
           </Button>
         </form>
       </div>

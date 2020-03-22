@@ -29,6 +29,10 @@ class AuthStore {
       .then(( res ) => {
         globalStore.setToken(res.authToken.token)
         userStore.pullUser()
+        let user = res.user
+        delete user.id
+        delete user.password
+        window.localStorage.setItem('userData', JSON.stringify(user))
       })
       .catch(action((err) => {
         this.errors = err.response && err.response.body && err.response.body.errors;
@@ -39,7 +43,7 @@ class AuthStore {
   logout() {
     return axios.Auth.logout()
     .then(( res ) =>  {
-      console.log(res)
+      window.localStorage.clear()
     })
     .catch(action((err) => {
         this.errors = err.response && err.response.body && err.response.body.errors;

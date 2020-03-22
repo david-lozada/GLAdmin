@@ -4,6 +4,7 @@ class GlobalStore {
 
   appName = 'Administrative';
   apiURL = 'http://localhost:9000'
+  module = ''
   token = window.localStorage.getItem('token');
   appLoaded = false;
 
@@ -36,6 +37,7 @@ decorate(GlobalStore, {
   appName: observable,
   apiURL: observable,
   token: observable,
+  module: observable,
   appLoaded: observable,
   tags: observable,
   isLoadingTags: observable,

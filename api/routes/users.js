@@ -10,4 +10,7 @@ router.post('/create', user_controller.create);
 /* GET current user */
 router.get('/user', user_controller.current);
 
+/* GET all users */
+router.get('/all', user_controller.getAllUsers);
+
 module.exports = router;
