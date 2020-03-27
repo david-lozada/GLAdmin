@@ -14,10 +14,15 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: theme.spacing(4),
   },
   paper: {
+    backgroundColor: '#2b2727',
+    color: '#fff',
     padding: theme.spacing(2),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
+  },
+  typography: {
+    color: '#fff',
   },
   fixedHeight: {
     height: 240,
@@ -26,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = inject("globalStore")(
   observer(({ globalStore }) => {
-    globalStore.module = 'Dashboard'
+    globalStore.setModule('Dashboard')
   	const classes = useStyles();
   	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (

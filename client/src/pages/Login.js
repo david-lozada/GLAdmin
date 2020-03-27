@@ -65,7 +65,7 @@ const Login = inject("userStore", "authStore", "globalStore")(
       }
       authStore.login()
       .then(() => {
-        history.push("/home")
+        history.push("/home/dashboard")
       })
   }
   return (

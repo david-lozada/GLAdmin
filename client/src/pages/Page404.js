@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Container, Paper } from '@material-ui/core'
+import { Grid, Container } from '@material-ui/core'
 
 const Page404 = ({ match }) => {
     return (

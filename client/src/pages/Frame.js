@@ -31,6 +31,8 @@ const useStyles = makeStyles(theme => ({
     ...theme.mixins.toolbar,
   },
   appBar: {
+    backgroundColor: theme.palette.primary.dark,
+    color: '#070707',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -55,7 +57,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   drawerPaper: {
-    backgroundColor: theme.palette.secondary.dark,
+    backgroundColor: theme.palette.primary.darker,
+    color: '#fff',
     position: 'relative',
     whiteSpace: 'nowrap',
     width: drawerWidth,
@@ -80,21 +83,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
+    backgroundColor: theme.palette.primary.dark,
   },
 }));
-
-/*function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}*/
 const Frame = inject("userStore", "authStore", "globalStore")(
   observer(({ authStore, userStore, globalStore }) => {
   const history = useHistory();
@@ -102,6 +93,7 @@ const Frame = inject("userStore", "authStore", "globalStore")(
   const [open, setOpen] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const user = JSON.parse(window.localStorage.getItem('userData'))
+  const userNames = user ? user.firstName + " " + user.lastName : ''
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   }
@@ -155,7 +147,7 @@ const Frame = inject("userStore", "authStore", "globalStore")(
             >
               {/*<MenuItem onClick={handleClose}>Profile</MenuItem>
                           <MenuItem onClick={handleClose}>My account</MenuItem>*/}
-              <MenuItem onClick={handleLogout}>Logout</MenuItem>
+              <MenuItem onClick={handleLogout}>Salir</MenuItem>
             </Menu>
           </Toolbar>
         </AppBar>
@@ -169,7 +161,7 @@ const Frame = inject("userStore", "authStore", "globalStore")(
           <div className={classes.toolbarIcon}>
           &nbsp;&nbsp;&nbsp;
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              { user.firstName + ' ' + user.lastName }
+              { userNames }
             </Typography>
             <IconButton onClick={handleDrawerClose}>
               <ChevronLeftIcon />

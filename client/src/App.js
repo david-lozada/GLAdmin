@@ -1,6 +1,6 @@
 // Dependencies
-import React, { Component } from 'react'
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
+import React, { useEffect } from 'react'
+import {BrowserRouter as Router, Switch, useHistory } from 'react-router-dom'
 import { inject, observer } from "mobx-react";
 import { ThemeProvider } from '@material-ui/core'
 import theme from './Theme';
@@ -8,33 +8,35 @@ import theme from './Theme';
 // Components
 import Frame from './pages/Frame';
 import Welcome from './pages/Welcome';
+import { ProtectedRoute, ProtectedLogin } from './components/ProtectedRoutes';
 
 
-class App extends Component {
-  UNSAFE_componentWillMount() {
-    if (!this.props.globalStore.token) {
-      this.props.globalStore.setAppLoaded();
-    }
-  }
-
-  componentDidMount() {    
-    if (this.props.globalStore.token) {
-      this.props.userStore.pullUser()
-        .finally(() => this.props.globalStore.setAppLoaded());
-    }
-  }
-  render() {
+const App = inject("userStore", "globalStore")(
+  observer(({ userStore, globalStore }) => {
+  	const history = useHistory()
+  	useEffect(() => {
+  		if (!globalStore.token) {
+  		  globalStore.setAppLoaded()
+  		  history.push('/')
+  		}
+  		return () => {
+  			if (globalStore.token) {
+	      		userStore.pullUser()
+	        	.finally(() => globalStore.setAppLoaded());
+	    	} 
+  		}
+  	}, [userStore, globalStore, history])
     return (
-      <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}>
         <Router>
           <Switch>
-            <Route exact path="/" component={Welcome} />
-            <Route path="/home" component={Frame} />
+            <ProtectedLogin exact path="/"  auth={globalStore.token} component={Welcome} />
+            <ProtectedRoute path="/home" auth={globalStore.token} component={Frame} />
           </Switch>
         </Router>
       </ThemeProvider>
-    )
-  }
-}
-App = inject("userStore", "globalStore")(observer(App))
+    );
+})
+)
+
 export default App

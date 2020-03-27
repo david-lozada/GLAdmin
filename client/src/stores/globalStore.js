@@ -32,6 +32,9 @@ class GlobalStore {
     this.appLoaded = true;
   }
 
+  setModule(name) {
+    this.module = name;
+  }
 }
 decorate(GlobalStore, {
   appName: observable,
@@ -43,6 +46,7 @@ decorate(GlobalStore, {
   isLoadingTags: observable,
   loadTags: action,
   setToken: action,
+  setModule: action,
   setAppLoaded: action
 })
 export default new GlobalStore();

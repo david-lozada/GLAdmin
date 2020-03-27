@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from "mobx-react";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 // Stores
 import authStore from "./stores/authStore";
@@ -22,9 +22,9 @@ export const StoreContext = React.createContext();
 
 ReactDOM.render(
     <Provider {...stores}>
-        <HashRouter>
+        <Router>
             <App />
-        </HashRouter>
+        </Router>
     </Provider>
     , document.getElementById('root'));
 

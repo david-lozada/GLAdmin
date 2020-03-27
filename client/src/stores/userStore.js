@@ -3,26 +3,58 @@ import axios from '../axios';
 
 class UserStore {
 
+  records;
   currentUser;
-  loadingUser;
-  updatingUser;
+  loading;
+  saveLoading;
   updatingUserErrors;
+  record = {
+    firstName: '',
+    lastName: '',
+    userName: '',
+    email: '',
+    password: '',
+    idRole: '',
+    available: false
+  };
 
+  reset() {
+    this.record.firstName = ''
+    this.record.lastName = ''
+    this.record.userName = ''
+    this.record.email = ''
+    this.record.password = ''
+    this.record.idRole = ''
+    this.record.available = false
+  }
+  save(user) {
+    this.saveLoading = true;
+     return axios.User.save(user)
+      /**
+      *   TODO: Use response in push method
+      */
+      .then(action(({ user }) => { 
+        this.records.push(this.record) 
+        this.saveLoading = false;
+      }))
+  }
   pullUser() {
-    this.loadingUser = true;
+    this.loading = true;
     return axios.User.current()
-    .then(action(( res ) => { this.currentUser = res.user.User;}))
-    .finally(action(() => { this.loadingUser = false; }))
+    .then(action(( res ) => { 
+      this.currentUser = res.user.User;
+      this.loading = false
+    }))
   }
   getAllUsers() {
-    this.loadingUser = true;
+    this.loading = true;
     return axios.User.getAllUsers()
     .then(( res ) => {
-      return res
+      this.records = res
     })
-    .finally(action(() => { this.loadingUser = false; }))
+    .finally(action(() => { this.loading = false; }))
   }
-  updateUser(newUser) {
+  update(newUser) {
     this.updatingUser = true;
     /* return agent.Auth.save(newUser)
       .then(action(({ user }) => { this.currentUser = user; }))
@@ -36,13 +68,17 @@ class UserStore {
 }
 
 decorate(UserStore, {
+  records: observable,
   currentUser: observable,
-  loadingUser: observable,
-  updatingUser: observable,
+  loading: observable,
+  saveLoading: observable,
   updatingUserErrors: observable,
+  user: observable,
+  reset: action,
+  save: action,
   getAllUsers: action,
   pullUser: action,
-  updateUser: action,
+  update: action,
   forgetUser: action
 })
 

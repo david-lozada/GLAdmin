@@ -26,37 +26,46 @@ const useStyles = makeStyles(theme => ({
   seeMore: {
     marginTop: theme.spacing(3),
   },
+  textCyan: {
+    color: theme.palette.secondary.main
+  },
+  textWhite: {
+    color: '#fff'
+  },
+  textGrey: {
+    color: theme.palette.primary.light
+  }
 }));
 
 export default function Orders() {
   const classes = useStyles();
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
+      <Title className={classes.textGrey}>Recent Orders</Title>
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
+            <TableCell className={classes.textCyan}>Date</TableCell>
+            <TableCell className={classes.textCyan}>Name</TableCell>
+            <TableCell className={classes.textCyan}>Ship To</TableCell>
+            <TableCell className={classes.textCyan}>Payment Method</TableCell>
+            <TableCell className={classes.textCyan} align="right">Sale Amount</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.map(row => (
             <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{row.amount}</TableCell>
+              <TableCell className={classes.textWhite}>{row.date}</TableCell>
+              <TableCell className={classes.textWhite}>{row.name}</TableCell>
+              <TableCell className={classes.textWhite}>{row.shipTo}</TableCell>
+              <TableCell className={classes.textWhite}>{row.paymentMethod}</TableCell>
+              <TableCell className={classes.textWhite} align="right">{row.amount}</TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
       <div className={classes.seeMore}>
-        <Link color="primary" href="#" onClick={preventDefault}>
+        <Link className={classes.textGrey} href="#" onClick={preventDefault}>
           See more orders
         </Link>
       </div>

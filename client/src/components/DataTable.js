@@ -1,79 +1,74 @@
-import React, { useState } from 'react';
+import React, { forwardRef } from 'react';
 import MaterialTable from "material-table";
-import { observer, inject } from "mobx-react"
+import { makeStyles } from '@material-ui/core/styles';
+import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteOutline,
+        Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
+        from '@material-ui/icons';
 
-const DataTable = inject("globalStore")(
-  observer(({ globalStore }) => {
-  const [state, setState] = useState({
-    columns: [
-      { title: "Nombre", field: "firstName" },
-      { title: "Apellido", field: "lastName" },
-      { title: "Correo", field: "email" },
-      {
-        title: "Rol",
-        field: "idRole",
-        lookup: { 1: "Master", 2: "Administrador", 3: "Empleado" }
-      }
-    ],
-    data: [
-      { firstName: "David", lastName: "Lozada", email: "david@gmail.com", idRole: 1 },
-      { firstName: "Laura", lastName: "Lopez", email: "laura@gmail.com", idRole: 2 }
-    ],
-  });
+const useStyles = makeStyles(theme => ({
+  tableColor: {
+  	backgroundColor: theme.palette.primary.darker
+  },
+}));
+const DataTable = ({ column, data, module, showForm }) => {
+  	const classes = useStyles();
+	const tableIcons = {
+	    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+	    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+	    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+	    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+	    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+	    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+	    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+	    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+	    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+	    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+	    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+	    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+	    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+	    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+	    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+	    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+	    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+	};
+    return (
+        <MaterialTable
+            className={classes.tableColor}
+            icons={tableIcons}
+            title={module}
+            columns={column}
+            data={data}
+            options={{
+              pageSizeOptions : [5],
+              headerStyle: {
+                backgroundColor: "#2b2727",
+                color: '#00e5ff'
+              },
+              rowStyle: {
+	            backgroundColor: '#2b2727',
+                color: '#fff'
+	          }
+            }}
+            actions={[
+              {
+                icon: 'add',
+                tooltip: 'Agregar Usuario',
+                isFreeAction: true,
+                onClick: (event) => showForm()
+              },
+              {
+		        icon: 'save',
+		        tooltip: 'Save User',
+		        onClick: (event, rowData) => alert("You saved " + rowData.name)
+		      },
+		      {
+		        icon: 'delete',
+		        tooltip: 'Delete User',
+		        onClick: (event, rowData) => alert("You want to delete " + rowData.name)
+		      }
+            ]}
+          />
+    )
+}
 
-  return (
-    <MaterialTable
-      title={globalStore.module}
-      columns={state.columns}
-      data={state.data}
-      options={{
-        pageSizeOptions : [5],
-        headerStyle: {
-          backgroundColor: "#7b8589",
-          color: '#FFF'
-        }
-      }}
-      editable={{
-        onRowAdd: newData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.push(newData);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-        onRowUpdate: (newData, oldData) =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              if (oldData) {
-                setState(prevState => {
-                  const data = [...prevState.data];
-                  data[data.indexOf(oldData)] = newData;
-                  return { ...prevState, data };
-                });
-              }
-            }, 600);
-          }),
-        onRowDelete: oldData =>
-          new Promise(resolve => {
-            setTimeout(() => {
-              resolve();
-              setState(prevState => {
-                const data = [...prevState.data];
-                data.splice(data.indexOf(oldData), 1);
-                return { ...prevState, data };
-              });
-            }, 600);
-          }),
-      }}
-    />
-  );
-})
-)
 export default DataTable;
-
-

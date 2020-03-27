@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt');
 var { User, AuthToken } = require('../models');
 
 exports.current = async function (req, res) {
-    console.log(req)    
     if (req.headers.authorization !== undefined) {
         token = req.headers.authorization.split(' ')[1]
         let user = await AuthToken.findOne({
@@ -64,10 +63,10 @@ exports.create = async function (req, res) {
 exports.getAllUsers = async function(req, res) {
     try {
         let users = await User.findAll({
-            attributes: ['firstName', 'lastName', 'email', 'idRole', 'available']
+            attributes: ['id', 'firstName', 'lastName', 'email', 'idRole', 'available']
         });
         if (users) {
-            return res.status(302).json(users);
+            return res.status(200).json(users);
         }
     } catch(err) {
         return res.status(400).send(err);

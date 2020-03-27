@@ -63,10 +63,10 @@ const User = {
     requests.get('/users/user'),
   getAllUsers: () =>
     requests.get('/users/all'),
-  register: (data) =>
-    requests.post('/users', { data }),
-  save: user =>
-    requests.put('/user', { user })
+  save: (data) =>
+    requests.post('/user/save', { data }),
+  update: user =>
+    requests.put('/user/update', { user })
 };
 
 export default {

@@ -1,27 +1,32 @@
 // Dependencies
-import React, { Component } from 'react'
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles';
+import { Container, Grid, Paper } from '@material-ui/core'
 //Store
 // Components
 import Login from './Login'
-import { observer, inject } from 'mobx-react'
 
-class Welcome extends Component {
-  render() {
-    return (
-      <div className="mdl-grid w-background">
-        <div className="mdl-cell mdl-cell--8-col w-headline font-effect-3d-float">
-          ADMINISTRATIVE
-        </div>
-        <div className="mdl-cell mdl-cell--4-col">
-          <div className="mdl-shadow--6dp w-fit">
-            <div className="mdl-card__supporting-text" style={{"width":"100%"}}>
-                <Login />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+const useStyles = makeStyles(theme => ({
+}));
+
+const Welcome = () => {
+  const classes = useStyles()
+  console.log(classes.wHeadline)
+  return (
+    <div className="w-background">
+      <Container maxWidth="lg">
+        <Grid container>
+          <Grid item md={8} lg={8} className="w-headline">
+            ADMINISTRATIVE
+          </Grid>
+          <Grid item xs={12} md={4} lg={4}>
+            <Paper style={{ height: 480 }}>
+                  <Login />
+            </Paper>
+          </Grid>
+        </Grid>
+      </Container>
+    </div>
+  )
 }
-Welcome = inject("authStore")(observer(Welcome))
 export default Welcome
