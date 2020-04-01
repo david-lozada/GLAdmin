@@ -17,7 +17,6 @@ const App = inject("userStore", "globalStore")(
   	useEffect(() => {
   		if (!globalStore.token) {
   		  globalStore.setAppLoaded()
-  		  history.push('/')
   		}
   		return () => {
   			if (globalStore.token) {

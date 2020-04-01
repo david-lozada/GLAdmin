@@ -28,11 +28,9 @@ app.use(customAuthMiddleware);
 
 // Routes Files
 var authRouter = require('./routes/auth');
-var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 //App Routes
-app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 // End Routes

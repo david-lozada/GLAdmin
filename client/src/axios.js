@@ -2,7 +2,7 @@ import Axios from 'axios';
 import globalStore from './stores/globalStore';
 
 
-const API_ROOT = 'http://localhost:9000';
+const API_ROOT = globalStore.apiURL;
 
 const requests = {
   delete: url =>
@@ -60,12 +60,16 @@ const Auth = {
 
 const User = {
   current: () =>
-    requests.get('/users/user'),
+    requests.get('/users/current'),
   getAllUsers: () =>
     requests.get('/users/all'),
+  getUser: (id) =>
+    requests.get('/users/user/'+id),
+  deleteUser: (id) =>
+    requests.get('/users/delete/'+id),
   save: (data) =>
-    requests.post('/user/save', { data }),
-  update: user =>
+    requests.post('/users/create', data ),
+  update: (user) =>
     requests.put('/user/update', { user })
 };
 

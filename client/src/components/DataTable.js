@@ -1,5 +1,6 @@
 import React, { forwardRef } from 'react';
 import MaterialTable from "material-table";
+import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
 import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteOutline,
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
@@ -10,8 +11,16 @@ const useStyles = makeStyles(theme => ({
   	backgroundColor: theme.palette.primary.darker
   },
 }));
-const DataTable = ({ column, data, module, showForm }) => {
-  	const classes = useStyles();
+const DataTable = inject("userStore", "globalStore")(
+  observer(({ store, userStore, globalStore }) => {
+  switch(store){
+    case 'userStore':
+      var Store = userStore
+      break
+    default:
+      return null
+  }
+  const classes = useStyles();
 	const tableIcons = {
 	    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
 	    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -35,40 +44,45 @@ const DataTable = ({ column, data, module, showForm }) => {
         <MaterialTable
             className={classes.tableColor}
             icons={tableIcons}
-            title={module}
-            columns={column}
-            data={data}
+            title={globalStore.module}
+            columns={Store.columns}
+            data={Store.records}
             options={{
-              pageSizeOptions : [5],
+              pageSizeOptions : [6],
               headerStyle: {
-                backgroundColor: "#2b2727",
-                color: '#00e5ff'
               },
               rowStyle: {
-	            backgroundColor: '#2b2727',
-                color: '#fff'
-	          }
+  	          }
             }}
             actions={[
               {
                 icon: 'add',
                 tooltip: 'Agregar Usuario',
                 isFreeAction: true,
-                onClick: (event) => showForm()
+                onClick: (event) => {
+                  globalStore.swipeForm('Agregar Usuario', 'create')
+                }
               },
               {
-		        icon: 'save',
-		        tooltip: 'Save User',
-		        onClick: (event, rowData) => alert("You saved " + rowData.name)
+		        icon: 'edit',
+		        tooltip: 'Editar Usuario',
+		        onClick: (event, rowData) => {
+                /**
+                 *  TODO: Fix Slide closing on edit seconds
+                */
+                globalStore.swipeForm('Actualizar Usuario', 'update')
+                Store.getUser(rowData.id)
+            }
 		      },
 		      {
 		        icon: 'delete',
-		        tooltip: 'Delete User',
+		        tooltip: 'Eliminar Usuario',
 		        onClick: (event, rowData) => alert("You want to delete " + rowData.name)
 		      }
             ]}
           />
     )
-}
+})
+)
 
 export default DataTable;
