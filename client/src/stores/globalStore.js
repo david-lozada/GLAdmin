@@ -14,8 +14,9 @@ class GlobalStore {
   gridCells = {
     table: 11,
     form: 1,
-    changed: false
+    isOpen: false,
   }
+  tableLoading = false;
 
   constructor() {
     reaction(
@@ -32,21 +33,26 @@ class GlobalStore {
 
   // Set values for table and form grids
   swipeForm = (title, method) => {
-    if (this.gridCells.changed) {
-        this.gridCells = {
-          table: 11,
-          form: 1,
-          changed: false
-        }
-    } else {
+    /*if (this.gridCells.isOpen) {
+      if (this.gridCells.isUpdate) {*/
         this.gridCells = {
           table: 6,
           form: 6,
-          changed: true
+          isOpen: true
         }
-    }
+      /*} else {
+        this.gridCells = {
+          table: 11,
+          form: 1,
+        }
+      }
+    }*/
     this.setFormMethod(method)
     this.setSlideTitle(title)
+  }
+
+  setIsUpdateSlide(bool) {
+    this.gridCells.isUpdate = bool
   }
 
   setFormMethod(method) {
@@ -68,6 +74,10 @@ class GlobalStore {
   setSlideTitle(title){
     this.slideTitle = title
   }
+
+  setTableLoaded() {
+    this.tableLoading = !this.tableLoading;
+  }
 }
 decorate(GlobalStore, {
   appName: observable,
@@ -76,6 +86,7 @@ decorate(GlobalStore, {
   module: observable,
   appLoaded: observable,
   tags: observable,
+  tableLoading: observable,
   isLoadingTags: observable,
   gridCells: observable,
   slideTitle: observable,
@@ -83,6 +94,7 @@ decorate(GlobalStore, {
   setFormMethod: action,
   setSlideTitle: action,
   swipeForm: action,
+  setIsUpdateSlide: action,
   loadTags: action,
   setToken: action,
   setModule: action,

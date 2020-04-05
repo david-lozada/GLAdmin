@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import alertify from 'alertifyjs'
 import { ValidatorForm } from 'react-material-ui-form-validator';
 
@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
   textInput: {
     color: '#fff',
   },
+  progress: {
+    indexZ: 1
+  }
 }));
 const Form = inject("userStore", "globalStore")(
     observer(({ store, userStore, globalStore }) => {
@@ -34,13 +37,10 @@ const Form = inject("userStore", "globalStore")(
     }
     const handleCreateSubmit = (e) => {
       e.preventDefault()
-      // if (validate(e.target)) {
-        // Call save record method
-      /*} else {
-        return null
-      }*/
-      Store.save(Store.record).then((res) => {
-        alertify.success(res.es)
+      Store.save(Store.record).then(({user, en, es}) => {
+        Store.reset()
+        Store.addRecords(user)
+        alertify.success(es)
       })
       .catch((err) => {
         console.log(err)
@@ -48,7 +48,14 @@ const Form = inject("userStore", "globalStore")(
     }
     const handleUpdateSubmit = (e) => {
       e.preventDefault()
-      alertify.success('Actulizado')
+      Store.update(Store.record).then(({user, en, es}) => {
+        Store.reset()
+        Store.updateRecords(user)
+        alertify.success(es)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
     return <ValidatorForm
                 className={classes.form}
@@ -56,7 +63,7 @@ const Form = inject("userStore", "globalStore")(
                 onError={errors => console.log(errors)}
             >
               { Store.fields.map(field => {
-                return <CustomTextField store={"userStore"} key={field.label} field={field}/>
+                return <CustomTextField store={store} key={field.label} field={field}/>
                 }
               )}
             <Button

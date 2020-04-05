@@ -7,6 +7,9 @@ var user_controller = require('../controllers/userController');
 /* POST create user */
 router.post('/create', user_controller.create);
 
+/* PUT update user */
+router.put('/update', user_controller.update);
+
 /* GET current user */
 router.get('/current', user_controller.current);
 
@@ -17,6 +20,6 @@ router.get('/all', user_controller.getAllUsers);
 router.get('/user/:id', user_controller.getUser);
 
 /* DELETE user */
-router.get('/delete/:id', user_controller.deleteUser);
+router.delete('/delete/:id', user_controller.deleteUser);
 
 module.exports = router;

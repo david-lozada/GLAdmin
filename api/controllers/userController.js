@@ -27,7 +27,6 @@ exports.current = async function (req, res) {
 
 // Register User
 exports.create = async function (req, res) {
-    console.log(req);
     try {
         // hash the password provided by the user with bcrypt so that
         // we are never storing plain text passwords. This is crucial
@@ -39,6 +38,7 @@ exports.create = async function (req, res) {
             defaults: Object.assign(req.body, { password: hash })
             });
         if (created) {
+            delete user.password
             return res.status(201).json({
                 user,
                 en: 'User has been created',
@@ -59,12 +59,12 @@ exports.create = async function (req, res) {
 // Get user
 exports.getUser = async function(req, res) {
     try {
-        let users = await User.findOne({
+        let user = await User.findOne({
             where: { id: req.params.id },
-            attributes: ['firstName', 'lastName', 'userName','email', 'idRole', 'available']
+            attributes: ['id', 'firstName', 'lastName', 'userName','email', 'idRole', 'available']
         });
-        if (users) {
-            return res.status(200).json(users);
+        if (user) {
+            return res.status(200).json(user);
         }
     } catch(err) {
         return res.status(400).send(err);
@@ -96,6 +96,25 @@ exports.deleteUser = async function(req, res) {
             return res.status(200).json({
                 en: 'User has been deleted',
                 es: 'El usuario fué eliminado'
+            });
+        }
+    } catch(err) {
+        return res.status(400).send(err);
+    }
+}
+
+// Update user
+exports.update = async function(req, res) {
+    try {
+        let user = await User.findOne({
+            where: { id: req.body.id },
+        });
+        if (user) {
+            user.update(req.body);
+            return res.status(200).json({
+                user,
+                en: 'User has been updated',
+                es: 'Usuario actualizado'
             });
         }
     } catch(err) {

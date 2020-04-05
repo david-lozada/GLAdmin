@@ -8,12 +8,9 @@ import { TextValidator, SelectValidator } from 'react-material-ui-form-validator
 const useStyles = makeStyles(theme => ({ 
   input: {
     color: '#fff',
-    width: theme.spacing(25),
-    marginLeft: theme.spacing(1),
+    width: theme.spacing(31),
+    marginRight: theme.spacing(1),
   },
-  textInput: {
-    color: '#fff',
-  }
 }));
 const CustomTextField = inject("userStore", "globalStore")(
     observer(({ store, userStore, globalStore, field }) => {
@@ -39,8 +36,8 @@ const CustomTextField = inject("userStore", "globalStore")(
                   control={
                     <Checkbox
                       	color="secondary"
-				        name={field.name}
-				        id={field.name}
+        				        name={field.name}
+        				        id={field.name}
                       	onChange={handleFieldChange}
 			          	      value={Store.record[field.name]}
                     />
@@ -55,19 +52,17 @@ const CustomTextField = inject("userStore", "globalStore")(
   			        margin={"normal"}
   			        name={field.name}
   			        id={field.name}
-  			        className={classes.input}
   			        label={field.label}
   			        autoComplete={field.name}
   			        color={"secondary"}
   				      value={Store.record[field.name]}
-  			        InputProps={{className: classes.textInput}}
+  			        InputProps={{className: classes.input}}
   		          onChange={handleFieldChange}
   			       />
     }else if (field.name === 'idRole') {
     	return  <SelectValidator
         				select
         				label={field.label}
-        	 			className={classes.input}
   			        variant={"outlined"}
 		            value={Store.record[field.name]}
 		            onChange={handleFieldChange}
@@ -75,7 +70,7 @@ const CustomTextField = inject("userStore", "globalStore")(
 		            id={field.name}
     				    validators={['required']}
                 errorMessages={['Campo requerido']}
-                InputProps={{className: classes.textInput}}
+                InputProps={{className: classes.input}}
     			>
 		            <MenuItem value={''}>Seleccione Ocupación</MenuItem>
 		            <MenuItem value={1}>Master</MenuItem>
@@ -91,12 +86,11 @@ const CustomTextField = inject("userStore", "globalStore")(
 			        name={field.name}
 			        id={field.name}
 			        type={"password"}
-			        className={classes.input}
 			        label={field.label}
 			        autoComplete={field.name}
 			        color={"secondary"}
 			        value={Store.record[field.name]}
-			        InputProps={{className: classes.textInput}}
+			        InputProps={{className: classes.input}}
 		          onChange={handleFieldChange}
 			    />
     } else {
@@ -107,12 +101,11 @@ const CustomTextField = inject("userStore", "globalStore")(
 			        margin={"normal"}
 			        name={field.name}
 			        id={field.name}
-			        className={classes.input}
 			        label={field.label}
 			        autoComplete={field.name}
 			        color={"secondary"}
 				      value={Store.record[field.name]}
-			        InputProps={{className: classes.textInput}}
+			        InputProps={{className: classes.input}}
 		          onChange={handleFieldChange}
 			    />
     }

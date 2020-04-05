@@ -25,7 +25,7 @@ const Drawer = inject("userStore", "globalStore")(
   observer(({ store, userStore, globalStore }) => {
   const classes = useStyles();  
   return (
-    <Slide direction="left" in={globalStore.gridCells.changed} mountOnEnter unmountOnExit>
+    <Slide direction="left" in={globalStore.gridCells.isOpen} mountOnEnter unmountOnExit>
       <Paper className={classes.paper}>
         <Typography component="h2" variant="h6" className={classes.textInput} gutterBottom>
           {globalStore.slideTitle}

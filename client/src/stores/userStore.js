@@ -3,7 +3,7 @@ import axios from '../axios';
 
 class UserStore {
 
-  records;
+  records = [];
   currentUser;
   loading;
   submiting;
@@ -71,12 +71,31 @@ class UserStore {
       value: this.record.available,
     }
   ];
-
   /**
    *  Function used to set value of record on input change
   */
   setField(name, value) {
     this.record[name] = value
+  }
+  /**
+   *  Function used to add a record to list of records
+  */
+  addRecords(record) {
+    const records = this.records
+    this.records = [ ...records, record ]
+  }
+  /**
+   *  Function used to update record in list of records
+  */
+  updateRecords(record) {
+    const records = this.records
+    records.find((row, i) => {
+      if (row.id === record.id) {
+        // console.log(i)
+        row =  record
+      }
+    })
+    console.log(records)
   }
   /**
    *  Function used to clear form inputs
@@ -99,10 +118,10 @@ class UserStore {
     this.submiting = true;
      return axios.User.save(user)
       .then(action((res) => { 
-        this.records.push(res.user) 
+        this.submiting = false;
         return res
       }))
-      .finally(action(() => { this.submiting = false; }))
+      .catch((err) => console.log(err) )
   }
   /**
    *  Function used to get current user info
@@ -118,7 +137,7 @@ class UserStore {
   /**
    *  Function used to get user by id
   */
-  getUser(id) {
+  getRecord(id) {
     this.loading = true;
     return axios.User.getUser(id)
     .then(( res ) => {
@@ -140,11 +159,14 @@ class UserStore {
   /**
    *  Function used to update user info
   */
-  update(newUser) {
+  update(user) {
     this.submiting = true;
-    /* return agent.Auth.save(newUser)
-      .then(action(({ user }) => { this.currentUser = user; }))
-      .finally(action(() => { this.submiting = false; })) */
+     return axios.User.update(user)
+      .then(action((res) => { 
+        this.submiting = false;
+        return res
+      }))
+      .catch((err) => console.log(err) )
   }
   /**
    *  Function used to clear current user data
@@ -155,13 +177,11 @@ class UserStore {
   /**
    *  Function used to delete user
   */
-  deletetUser(id) {
-    this.deleting = true;
+  delete(id) {
     return axios.User.deleteUser(id) 
     .then(( res ) => {
       return res
     })
-    .finally(action(() => { this.deleting = false; }))
   }
 
 }
@@ -180,9 +200,10 @@ decorate(UserStore, {
   save: action,
   getAllUsers: action,
   getUser: action,
+  delete: action,
   pullUser: action,
   update: action,
-  forgetUser: action
+  forgetUser: action,
 })
 
 export default new UserStore();

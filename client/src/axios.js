@@ -66,11 +66,11 @@ const User = {
   getUser: (id) =>
     requests.get('/users/user/'+id),
   deleteUser: (id) =>
-    requests.get('/users/delete/'+id),
+    requests.delete('/users/delete/'+id),
   save: (data) =>
     requests.post('/users/create', data ),
   update: (user) =>
-    requests.put('/user/update', { user })
+    requests.put('/users/update',  user )
 };
 
 export default {

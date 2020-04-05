@@ -31,16 +31,19 @@ const useStyles = makeStyles(theme => ({
 
 const User = inject("userStore", "globalStore")(
   observer(({ userStore, globalStore }) => {
-    globalStore.setModule('Usuarios')
+    globalStore.setModule('Usuario')
     // Get all users
     useEffect(() => {
+      globalStore.setTableLoaded()
       userStore.getAllUsers()
+        .then(() => globalStore.setTableLoaded() )
 
-    }, [userStore])
+    }, [userStore, globalStore])
     const NEW_KEYS = ['112', 'F1'];
     function handler({ key }) {
       if (NEW_KEYS.includes(String(key))) {
         userStore.reset()
+        globalStore.setIsUpdateSlide(false)
         globalStore.swipeForm('Agregar Usuario', 'create')
       }
     }

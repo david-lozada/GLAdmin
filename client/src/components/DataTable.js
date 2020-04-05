@@ -2,6 +2,7 @@ import React, { forwardRef } from 'react';
 import MaterialTable from "material-table";
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
+import alertify from "alertifyjs";
 import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteOutline,
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
         from '@material-ui/icons';
@@ -10,6 +11,9 @@ const useStyles = makeStyles(theme => ({
   tableColor: {
   	backgroundColor: theme.palette.primary.darker
   },
+  icon: {
+    color: theme.palette.secondary.main
+  }
 }));
 const DataTable = inject("userStore", "globalStore")(
   observer(({ store, userStore, globalStore }) => {
@@ -47,8 +51,9 @@ const DataTable = inject("userStore", "globalStore")(
             title={globalStore.module}
             columns={Store.columns}
             data={Store.records}
+            isLoading={globalStore.tableLoading}
             options={{
-              pageSizeOptions : [6],
+              pageSizeOptions : [5],
               headerStyle: {
               },
               rowStyle: {
@@ -57,28 +62,43 @@ const DataTable = inject("userStore", "globalStore")(
             actions={[
               {
                 icon: 'add',
-                tooltip: 'Agregar Usuario',
+                tooltip: 'Agregar ' + globalStore.module,
                 isFreeAction: true,
                 onClick: (event) => {
-                  globalStore.swipeForm('Agregar Usuario', 'create')
+                  Store.reset()
+                  globalStore.setIsUpdateSlide(false)
+                  globalStore.swipeForm('Agregar ' + globalStore.module, 'create')
                 }
               },
               {
-		        icon: 'edit',
-		        tooltip: 'Editar Usuario',
-		        onClick: (event, rowData) => {
-                /**
-                 *  TODO: Fix Slide closing on edit seconds
-                */
-                globalStore.swipeForm('Actualizar Usuario', 'update')
-                Store.getUser(rowData.id)
-            }
-		      },
-		      {
-		        icon: 'delete',
-		        tooltip: 'Eliminar Usuario',
-		        onClick: (event, rowData) => alert("You want to delete " + rowData.name)
-		      }
+    		        icon: 'edit',
+    		        tooltip: 'Editar Usuario',
+    		        onClick: (event, rowData) => {
+                    Store.reset()
+                    globalStore.setIsUpdateSlide(true)
+                    globalStore.swipeForm('Actualizar ' + globalStore.module, 'update')
+                    Store.getRecord(rowData.id)
+                }
+    		      },
+              {
+                icon: 'delete',
+                tooltip: 'Eliminar ' + globalStore.module,
+                onClick: (event, rowData) => {
+                  alertify.confirm("!ALERTA¡", "Desea eliminar "+ globalStore.module +"?",
+                  function(){
+                    globalStore.setTableLoaded()
+                    Store.delete(rowData.id).then((res) => {
+                      const records = Store.records
+                      const index = records.indexOf(rowData)
+                      records.splice(index, 1)
+                      globalStore.setTableLoaded()
+                      alertify.success(res.es)
+                    })
+                  },
+                  function(){
+                  });
+                }
+              }
             ]}
           />
     )
