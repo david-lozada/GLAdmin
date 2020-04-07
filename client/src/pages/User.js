@@ -1,5 +1,5 @@
 // Dependencies
-import React, { useEffect } from 'react';
+import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
@@ -33,12 +33,6 @@ const User = inject("userStore", "globalStore")(
   observer(({ userStore, globalStore }) => {
     globalStore.setModule('Usuario')
     // Get all users
-    useEffect(() => {
-      globalStore.setTableLoaded()
-      userStore.getAllUsers()
-        .then(() => globalStore.setTableLoaded() )
-
-    }, [userStore, globalStore])
     const NEW_KEYS = ['112', 'F1'];
     function handler({ key }) {
       if (NEW_KEYS.includes(String(key))) {

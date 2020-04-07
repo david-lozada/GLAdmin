@@ -35,6 +35,9 @@ const Form = inject("userStore", "globalStore")(
       default:
         return null
     }
+    /**
+     *  Create handle method
+    */
     const handleCreateSubmit = (e) => {
       e.preventDefault()
       Store.save(Store.record).then(({user, en, es}) => {
@@ -46,6 +49,9 @@ const Form = inject("userStore", "globalStore")(
         console.log(err)
       })
     }
+    /**
+     *  Update handle method
+    */
     const handleUpdateSubmit = (e) => {
       e.preventDefault()
       Store.update(Store.record).then(({user, en, es}) => {
@@ -57,6 +63,19 @@ const Form = inject("userStore", "globalStore")(
         console.log(err)
       })
     }
+    /**
+     *  Used to define submit button text
+    */
+    var btnText
+    if (Store.submiting) {
+      btnText = <CircularProgress color={"secondary"}/>
+    } else {
+      if (globalStore.formMethod === 'create') {
+        btnText = 'GUARDAR'
+      } else {
+        btnText = 'ACTUALIZAR'
+      }
+    }
     return <ValidatorForm
                 className={classes.form}
                 onSubmit={globalStore.formMethod === 'create' ? handleCreateSubmit : handleUpdateSubmit}
@@ -64,8 +83,8 @@ const Form = inject("userStore", "globalStore")(
             >
               { Store.fields.map(field => {
                 return <CustomTextField store={store} key={field.label} field={field}/>
-                }
-              )}
+                })
+              }
             <Button
               type="submit"
               fullWidth
@@ -73,7 +92,7 @@ const Form = inject("userStore", "globalStore")(
               color="secondary"
               disabled={Store.submiting}
             >
-              { globalStore.formMethod === 'create' ? 'GUARDAR' : 'ACTUALIZAR' }
+              { btnText }
             </Button>
           </ValidatorForm>
     

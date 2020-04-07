@@ -1,4 +1,4 @@
-import { observable, action, decorate } from 'mobx';
+import { observable, action, decorate, autorun } from 'mobx';
 import axios from '../axios';
 
 class UserStore {
@@ -7,7 +7,6 @@ class UserStore {
   currentUser;
   loading;
   submiting;
-  deleting;
   record = {
     firstName: '',
     lastName: '',
@@ -31,71 +30,68 @@ class UserStore {
       name: 'firstName',
       label: 'Nombre',
       placeholder: 'Ingrese Nombre',
-      rules: 'required|string|between:2,20',
-      value: this.record.firstName,
+      rules: 'required|string|between:2,20',  
+      type: 'text'
     }, {
       name: 'lastName',
       label: 'Apellido',
       placeholder: 'Ingrese Apellido',
-      rules: 'required|string|between:2,20',
-      value: this.record.lastName,
+      rules: 'required|string|between:2,20',  
+      type: 'text'
     }, {
       name: 'userName',
       label: 'Usuario',
       placeholder: 'Ingrese Usuario',
-      rules: 'required|string|between:4,30',
-      value: this.record.userName,
+      rules: 'required|string|between:4,30',  
+      type: 'text'
     }, {
       name: 'email',
       label: 'Correo',
       placeholder: 'Ingrese Correo',
-      rules: 'required|email|string|between:5,25',
-      value: this.record.email,
+      rules: 'required|email|string|between:5,25',  
+      type: 'email'
     }, {
       name: 'password',
       label: 'Contraseña',
       placeholder: 'Ingrese Contraseña',
-      rules: 'required|string|between:5,25',
-      value: this.record.password,
+      rules: 'required|string|between:5,25',  
+      type: 'password'
     }, {
       name: 'idRole',
       label: 'Ocupación',
       placeholder: 'Seleccione Rol',
-      rules: 'required|number|max:1',
-      value: this.record.idRole,
+      rules: 'required|number|max:1', 
+      type: 'select'
     }, {
       name: 'available',
       label: 'Disponible',
       placeholder: '',
-      rules: 'boolean',
-      value: this.record.available,
+      rules: 'boolean', 
+      type: 'checkbox'
     }
   ];
+
+  constructor() {
+    autorun(reaction => {
+      /**
+       *  Used to get all users in db
+      */
+      this.loading = true;
+      axios.User.getAllUsers()
+      .then(( res ) => {
+        this.records = res
+        this.loading = false;
+      })
+      reaction.dispose()
+    })
+  }
+
+
   /**
    *  Function used to set value of record on input change
   */
   setField(name, value) {
     this.record[name] = value
-  }
-  /**
-   *  Function used to add a record to list of records
-  */
-  addRecords(record) {
-    const records = this.records
-    this.records = [ ...records, record ]
-  }
-  /**
-   *  Function used to update record in list of records
-  */
-  updateRecords(record) {
-    const records = this.records
-    records.find((row, i) => {
-      if (row.id === record.id) {
-        // console.log(i)
-        row =  record
-      }
-    })
-    console.log(records)
   }
   /**
    *  Function used to clear form inputs
@@ -121,7 +117,10 @@ class UserStore {
         this.submiting = false;
         return res
       }))
-      .catch((err) => console.log(err) )
+      .catch((err) => {
+        this.submiting = false;
+        console.log(err)
+      })
   }
   /**
    *  Function used to get current user info
@@ -133,6 +132,10 @@ class UserStore {
       this.currentUser = res.user.User;
       this.loading = false
     }))
+      .catch((err) => {
+        this.loading = false;
+        console.log(err)
+      })
   }
   /**
    *  Function used to get user by id
@@ -142,19 +145,12 @@ class UserStore {
     return axios.User.getUser(id)
     .then(( res ) => {
       this.record = res
+      this.loading = false;
     })
-    .finally(action(() => { this.loading = false; }))
-  }
-  /**
-   *  Function used to get all users in db
-  */
-  getAllUsers() {
-    this.loading = true;
-    return axios.User.getAllUsers()
-    .then(( res ) => {
-      this.records = res
+    .catch((err) => {
+      this.loading = false;
+      console.log(err)
     })
-    .finally(action(() => { this.loading = false; }))
   }
   /**
    *  Function used to update user info
@@ -166,7 +162,10 @@ class UserStore {
         this.submiting = false;
         return res
       }))
-      .catch((err) => console.log(err) )
+      .catch((err) => {
+        this.submiting = false;
+        console.log(err)
+      })
   }
   /**
    *  Function used to clear current user data
@@ -178,10 +177,47 @@ class UserStore {
    *  Function used to delete user
   */
   delete(id) {
+    this.loading = true;
     return axios.User.deleteUser(id) 
     .then(( res ) => {
+    this.loading = false;
       return res
     })
+    .catch((err) => {
+      this.loading = false;
+      console.log(err)
+
+    })
+  }
+  /**
+   *  Function used to add a record to list of records
+  */
+  addRecords(record) {
+    const records = this.records
+    this.records = [ ...records, record ]
+  }
+  /**
+   *  Function used to update record in list of records
+  */
+  updateRecords(record) {
+    const records = [...this.records]
+    records.find(row => {
+      if (row.id === record.id) {
+        row = { ...row, record }
+        console.log(row)
+      }
+    })
+    this.records = [...records]
+  }
+  /**
+   *  Function used to delete record in list of records
+  */
+  deleteRecords(record) {
+    const records = [...this.records]
+    const toDelete = records.find(row => row.id === record)
+    const index = records.indexOf(toDelete)
+    records.splice(index, 1)
+    this.records = [...records]
   }
 
 }
@@ -190,10 +226,9 @@ decorate(UserStore, {
   records: observable,
   currentUser: observable,
   loading: observable,
-  creating: observable,
-  deleting: observable,
-  updatingUserErrors: observable,
+  submiting: observable,
   record: observable,
+  updateRecords: action,
   setRecord: action,
   setForm: action,
   reset: action,

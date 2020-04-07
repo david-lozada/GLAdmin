@@ -51,7 +51,7 @@ const DataTable = inject("userStore", "globalStore")(
             title={globalStore.module}
             columns={Store.columns}
             data={Store.records}
-            isLoading={globalStore.tableLoading}
+            isLoading={Store.loading}
             options={{
               pageSizeOptions : [5],
               headerStyle: {
@@ -88,9 +88,7 @@ const DataTable = inject("userStore", "globalStore")(
                   function(){
                     globalStore.setTableLoaded()
                     Store.delete(rowData.id).then((res) => {
-                      const records = Store.records
-                      const index = records.indexOf(rowData)
-                      records.splice(index, 1)
+                      Store.deleteRecords(rowData.id)
                       globalStore.setTableLoaded()
                       alertify.success(res.es)
                     })
