@@ -38,7 +38,7 @@ const User = inject("userStore", "globalStore")(
       if (NEW_KEYS.includes(String(key))) {
         userStore.reset()
         globalStore.setIsUpdateSlide(false)
-        globalStore.swipeForm('Agregar Usuario', 'create')
+        globalStore.swipeOutForm('Agregar Usuario', 'create')
       }
     }
     useEventListener('keydown', handler);

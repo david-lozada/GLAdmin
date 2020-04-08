@@ -1,7 +1,7 @@
 import React from 'react';
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress, Grid } from '@material-ui/core';
 import alertify from 'alertifyjs'
 import { ValidatorForm } from 'react-material-ui-form-validator';
 
@@ -9,21 +9,40 @@ import { ValidatorForm } from 'react-material-ui-form-validator';
 import CustomTextField from './CustomTextField'
 
 const useStyles = makeStyles(theme => ({ 
+  root: {
+    color: theme.palette.secondary.main,
+    '& label.Mui-focused': {
+      color: theme.palette.secondary.main,
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: theme.palette.secondary.main,
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: theme.palette.primary.light,
+      },
+      '&:hover fieldset': {
+        borderColor: theme.palette.secondary.main,
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: theme.palette.secondary.main,
+      },
+    },
+    width: '100%', // Fix IE 11 issue.
+    padding: theme.spacing(3),
+  },
+  container: {
+    alignContent: "flex-end"
+  },
+  /*button: {
+    zIndex: 1,
+    transform: 'translateY(250%)'
+  },*/
   input: {
     color: '#fff',
     width: theme.spacing(25),
     marginLeft: theme.spacing(1),
   },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    padding: theme.spacing(3),
-  },
-  textInput: {
-    color: '#fff',
-  },
-  progress: {
-    indexZ: 1
-  }
 }));
 const Form = inject("userStore", "globalStore")(
     observer(({ store, userStore, globalStore }) => {
@@ -77,23 +96,30 @@ const Form = inject("userStore", "globalStore")(
       }
     }
     return <ValidatorForm
-                className={classes.form}
+                className={classes.root}
                 onSubmit={globalStore.formMethod === 'create' ? handleCreateSubmit : handleUpdateSubmit}
                 onError={errors => console.log(errors)}
             >
-              { Store.fields.map(field => {
-                return <CustomTextField store={store} key={field.label} field={field}/>
-                })
-              }
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="secondary"
-              disabled={Store.submiting}
-            >
-              { btnText }
-            </Button>
+            <Grid container spacing={1}> 
+              <Grid item xs={12}> 
+                { Store.fields.map((field, i) => {
+                  return <CustomTextField store={store} key={field.label} field={field} index={i}/>
+                  })
+                }
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  className={classes.button}
+                  type={"submit"}
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  disabled={Store.submiting}
+                >
+                  { btnText }
+                </Button>
+              </Grid>
+            </Grid>
           </ValidatorForm>
     
   })

@@ -18,33 +18,33 @@ export const mainListItems = (
     <Link to="/home/dashboard" style={link}>
       <ListItem button>
         <ListItemIcon>
-          <DashboardIcon />
+          <DashboardIcon color={"primary"}/>
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItem>
     </Link>
     <ListItem button>
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <ShoppingCartIcon  color={"primary"}/>
       </ListItemIcon>
       <ListItemText primary="Orders" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <PeopleIcon />
+        <PeopleIcon  color={"primary"}/>
       </ListItemIcon>
       <ListItemText primary="Customers" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <BarChartIcon />
+        <BarChartIcon  color={"primary"}/>
       </ListItemIcon>
       <ListItemText primary="Reports" />
     </ListItem>
     <Link to="/home/users"  color="inherit" style={link}>
       <ListItem button>
         <ListItemIcon>
-          <LayersIcon />
+          <LayersIcon  color={"primary"}/>
         </ListItemIcon>
         <ListItemText primary="Usuarios" />
       </ListItem>
@@ -57,19 +57,19 @@ export const secondaryListItems = (
     <ListSubheader inset>Reportes</ListSubheader>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <AssignmentIcon  color={"primary"}/>
       </ListItemIcon>
       <ListItemText primary="Current month" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <AssignmentIcon  color={"primary"}/>
       </ListItemIcon>
       <ListItemText primary="Last quarter" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
-        <AssignmentIcon />
+        <AssignmentIcon  color={"primary"}/>
       </ListItemIcon>
       <ListItemText primary="Year-end sale" />
     </ListItem>

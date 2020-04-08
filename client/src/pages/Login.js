@@ -87,6 +87,7 @@ const Login = inject("userStore", "authStore", "globalStore")(
             autoComplete="userName"
             autoFocus
             value={values.username} 
+            disabled={inProgress}
             onChange={handleUserNameChange}
           />
           <TextField
@@ -99,6 +100,7 @@ const Login = inject("userStore", "authStore", "globalStore")(
             type="password"
             id="password"
             autoComplete="current-password"
+            disabled={inProgress}
             value={values.password} 
             onChange={handlePasswordChange}
           />

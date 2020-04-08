@@ -10,10 +10,11 @@ const useStyles = makeStyles(theme => ({
     color: '#fff',
     width: theme.spacing(31),
     marginRight: theme.spacing(1),
+    // marginTop: theme.spacing(2),
   },
 }));
 const CustomTextField = inject("userStore", "globalStore")(
-    observer(({ store, userStore, globalStore, field }) => {
+    observer(({ store, userStore, globalStore, field, index }) => {
     const classes = useStyles();  
     switch(store){
       case 'userStore':
@@ -43,6 +44,7 @@ const CustomTextField = inject("userStore", "globalStore")(
                         id={field.name}
                         onChange={handleFieldChange}
                         value={Store.record[field.name]}
+                        checked={Store.record[field.name] ? true : false}
                     />
                   }
                   label={field.label}
@@ -124,6 +126,7 @@ const CustomTextField = inject("userStore", "globalStore")(
                   margin={"normal"}
                   name={field.name}
                   id={field.name}
+                  autoFocus={index === 0 ? true : false}
                   label={field.label}
                   autoComplete={field.name}
                   color={"secondary"}

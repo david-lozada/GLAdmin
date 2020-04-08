@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     ...theme.mixins.toolbar,
   },
   appBar: {
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.main,
     color: '#070707',
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   drawerPaper: {
-    backgroundColor: theme.palette.primary.darker,
+    backgroundColor: theme.palette.primary.dark,
     color: '#fff',
     position: 'relative',
     whiteSpace: 'nowrap',
@@ -83,7 +83,8 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: '100vh',
     overflow: 'auto',
-    backgroundColor: theme.palette.primary.dark,
+    backgroundColor: theme.palette.primary.main,
+    overflowY: 'hidden',
   },
 }));
 const Frame = inject("userStore", "authStore", "globalStore")(
@@ -164,7 +165,7 @@ const Frame = inject("userStore", "authStore", "globalStore")(
               { userNames }
             </Typography>
             <IconButton onClick={handleDrawerClose}>
-              <ChevronLeftIcon />
+              <ChevronLeftIcon color={"secondary"}/>
             </IconButton>
           </div>
           <Divider />

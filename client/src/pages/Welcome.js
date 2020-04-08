@@ -7,15 +7,17 @@ import { Container, Grid, Paper } from '@material-ui/core'
 import Login from './Login'
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    marginTop: '4%'
+  }
 }));
 
 const Welcome = () => {
   const classes = useStyles()
-  console.log(classes.wHeadline)
   return (
     <div className="w-background">
       <Container maxWidth="lg">
-        <Grid container>
+        <Grid container className={classes.container}>
           <Grid item md={8} lg={8} className="w-headline">
             ADMINISTRATIVE
           </Grid>

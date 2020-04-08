@@ -21,8 +21,7 @@ class UserStore {
       { title: "Nombre", field: "firstName" },
       { title: "Apellido", field: "lastName" },
       { title: "Correo", field: "email" },
-      { title: "Contraseña", field: "password" },
-      { title: "Rol", field: "idRole", lookup: { 1: "Master", 2: "Administrador", 3: "Empleado" }},
+      { title: "Ocupación", field: "idRole", lookup: { 1: "Master", 2: "Administrador", 3: "Empleado" }},
       { title: "Disponible", field: "available", type: "boolean" },
   ];
   fields = [
@@ -85,8 +84,6 @@ class UserStore {
       reaction.dispose()
     })
   }
-
-
   /**
    *  Function used to set value of record on input change
   */
@@ -194,20 +191,25 @@ class UserStore {
   */
   addRecords(record) {
     const records = this.records
+    delete record.password
     this.records = [ ...records, record ]
   }
   /**
    *  Function used to update record in list of records
   */
   updateRecords(record) {
-    const records = [...this.records]
-    records.find(row => {
+    const records = this.records
+    var updated = []
+    records.map(row => {
       if (row.id === record.id) {
-        row = { ...row, record }
-        console.log(row)
+        row = record
+        updated.push(row)
+      } else {
+        updated.push(row)
       }
+      return null
     })
-    this.records = [...records]
+    this.records = updated
   }
   /**
    *  Function used to delete record in list of records

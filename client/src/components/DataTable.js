@@ -1,20 +1,12 @@
 import React, { forwardRef } from 'react';
 import MaterialTable from "material-table";
 import { observer, inject } from "mobx-react"
-import { makeStyles } from '@material-ui/core/styles';
 import alertify from "alertifyjs";
+import theme from '../Theme';
 import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteOutline,
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
         from '@material-ui/icons';
 
-const useStyles = makeStyles(theme => ({
-  tableColor: {
-  	backgroundColor: theme.palette.primary.darker
-  },
-  icon: {
-    color: theme.palette.secondary.main
-  }
-}));
 const DataTable = inject("userStore", "globalStore")(
   observer(({ store, userStore, globalStore }) => {
   switch(store){
@@ -24,64 +16,94 @@ const DataTable = inject("userStore", "globalStore")(
     default:
       return null
   }
-  const classes = useStyles();
 	const tableIcons = {
-	    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-	    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-	    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-	    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-	    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-	    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-	    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-	    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-	    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-	    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-	    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-	    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-	    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-	    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-	    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-	    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-	    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+	    Add: forwardRef((props, ref) => <AddBox color={"secondary"} {...props} ref={ref} />),
+	    Check: forwardRef((props, ref) => <Check color={"primary"} {...props} ref={ref} />),
+	    Clear: forwardRef((props, ref) => <Clear color={"secondary"} {...props} ref={ref} />),
+	    Delete: forwardRef((props, ref) => <DeleteOutline color={"primary"} {...props} ref={ref} />),
+	    DetailPanel: forwardRef((props, ref) => <ChevronRight color={"secondary"} {...props} ref={ref} />),
+	    Edit: forwardRef((props, ref) => <Edit color={"primary"} {...props} ref={ref} />),
+	    Export: forwardRef((props, ref) => <SaveAlt color={"secondary"} {...props} ref={ref} />),
+	    Filter: forwardRef((props, ref) => <FilterList color={"secondary"} {...props} ref={ref} />),
+	    FirstPage: forwardRef((props, ref) => <FirstPage color={"secondary"} {...props} ref={ref} />),
+	    LastPage: forwardRef((props, ref) => <LastPage color={"secondary"} {...props} ref={ref} />),
+	    NextPage: forwardRef((props, ref) => <ChevronRight color={"secondary"} {...props} ref={ref} />),
+	    PreviousPage: forwardRef((props, ref) => <ChevronLeft color={"secondary"} {...props} ref={ref} />),
+	    ResetSearch: forwardRef((props, ref) => <Clear color={"secondary"} {...props} ref={ref} />),
+	    Search: forwardRef((props, ref) => <Search color={"secondary"} {...props} ref={ref} />),
+	    SortArrow: forwardRef((props, ref) => <ArrowDownward color={"secondary"} {...props} ref={ref} />),
+	    ThirdStateCheck: forwardRef((props, ref) => <Remove color={"secondary"} {...props} ref={ref} />),
+	    ViewColumn: forwardRef((props, ref) => <ViewColumn color={"secondary"} {...props} ref={ref} />)
 	};
     return (
         <MaterialTable
-            className={classes.tableColor}
+            style={{ backgroundColor: theme.palette.primary.dark, color: '#fff', padding: '2% 2% 2% 2%'}}
             icons={tableIcons}
             title={globalStore.module}
             columns={Store.columns}
             data={Store.records}
             isLoading={Store.loading}
             options={{
-              pageSizeOptions : [5],
+              minBodyHeight: 90,
+              pageSize: 10,
+              padding: 'dense',
+              pageSizeOptions : [10],
               headerStyle: {
+                backgroundColor: theme.palette.primary.dark, 
+                color: theme.palette.secondary.main,
+                fontWeight: 'bold'
+              },
+              searchFieldStyle: {
+                color: theme.palette.primary.light
               },
               rowStyle: {
-  	          }
+                borderColor: theme.palette.primary.main
+              },
+              exportButton: true,
+              exportAllData: true,
+              exportFileName: 'Usuarios'
+            }}
+            localization={{
+              pagination: {
+                labelRowsPerPage: 'Filas por página',
+                labelDisplayedRows: '{from}-{to} de {count}',
+                firstAriaLabel: 'Primera Página',
+                firstTooltip: 'Primera Página',
+                previousAriaLabel: 'Página Previa',
+                previousTooltip: 'Página Previa',
+                nextAriaLabel: 'Siguiente Página',
+                nextTooltip: 'Siguiente Página',
+                lastAriaLabel: 'Última Página',
+                lastTooltip: 'Última Página',
+              },
+              toolbar: {
+                searchTooltip: 'Buscar',
+                searchPlaceholder: 'Buscar',
+              }
             }}
             actions={[
               {
-                icon: 'add',
+                icon: tableIcons.Add,
                 tooltip: 'Agregar ' + globalStore.module,
                 isFreeAction: true,
                 onClick: (event) => {
                   Store.reset()
                   globalStore.setIsUpdateSlide(false)
-                  globalStore.swipeForm('Agregar ' + globalStore.module, 'create')
+                  globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
                 }
               },
               {
-    		        icon: 'edit',
+    		        icon: tableIcons.Edit,
     		        tooltip: 'Editar Usuario',
     		        onClick: (event, rowData) => {
                     Store.reset()
                     globalStore.setIsUpdateSlide(true)
-                    globalStore.swipeForm('Actualizar ' + globalStore.module, 'update')
+                    globalStore.swipeOutForm('Actualizar ' + globalStore.module, 'update')
                     Store.getRecord(rowData.id)
                 }
     		      },
               {
-                icon: 'delete',
+                icon: tableIcons.Delete,
                 tooltip: 'Eliminar ' + globalStore.module,
                 onClick: (event, rowData) => {
                   alertify.confirm("!ALERTA¡", "Desea eliminar "+ globalStore.module +"?",

@@ -32,23 +32,22 @@ class GlobalStore {
   }
 
   // Set values for table and form grids
-  swipeForm = (title, method) => {
-    /*if (this.gridCells.isOpen) {
-      if (this.gridCells.isUpdate) {*/
-        this.gridCells = {
-          table: 6,
-          form: 6,
-          isOpen: true
-        }
-      /*} else {
-        this.gridCells = {
-          table: 11,
-          form: 1,
-        }
-      }
-    }*/
+  swipeOutForm = (title, method) => {
+    this.gridCells = {
+      table: 6,
+      form: 6,
+      isOpen: true
+    }
     this.setFormMethod(method)
     this.setSlideTitle(title)
+  }
+
+  swipeInForm = () => {
+    this.gridCells = {
+      table: 11,
+      form: 1,
+      isOpen: false,
+    }
   }
 
   setIsUpdateSlide(bool) {
@@ -93,7 +92,8 @@ decorate(GlobalStore, {
   formMethod: observable,
   setFormMethod: action,
   setSlideTitle: action,
-  swipeForm: action,
+  swipeOutForm: action,
+  swipeInForm: action,
   setIsUpdateSlide: action,
   loadTags: action,
   setToken: action,
