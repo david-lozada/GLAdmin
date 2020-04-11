@@ -17,6 +17,8 @@ import Dashboard from './Dashboard'
 import User from './User'
 import Customer from './Customer'
 import Supplier from './Supplier'
+import Company from './Company'
+import Tax from './Tax'
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({ 
@@ -183,6 +185,8 @@ const Frame = inject("userStore", "authStore", "globalStore")(
               <Route path="/home/users" component={User} />
               <Route path="/home/customers" component={Customer} />
               <Route path="/home/suppliers" component={Supplier} />
+              <Route path="/home/companies" component={Company} />
+              <Route path="/home/taxes" component={Tax} />
               <Route component={Page404} />
             </Switch>
         </main>

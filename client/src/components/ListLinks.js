@@ -4,12 +4,10 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import LocalShipping from '@material-ui/icons/LocalShipping';
-import PeopleIcon from '@material-ui/icons/People';
-import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import { Dashboard as DashboardIcon, LocalShipping, People as PeopleIcon,
+          PeopleOutline as PeopleOutlineIcon, Assignment as AssignmentIcon, 
+          Business as BusinessIcon, MonetizationOn as MonetizationOnIcon  } from '@material-ui/icons';
+
 
 const link = { textDecoration: 'none', color: 'inherit' }
 
@@ -39,18 +37,28 @@ export const mainListItems = (
         <ListItemText primary="Clientes" />
       </ListItem>
     </Link>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon  color={"primary"}/>
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
+    <Link to="/home/companies"  color="inherit" style={link}>
+      <ListItem button>
+        <ListItemIcon>
+          <BusinessIcon  color={"primary"}/>
+        </ListItemIcon>
+        <ListItemText primary="Empresas" />
+      </ListItem>
+    </Link>
     <Link to="/home/users"  color="inherit" style={link}>
       <ListItem button>
         <ListItemIcon>
           <PeopleIcon  color={"primary"}/>
         </ListItemIcon>
         <ListItemText primary="Usuarios" />
+      </ListItem>
+    </Link>
+    <Link to="/home/taxes"  color="inherit" style={link}>
+      <ListItem button>
+        <ListItemIcon>
+          <MonetizationOnIcon  color={"primary"}/>
+        </ListItemIcon>
+        <ListItemText primary="Impuestos" />
       </ListItem>
     </Link>
   </div>

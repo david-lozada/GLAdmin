@@ -15,6 +15,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       formula: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       createdAt: {

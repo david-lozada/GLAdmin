@@ -31,12 +31,16 @@ var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 var customersRouter = require('./routes/customers');
 var suppliersRouter = require('./routes/suppliers');
+var companiesRouter = require('./routes/companies');
+var taxesRouter = require('./routes/taxes');
 
 //App Routes
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/customers', customersRouter);
 app.use('/suppliers', suppliersRouter);
+app.use('/companies', companiesRouter);
+app.use('/taxes', taxesRouter);
 // End Routes
 
 // catch 404 and forward to error handler

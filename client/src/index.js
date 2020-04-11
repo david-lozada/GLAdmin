@@ -11,6 +11,8 @@ import userStore from "./stores/userStore";
 import globalStore from "./stores/globalStore";
 import customerStore from "./stores/customerStore";
 import supplierStore from "./stores/supplierStore";
+import companyStore from "./stores/companyStore";
+import taxStore from "./stores/taxStore";
 
 const stores = {
     authStore,
@@ -18,10 +20,9 @@ const stores = {
     globalStore,
     customerStore,
     supplierStore,
+    companyStore,
+    taxStore,
 };
-// For easier debugging
-window._____APP_STATE_____ = stores;
-
 
 ReactDOM.render(
     <Provider {...stores}>

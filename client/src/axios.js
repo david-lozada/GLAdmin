@@ -98,9 +98,38 @@ const Supplier = {
   update: (supplier) =>
     requests.put('/suppliers/update',  supplier )
 };
+
+const Company = {
+  getAllRecords: () =>
+    requests.get('/companies/all'),
+  getRecord: (id) =>
+    requests.get('/companies/company/'+id),
+  delete: (id) =>
+    requests.delete('/companies/delete/'+id),
+  save: (data) =>
+    requests.post('/companies/create', data ),
+  update: (company) =>
+    requests.put('/companies/update',  company )
+};
+
+const Tax = {
+  getAllRecords: () =>
+    requests.get('/taxes/all'),
+  getRecord: (id) =>
+    requests.get('/taxes/tax/'+id),
+  delete: (id) =>
+    requests.delete('/taxes/delete/'+id),
+  save: (data) =>
+    requests.post('/taxes/create', data ),
+  update: (tax) =>
+    requests.put('/taxes/update',  tax )
+};
+
 export default {
   Auth,
   User,
   Customer,
   Supplier,
+  Company,
+  Tax,
 };

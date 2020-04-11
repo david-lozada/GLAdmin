@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
 
 const Dashboard = inject("globalStore")(
   observer(({ globalStore }) => {
-    globalStore.setModule('Dashboard')
+    globalStore.setModule('Inicio')
   	const classes = useStyles();
   	const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     return (

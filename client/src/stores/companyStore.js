@@ -1,50 +1,48 @@
 import { observable, action, decorate, autorun } from 'mobx';
 import axios from '../axios';
 
-class CustomerStore {
+class CompanyStore {
 
   records = [];
   currentUser;
   loading;
   submiting;
   record = {
-    idCardNumber: '',
-    firstName: '',
-    lastName: '',
+    documentNumber: '',
+    name: '',
     address: '',
     phoneNumber: '',
     email: '',
-    available: false,
+    website: '',
   };
   columns = [
       { title: "#", field: "id" },
-      { title: "Cédula", field: "idCardNumber" },
-      { title: "Nombres", field: "firstName" },
-      { title: "Apellidos", field: "lastName" },
+      { title: "RIF", field: "documentNumber" },
+      { title: "Nombre", field: "name" },
+      { title: "Dirección", field: "address" },
       { title: "Teléfono", field: "phoneNumber" },
       { title: "Correo", field: "email" },
-      { title: "Dirección", field: "address" },
-      { title: "Disponible", field: "available", type: "boolean" },
+      { title: "Sitio Web", field: "website" },
   ];
   fields = [
     {
-      name: 'idCardNumber',
-      label: 'Cédula',
-      placeholder: 'Ingrese Cédula',
+      name: 'documentNumber',
+      label: 'RIF',
+      placeholder: 'Ingrese RIF',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
-      name: 'firstName',
-      label: 'Nombres',
+      name: 'name',
+      label: 'Empresa',
       placeholder: 'Ingrese Apellido',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
-      name: 'lastName',
-      label: 'Apellidos',
-      placeholder: 'Ingrese Apellido',
-      rules: 'required|string|between:2,20',  
-      type: 'text'
+      name: 'email',
+      label: 'Correo',
+      placeholder: 'Ingrese Correo',
+      rules: 'required|string|between:5,25',  
+      type: 'email'
     }, {
       name: 'address',
       label: 'Dirección',
@@ -58,18 +56,12 @@ class CustomerStore {
       rules: 'required|email|string|between:5,25',  
       type: 'text'
     }, {
-      name: 'email',
-      label: 'Correo',
-      placeholder: 'Ingrese Correo',
-      rules: 'required|string|between:5,25',  
-      type: 'email'
-    }, {
-      name: 'available',
-      label: 'Disponible',
-      placeholder: '',
-      rules: 'boolean', 
-      type: 'checkbox'
-    }
+      name: 'website',
+      label: 'Sitio Web',
+      placeholder: 'Ingrese Sitio Web',
+      rules: 'notRequired|string|between:5,25',  
+      type: 'text'
+    }, 
   ];
 
   constructor() {
@@ -78,7 +70,7 @@ class CustomerStore {
        *  Used to get all users in db
       */
       this.loading = true;
-      axios.Customer.getAllRecords()
+      axios.Company.getAllRecords()
       .then(( res ) => {
         this.records = res
         this.loading = false;
@@ -101,13 +93,12 @@ class CustomerStore {
   */
   reset() {
     this.record = {
-      idCardNumber: '',
-      firstName: '',
-      lastName: '',
+      documentNumber: '',
+      name: '',
       address: '',
       phoneNumber: '',
       email: '',
-      available: false,
+      website: '',
     };
   }
   /**
@@ -115,7 +106,7 @@ class CustomerStore {
   */
   save(record) {
     this.submiting = true;
-     return axios.Customer.save(record)
+     return axios.Company.save(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -130,7 +121,7 @@ class CustomerStore {
   */
   getRecord(id) {
     this.loading = true;
-    return axios.Customer.getRecord(id)
+    return axios.Company.getRecord(id)
     .then(( res ) => {
       this.record = res
       this.loading = false;
@@ -145,7 +136,7 @@ class CustomerStore {
   */
   update(record) {
     this.submiting = true;
-     return axios.Customer.update(record)
+     return axios.Company.update(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -160,7 +151,7 @@ class CustomerStore {
   */
   delete(id) {
     this.loading = true;
-    return axios.Customer.delete(id) 
+    return axios.Company.delete(id) 
     .then(( res ) => {
     this.loading = false;
       return res
@@ -209,7 +200,7 @@ class CustomerStore {
 
 }
 
-decorate(CustomerStore, {
+decorate(CompanyStore, {
   records: observable,
   loading: observable,
   submiting: observable,
@@ -224,4 +215,4 @@ decorate(CustomerStore, {
   update: action,
 })
 
-export default new CustomerStore();
+export default new CompanyStore();

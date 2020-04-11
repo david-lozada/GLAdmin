@@ -37,8 +37,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
   },
 }));
-const Form = inject("userStore", "globalStore", "customerStore", "supplierStore")(
-    observer(({ store, userStore, globalStore, customerStore, supplierStore }) => {
+const Form = inject("userStore", "globalStore", "customerStore", "supplierStore", "companyStore", "taxStore")(
+    observer(({ store, userStore, globalStore, customerStore, supplierStore, companyStore, taxStore }) => {
     const classes = useStyles();  
     var Store
     switch(store){
@@ -51,6 +51,12 @@ const Form = inject("userStore", "globalStore", "customerStore", "supplierStore"
       case 'supplierStore':
         Store = supplierStore
         break
+      case 'companyStore':
+        Store = companyStore
+        break
+      case 'taxStore':
+        Store = taxStore
+        break
       default:
         return null
     }
@@ -59,10 +65,12 @@ const Form = inject("userStore", "globalStore", "customerStore", "supplierStore"
     */
     const handleCreateSubmit = (e) => {
       e.preventDefault()
-      Store.save(Store.record).then(({record, en, es}) => {
+      Store.save(Store.record).then((res) => {
         Store.reset()
-        Store.addRecord(record)
-        alertify.success(es)
+        if (res.record){
+          Store.addRecord(res.record)
+        }
+        alertify.success(res.es)
       })
       .catch((err) => {
         console.log(err)

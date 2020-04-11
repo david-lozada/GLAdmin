@@ -13,8 +13,8 @@ const useStyles = makeStyles(theme => ({
     // marginTop: theme.spacing(2),
   },
 }));
-const CustomTextField = inject("userStore", "globalStore", "customerStore", "supplierStore")(
-    observer(({ store, customerStore, userStore, globalStore, supplierStore, field, index }) => {
+const CustomTextField = inject("userStore", "globalStore", "customerStore", "supplierStore", "companyStore", "taxStore")(
+    observer(({ store, customerStore, userStore, globalStore, supplierStore, companyStore, taxStore, field, index }) => {
     const classes = useStyles();  
     var Store
     switch(store){
@@ -26,6 +26,12 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
         break
       case 'supplierStore':
         Store = supplierStore
+        break
+      case 'companyStore':
+        Store = companyStore
+        break
+      case 'taxStore':
+        Store = taxStore
         break
       default:
         return null
@@ -125,6 +131,24 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                   <MenuItem value={2}>Administrador</MenuItem>
                   <MenuItem value={3}>Empleado</MenuItem>
                 </SelectValidator>
+      case 'number':
+        return <TextValidator
+                  validators={ required ? ['required'] : []}
+                  errorMessages={ required ? ['Campo requerido'] : []}
+                  variant={"outlined"}
+                  margin={"normal"}
+                  name={field.name}
+                  id={field.name}
+                  autoFocus={index === 0 ? true : false}
+                  label={field.label}
+                  autoComplete={field.name}
+                  color={"secondary"}
+                  type={"number"}
+                  value={Store.record[field.name] || ''}
+                  InputProps={{className: classes.input}}
+                  onChange={handleFieldChange}
+                  disabled={Store.submiting}
+                />
       default:
         return <TextValidator
                   validators={ required ? ['required'] : []}
@@ -137,7 +161,7 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                   label={field.label}
                   autoComplete={field.name}
                   color={"secondary"}
-                  value={Store.record[field.name]}
+                  value={Store.record[field.name] || ''}
                   InputProps={{className: classes.input}}
                   onChange={handleFieldChange}
                   disabled={Store.submiting}

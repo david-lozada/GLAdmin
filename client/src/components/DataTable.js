@@ -7,8 +7,8 @@ import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteO
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
         from '@material-ui/icons';
 
-const DataTable = inject("userStore", "customerStore", "globalStore", "supplierStore")(
-  observer(({ store, userStore, customerStore, globalStore, supplierStore }) => {
+const DataTable = inject("userStore", "customerStore", "globalStore", "supplierStore", "companyStore", "taxStore")(
+  observer(({ store, userStore, customerStore, globalStore, supplierStore, companyStore, taxStore }) => {
   var Store
   switch(store){
     case 'userStore':
@@ -19,6 +19,12 @@ const DataTable = inject("userStore", "customerStore", "globalStore", "supplierS
       break
     case 'supplierStore':
       Store = supplierStore
+      break
+    case 'companyStore':
+      Store = companyStore
+      break
+    case 'taxStore':
+      Store = taxStore
       break
     default:
       return null

@@ -8,8 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     paymentMethod: DataTypes.INTEGER,
     status: DataTypes.INTEGER
   }, {});
-  PurchaseOrder.associate = function(models) {
+  PurchaseOrder.associate = function({ AccountsPayable }) {
     // associations can be defined here
+    PurchaseOrder.hasMany(AccountsPayable,  {as: 'purchaseOrder',foreignKey: 'idPurchaseOrder'});
   };
   return PurchaseOrder;
 };

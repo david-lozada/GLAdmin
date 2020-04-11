@@ -8,8 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     credit: DataTypes.DECIMAL,
     status: DataTypes.INTEGER
   }, {});
-  AccountsPayable.associate = function(models) {
+  AccountsPayable.associate = function({ PurchaseOrder }) {
     // associations can be defined here
+    AccountsPayable.belongsTo(PurchaseOrder,  {as: 'purchaseOrder',foreignKey: 'idPurchaseOrder'});
   };
   return AccountsPayable;
 };
