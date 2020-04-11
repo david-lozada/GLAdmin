@@ -22,8 +22,8 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Drawer = inject("userStore", "globalStore")(
-  observer(({ store, userStore, globalStore }) => {
+const Drawer = inject("globalStore")(
+  observer(({ store, globalStore }) => {
   const classes = useStyles();  
   return (
     <Slide direction="left" in={globalStore.gridCells.isOpen} mountOnEnter unmountOnExit>
@@ -40,7 +40,7 @@ const Drawer = inject("userStore", "globalStore")(
             </IconButton>
           </Grid>
         </Grid>
-        <Form store={"userStore"}/>
+        <Form store={store}/>
       </Paper>
     </Slide>
   );

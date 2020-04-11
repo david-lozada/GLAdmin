@@ -7,11 +7,18 @@ import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteO
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
         from '@material-ui/icons';
 
-const DataTable = inject("userStore", "globalStore")(
-  observer(({ store, userStore, globalStore }) => {
+const DataTable = inject("userStore", "customerStore", "globalStore", "supplierStore")(
+  observer(({ store, userStore, customerStore, globalStore, supplierStore }) => {
+  var Store
   switch(store){
     case 'userStore':
-      var Store = userStore
+      Store = userStore
+      break
+    case 'customerStore':
+      Store = customerStore
+      break
+    case 'supplierStore':
+      Store = supplierStore
       break
     default:
       return null
@@ -110,7 +117,7 @@ const DataTable = inject("userStore", "globalStore")(
                   function(){
                     globalStore.setTableLoaded()
                     Store.delete(rowData.id).then((res) => {
-                      Store.deleteRecords(rowData.id)
+                      Store.deleteRecord(rowData.id)
                       globalStore.setTableLoaded()
                       alertify.success(res.es)
                     })

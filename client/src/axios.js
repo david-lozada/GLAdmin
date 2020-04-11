@@ -65,7 +65,7 @@ const User = {
     requests.get('/users/all'),
   getUser: (id) =>
     requests.get('/users/user/'+id),
-  deleteUser: (id) =>
+  delete: (id) =>
     requests.delete('/users/delete/'+id),
   save: (data) =>
     requests.post('/users/create', data ),
@@ -73,7 +73,34 @@ const User = {
     requests.put('/users/update',  user )
 };
 
+const Customer = {
+  getAllRecords: () =>
+    requests.get('/customers/all'),
+  getRecord: (id) =>
+    requests.get('/customers/customer/'+id),
+  delete: (id) =>
+    requests.delete('/customers/delete/'+id),
+  save: (data) =>
+    requests.post('/customers/create', data ),
+  update: (customer) =>
+    requests.put('/customers/update',  customer )
+};
+
+const Supplier = {
+  getAllRecords: () =>
+    requests.get('/suppliers/all'),
+  getRecord: (id) =>
+    requests.get('/suppliers/supplier/'+id),
+  delete: (id) =>
+    requests.delete('/suppliers/delete/'+id),
+  save: (data) =>
+    requests.post('/suppliers/create', data ),
+  update: (supplier) =>
+    requests.put('/suppliers/update',  supplier )
+};
 export default {
   Auth,
   User,
+  Customer,
+  Supplier,
 };

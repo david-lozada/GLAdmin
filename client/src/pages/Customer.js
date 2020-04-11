@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid/*, Button*/ } from '@material-ui/core'
+import { Container, Grid } from '@material-ui/core'
 
 // Components
 import DataTable from '../components/DataTable'
@@ -29,35 +29,34 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const User = inject("userStore", "globalStore")(
-  observer(({ userStore, globalStore }) => {
-    globalStore.setModule('Usuario')
+const Customer = inject("customerStore", "globalStore")(
+  observer(({ customerStore, globalStore }) => {
+    globalStore.setModule('Cliente')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];
     function handler({ key }) {
       if (NEW_KEYS.includes(String(key))) {
         globalStore.setIsUpdateSlide(false)
         globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
-        userStore.reset()
+        customerStore.reset()
       }
     }
     useEventListener('keydown', handler);
 
   	const classes = useStyles();
-    // console.log(swipe);
     return (
-        <Container maxWidth="lg" className={classes.container}>
-            <Grid container spacing={1}> 
-              <Grid item xs={globalStore.gridCells.table}> 
-                <DataTable store={"userStore"}/>
-              </Grid>
-              <Grid item xs={globalStore.gridCells.form}> 
-                <Slide store={"userStore"}/>
-              </Grid>
+      <Container maxWidth="lg" className={classes.container}>
+          <Grid container spacing={1}> 
+            <Grid item xs={globalStore.gridCells.table}> 
+              <DataTable store={"customerStore"}/>
             </Grid>
-        </Container>
+            <Grid item xs={globalStore.gridCells.form}> 
+              <Slide store={"customerStore"}/>
+            </Grid>
+          </Grid>
+      </Container>
     )
 })
 )
 
-export default withRouter(User)
+export default withRouter(Customer)

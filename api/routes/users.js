@@ -20,6 +20,6 @@ router.get('/all', user_controller.getAllUsers);
 router.get('/user/:id', user_controller.getUser);
 
 /* DELETE user */
-router.delete('/delete/:id', user_controller.deleteUser);
+router.delete('/delete/:id', user_controller.delete);
 
 module.exports = router;

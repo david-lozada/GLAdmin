@@ -29,10 +29,14 @@ app.use(customAuthMiddleware);
 // Routes Files
 var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
+var customersRouter = require('./routes/customers');
+var suppliersRouter = require('./routes/suppliers');
 
 //App Routes
-app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/users', usersRouter);
+app.use('/customers', customersRouter);
+app.use('/suppliers', suppliersRouter);
 // End Routes
 
 // catch 404 and forward to error handler

@@ -9,9 +9,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       documentNumber: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      name: {
+      companyName: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      firstName: {
+        allowNull: true,
+        type: Sequelize.STRING
+      },
+      lastName: {
+        allowNull: true,
         type: Sequelize.STRING
       },
       address: {
@@ -22,6 +32,10 @@ module.exports = {
       },
       email: {
         type: Sequelize.STRING
+      },
+      available: {]
+        type: Sequelize.BOOLEAN,
+        default: true
       },
       createdAt: {
         allowNull: false,

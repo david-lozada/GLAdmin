@@ -1,4 +1,5 @@
 import { decorate, observable, action } from "mobx";
+import alertify from 'alertifyjs'
 
 // Stores
 import globalStore from "./globalStore";
@@ -7,7 +8,7 @@ import userStore from "./userStore";
 
 class AuthStore {
   inProgress = false;
-  errors = undefined;
+  errors = '';
   values = {
     username: '',
     password: '',
@@ -35,8 +36,8 @@ class AuthStore {
         window.localStorage.setItem('userData', JSON.stringify(user))
       })
       .catch(action((err) => {
-        this.errors = err.response && err.response.body && err.response.body.errors;
-        throw err;
+        /* TODO: Display response data in alert */
+        alertify.error('Error en datos ingresados')
       }))
       .finally(action(() => { this.inProgress = false; }));
   }

@@ -9,11 +9,15 @@ import { BrowserRouter as Router } from "react-router-dom";
 import authStore from "./stores/authStore";
 import userStore from "./stores/userStore";
 import globalStore from "./stores/globalStore";
+import customerStore from "./stores/customerStore";
+import supplierStore from "./stores/supplierStore";
 
 const stores = {
     authStore,
     userStore,
-    globalStore
+    globalStore,
+    customerStore,
+    supplierStore,
 };
 // For easier debugging
 window._____APP_STATE_____ = stores;

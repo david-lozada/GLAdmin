@@ -13,12 +13,19 @@ const useStyles = makeStyles(theme => ({
     // marginTop: theme.spacing(2),
   },
 }));
-const CustomTextField = inject("userStore", "globalStore")(
-    observer(({ store, userStore, globalStore, field, index }) => {
+const CustomTextField = inject("userStore", "globalStore", "customerStore", "supplierStore")(
+    observer(({ store, customerStore, userStore, globalStore, supplierStore, field, index }) => {
     const classes = useStyles();  
+    var Store
     switch(store){
       case 'userStore':
-        var Store = userStore
+        Store = userStore
+        break
+      case 'customerStore':
+        Store = customerStore
+        break
+      case 'supplierStore':
+        Store = supplierStore
         break
       default:
         return null
@@ -120,8 +127,8 @@ const CustomTextField = inject("userStore", "globalStore")(
                 </SelectValidator>
       default:
         return <TextValidator
-                  validators={ required ? ['required'] : null}
-                  errorMessages={ required ? ['Campo requerido'] : null}
+                  validators={ required ? ['required'] : []}
+                  errorMessages={ required ? ['Campo requerido'] : []}
                   variant={"outlined"}
                   margin={"normal"}
                   name={field.name}

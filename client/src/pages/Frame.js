@@ -10,10 +10,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { mainListItems, secondaryListItems } from '../components/ListLinks';
+
 // Components
+import Page404 from './Page404'
 import Dashboard from './Dashboard'
 import User from './User'
-import Page404 from './Page404'
+import Customer from './Customer'
+import Supplier from './Supplier'
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({ 
@@ -178,6 +181,8 @@ const Frame = inject("userStore", "authStore", "globalStore")(
             <Switch>
               <Route path="/home/dashboard" component={Dashboard} />
               <Route path="/home/users" component={User} />
+              <Route path="/home/customers" component={Customer} />
+              <Route path="/home/suppliers" component={Supplier} />
               <Route component={Page404} />
             </Switch>
         </main>

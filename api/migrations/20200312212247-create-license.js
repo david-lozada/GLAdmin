@@ -11,6 +11,10 @@ module.exports = {
       code: {
         type: Sequelize.STRING
       },
+      idCompany: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       available: {
         type: Sequelize.BOOLEAN
       },

@@ -9,19 +9,32 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       idCardNumber: {
+        allowNull: false,
         type: Sequelize.STRING
       },
-      name: {
+      firstName: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      lastName: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       address: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       phoneNumber: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      available: {
+        type: Sequelize.BOOLEAN,
+        default: true
       },
       createdAt: {
         allowNull: false,

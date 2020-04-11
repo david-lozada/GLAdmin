@@ -1,66 +1,68 @@
 import { observable, action, decorate, autorun } from 'mobx';
 import axios from '../axios';
 
-class UserStore {
+class CustomerStore {
 
   records = [];
   currentUser;
   loading;
   submiting;
   record = {
+    idCardNumber: '',
     firstName: '',
     lastName: '',
-    userName: '',
-    password: '',
+    address: '',
+    phoneNumber: '',
     email: '',
-    idRole: '',
-    available: '',
+    available: false,
   };
   columns = [
       { title: "#", field: "id" },
-      { title: "Nombre", field: "firstName" },
-      { title: "Apellido", field: "lastName" },
+      { title: "Cédula", field: "idCardNumber" },
+      { title: "Nombres", field: "firstName" },
+      { title: "Apellidos", field: "lastName" },
+      { title: "Teléfono", field: "phoneNumber" },
       { title: "Correo", field: "email" },
-      { title: "Ocupación", field: "idRole", lookup: { 1: "Master", 2: "Administrador", 3: "Empleado" }},
+      { title: "Dirección", field: "address" },
       { title: "Disponible", field: "available", type: "boolean" },
   ];
   fields = [
     {
-      name: 'firstName',
-      label: 'Nombre',
-      placeholder: 'Ingrese Nombre',
+      name: 'idCardNumber',
+      label: 'Cédula',
+      placeholder: 'Ingrese Cédula',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
-      name: 'lastName',
-      label: 'Apellido',
+      name: 'firstName',
+      label: 'Nombres',
       placeholder: 'Ingrese Apellido',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
-      name: 'userName',
-      label: 'Usuario',
-      placeholder: 'Ingrese Usuario',
+      name: 'lastName',
+      label: 'Apellidos',
+      placeholder: 'Ingrese Apellido',
+      rules: 'required|string|between:2,20',  
+      type: 'text'
+    }, {
+      name: 'address',
+      label: 'Dirección',
+      placeholder: 'Ingrese Dirección',
       rules: 'required|string|between:4,30',  
+      type: 'text'
+    }, {
+      name: 'phoneNumber',
+      label: 'Télefono',
+      placeholder: 'Ingrese Correo',
+      rules: 'required|email|string|between:5,25',  
       type: 'text'
     }, {
       name: 'email',
       label: 'Correo',
       placeholder: 'Ingrese Correo',
-      rules: 'required|email|string|between:5,25',  
-      type: 'email'
-    }, {
-      name: 'password',
-      label: 'Contraseña',
-      placeholder: 'Ingrese Contraseña',
       rules: 'required|string|between:5,25',  
-      type: 'password'
-    }, {
-      name: 'idRole',
-      label: 'Ocupación',
-      placeholder: 'Seleccione Rol',
-      rules: 'required|number|max:1', 
-      type: 'select'
+      type: 'email'
     }, {
       name: 'available',
       label: 'Disponible',
@@ -76,7 +78,7 @@ class UserStore {
        *  Used to get all users in db
       */
       this.loading = true;
-      axios.User.getAllUsers()
+      axios.Customer.getAllRecords()
       .then(( res ) => {
         this.records = res
         this.loading = false;
@@ -99,12 +101,12 @@ class UserStore {
   */
   reset() {
     this.record = {
+      idCardNumber: '',
       firstName: '',
       lastName: '',
-      userName: '',
-      password: '',
+      address: '',
+      phoneNumber: '',
       email: '',
-      idRole: '',
       available: false,
     };
   }
@@ -113,7 +115,7 @@ class UserStore {
   */
   save(record) {
     this.submiting = true;
-     return axios.User.save(record)
+     return axios.Customer.save(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -124,26 +126,11 @@ class UserStore {
       })
   }
   /**
-   *  Function used to get current user info
-  */
-  pullUser() {
-    this.loading = true;
-    return axios.User.current()
-    .then(action(( res ) => { 
-      this.currentUser = res.user.User;
-      this.loading = false
-    }))
-      .catch((err) => {
-        this.loading = false;
-        console.log(err)
-      })
-  }
-  /**
    *  Function used to get user by id
   */
   getRecord(id) {
     this.loading = true;
-    return axios.User.getUser(id)
+    return axios.Customer.getRecord(id)
     .then(( res ) => {
       this.record = res
       this.loading = false;
@@ -156,9 +143,9 @@ class UserStore {
   /**
    *  Function used to update user info
   */
-  update(user) {
+  update(record) {
     this.submiting = true;
-     return axios.User.update(user)
+     return axios.Customer.update(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -169,17 +156,11 @@ class UserStore {
       })
   }
   /**
-   *  Function used to clear current user data
-  */
-  forgetUser() {
-    this.currentUser = undefined;
-  }
-  /**
    *  Function used to delete user
   */
   delete(id) {
     this.loading = true;
-    return axios.User.delete(id) 
+    return axios.Customer.delete(id) 
     .then(( res ) => {
     this.loading = false;
       return res
@@ -228,9 +209,8 @@ class UserStore {
 
 }
 
-decorate(UserStore, {
+decorate(CustomerStore, {
   records: observable,
-  currentUser: observable,
   loading: observable,
   submiting: observable,
   record: observable,
@@ -239,11 +219,9 @@ decorate(UserStore, {
   deleteRecord: action,
   reset: action,
   save: action,
-  getUser: action,
+  getRecord: action,
   delete: action,
-  pullUser: action,
   update: action,
-  forgetUser: action,
 })
 
-export default new UserStore();
+export default new CustomerStore();

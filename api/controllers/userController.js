@@ -40,13 +40,13 @@ exports.create = async function (req, res) {
         if (created) {
             delete user.password
             return res.status(201).json({
-                user,
+                record: user,
                 en: 'User has been created',
                 es: 'Usuario creado'
             });
         } else {
             return res.status(301).json({
-                user,
+                record: user,
                 en: 'User already exists',
                 es: 'El usuario ya existe'
             });
@@ -86,7 +86,7 @@ exports.getAllUsers = async function(req, res) {
 }
 
 // Get all users
-exports.deleteUser = async function(req, res) {
+exports.delete = async function(req, res) {
     try {
         const user = await User.findOne({
             where: { id: req.params.id }
@@ -112,7 +112,7 @@ exports.update = async function(req, res) {
         if (user) {
             user.update(req.body);
             return res.status(200).json({
-                user,
+                record: user,
                 en: 'User has been updated',
                 es: 'Usuario actualizado'
             });

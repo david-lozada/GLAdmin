@@ -5,10 +5,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import LocalShipping from '@material-ui/icons/LocalShipping';
 import PeopleIcon from '@material-ui/icons/People';
+import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
 const link = { textDecoration: 'none', color: 'inherit' }
@@ -20,21 +20,25 @@ export const mainListItems = (
         <ListItemIcon>
           <DashboardIcon color={"primary"}/>
         </ListItemIcon>
-        <ListItemText primary="Dashboard" />
+        <ListItemText primary="Inicio" />
       </ListItem>
     </Link>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon  color={"primary"}/>
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon  color={"primary"}/>
-      </ListItemIcon>
-      <ListItemText primary="Customers" />
-    </ListItem>
+    <Link to="/home/suppliers"  color="inherit" style={link}>
+      <ListItem button>
+        <ListItemIcon>
+          <LocalShipping  color={"primary"}/>
+        </ListItemIcon>
+        <ListItemText primary="Proveedores" />
+      </ListItem>
+    </Link>
+    <Link to="/home/customers"  color="inherit" style={link}>
+      <ListItem button>
+        <ListItemIcon>
+          <PeopleOutlineIcon  color={"primary"}/>
+        </ListItemIcon>
+        <ListItemText primary="Clientes" />
+      </ListItem>
+    </Link>
     <ListItem button>
       <ListItemIcon>
         <BarChartIcon  color={"primary"}/>
@@ -44,7 +48,7 @@ export const mainListItems = (
     <Link to="/home/users"  color="inherit" style={link}>
       <ListItem button>
         <ListItemIcon>
-          <LayersIcon  color={"primary"}/>
+          <PeopleIcon  color={"primary"}/>
         </ListItemIcon>
         <ListItemText primary="Usuarios" />
       </ListItem>

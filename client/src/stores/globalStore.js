@@ -7,8 +7,6 @@ class GlobalStore {
   module = ''
   token = window.localStorage.getItem('token');
   appLoaded = false;
-  tags = [];
-  isLoadingTags = false;
   slideTitle = ''
   formMethod = '';
   gridCells = {
@@ -84,9 +82,7 @@ decorate(GlobalStore, {
   token: observable,
   module: observable,
   appLoaded: observable,
-  tags: observable,
   tableLoading: observable,
-  isLoadingTags: observable,
   gridCells: observable,
   slideTitle: observable,
   formMethod: observable,
@@ -95,7 +91,6 @@ decorate(GlobalStore, {
   swipeOutForm: action,
   swipeInForm: action,
   setIsUpdateSlide: action,
-  loadTags: action,
   setToken: action,
   setModule: action,
   setAppLoaded: action

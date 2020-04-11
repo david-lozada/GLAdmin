@@ -31,25 +31,25 @@ const useStyles = makeStyles(theme => ({
     width: '100%', // Fix IE 11 issue.
     padding: theme.spacing(3),
   },
-  container: {
-    alignContent: "flex-end"
-  },
-  /*button: {
-    zIndex: 1,
-    transform: 'translateY(250%)'
-  },*/
   input: {
     color: '#fff',
     width: theme.spacing(25),
     marginLeft: theme.spacing(1),
   },
 }));
-const Form = inject("userStore", "globalStore")(
-    observer(({ store, userStore, globalStore }) => {
+const Form = inject("userStore", "globalStore", "customerStore", "supplierStore")(
+    observer(({ store, userStore, globalStore, customerStore, supplierStore }) => {
     const classes = useStyles();  
+    var Store
     switch(store){
       case 'userStore':
-        var Store = userStore
+        Store = userStore
+        break
+      case 'customerStore':
+        Store = customerStore
+        break
+      case 'supplierStore':
+        Store = supplierStore
         break
       default:
         return null
@@ -59,9 +59,9 @@ const Form = inject("userStore", "globalStore")(
     */
     const handleCreateSubmit = (e) => {
       e.preventDefault()
-      Store.save(Store.record).then(({user, en, es}) => {
+      Store.save(Store.record).then(({record, en, es}) => {
         Store.reset()
-        Store.addRecords(user)
+        Store.addRecord(record)
         alertify.success(es)
       })
       .catch((err) => {
@@ -73,9 +73,11 @@ const Form = inject("userStore", "globalStore")(
     */
     const handleUpdateSubmit = (e) => {
       e.preventDefault()
-      Store.update(Store.record).then(({user, en, es}) => {
+      Store.update(Store.record).then(({record, en, es}) => {
         Store.reset()
-        Store.updateRecords(user)
+        Store.updateRecord(record)
+        globalStore.setFormMethod('create')
+        globalStore.setSlideTitle('Agregar ' + globalStore.module)
         alertify.success(es)
       })
       .catch((err) => {
