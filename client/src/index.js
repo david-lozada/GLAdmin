@@ -13,6 +13,7 @@ import customerStore from "./stores/customerStore";
 import supplierStore from "./stores/supplierStore";
 import companyStore from "./stores/companyStore";
 import taxStore from "./stores/taxStore";
+import roleStore from "./stores/roleStore";
 
 const stores = {
     authStore,
@@ -22,6 +23,7 @@ const stores = {
     supplierStore,
     companyStore,
     taxStore,
+    roleStore,
 };
 
 ReactDOM.render(

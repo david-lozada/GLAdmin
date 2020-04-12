@@ -9,16 +9,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { mainListItems, secondaryListItems } from '../components/ListLinks';
-
-// Components
+import Navegation from '../components/Navegation';
+import { uniqBy } from 'lodash';
+import rolesConfig from '../config/rolesConfig';
+import * as Routes from '../components/PrivateComponents';
 import Page404 from './Page404'
-import Dashboard from './Dashboard'
-import User from './User'
-import Customer from './Customer'
-import Supplier from './Supplier'
-import Company from './Company'
-import Tax from './Tax'
 
 const drawerWidth = 240;
 const useStyles = makeStyles(theme => ({ 
@@ -92,8 +87,8 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'hidden',
   },
 }));
-const Frame = inject("userStore", "authStore", "globalStore")(
-  observer(({ authStore, userStore, globalStore }) => {
+const Frame = inject("userStore", "authStore", "globalStore", "roleStore")(
+  observer(({ match, authStore, userStore, globalStore, roleStore }) => {
   const history = useHistory();
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
@@ -118,6 +113,17 @@ const Frame = inject("userStore", "authStore", "globalStore")(
     userStore.forgetUser();
     history.push('/')
   }
+  const roles = roleStore.roles;
+
+  let allowedRoutes = roles.reduce((acc, role) => {
+    return [
+      ...acc,
+      ...rolesConfig[role].routes
+    ]
+  }, []);
+
+  // For removing duplicate entries.
+  allowedRoutes = uniqBy(allowedRoutes, 'component');
   return (
     <Router>
       <div className={classes.root}>
@@ -174,21 +180,26 @@ const Frame = inject("userStore", "authStore", "globalStore")(
             </IconButton>
           </div>
           <Divider />
-          <List>{mainListItems}</List>
+          <List>
+            <Navegation routes={allowedRoutes} match={match}/>
+          </List>
           <Divider />
-          <List>{secondaryListItems}</List>
+          {/*<List>{secondaryListItems}</List>*/}
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-            <Switch>
-              <Route path="/home/dashboard" component={Dashboard} />
-              <Route path="/home/users" component={User} />
-              <Route path="/home/customers" component={Customer} />
-              <Route path="/home/suppliers" component={Supplier} />
-              <Route path="/home/companies" component={Company} />
-              <Route path="/home/taxes" component={Tax} />
-              <Route component={Page404} />
-            </Switch>
+          <Switch>
+            {
+              allowedRoutes.map(({component, url}) => (
+                <Route
+                  key={component}
+                  path={`${match.path}${url}`}
+                  component={Routes[component]}
+                />
+              ))
+            }
+            <Route component={Page404} />
+          </Switch>
         </main>
       </div>
     </Router>

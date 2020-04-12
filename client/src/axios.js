@@ -125,6 +125,11 @@ const Tax = {
     requests.put('/taxes/update',  tax )
 };
 
+const Role = {
+  getRole: () =>
+    requests.get('/roles/all')
+};
+
 export default {
   Auth,
   User,
@@ -132,4 +137,5 @@ export default {
   Supplier,
   Company,
   Tax,
+  Role,
 };
