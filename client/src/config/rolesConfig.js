@@ -3,19 +3,19 @@ export default {
  master: {
     routes: [
       {
-        component: 'User', 
-        url: '/users',
-        name: 'Usuarios'
-      },
-      {
-        component: 'Supplier', 
-        url: '/suppliers',
-        name: 'Proveedores'
+        component: 'Stock', 
+        url: '/stock',
+        name: 'Inventario'
       },
       {
         component: 'Customer', 
         url: '/customers',
         name: 'Clientes'
+      },
+      {
+        component: 'Supplier', 
+        url: '/suppliers',
+        name: 'Proveedores'
       },
       {
         component: 'Tax', 
@@ -26,20 +26,20 @@ export default {
         component: 'Company', 
         url: '/companies',
         name: 'Empresas'
+      },
+      {
+        component: 'User', 
+        url: '/users',
+        name: 'Usuarios'
       }
     ],
   },
   admin: {
     routes: [
       {
-        component: 'User', 
-        url: '/users',
-        name: 'Usuarios'
-      },
-      {
-        component: 'Supplier', 
-        url: '/suppliers',
-        name: 'Proveedores'
+        component: 'Stock', 
+        url: '/stock',
+        name: 'Inventario'
       },
       {
         component: 'Customer', 
@@ -47,9 +47,19 @@ export default {
         name: 'Clientes'
       },
       {
+        component: 'Supplier', 
+        url: '/suppliers',
+        name: 'Proveedores'
+      },
+      {
         component: 'Tax', 
         url: '/taxes',
         name: 'Impuestos'
+      },
+      {
+        component: 'User', 
+        url: '/users',
+        name: 'Usuarios'
       }
     ],
   },

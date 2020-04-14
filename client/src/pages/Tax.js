@@ -29,8 +29,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Supplier = inject("supplierStore", "globalStore")(
-  observer(({ supplierStore, globalStore }) => {
+const Tax = inject("taxStore", "globalStore")(
+  observer(({ taxStore, globalStore }) => {
+    React.useEffect(() => {
+      taxStore.getAllRecords()
+    }, [taxStore])
     globalStore.setModule('Impuesto')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];
@@ -38,7 +41,7 @@ const Supplier = inject("supplierStore", "globalStore")(
       if (NEW_KEYS.includes(String(key))) {
         globalStore.setIsUpdateSlide(false)
         globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
-        supplierStore.reset()
+        taxStore.reset()
       }
     }
     useEventListener('keydown', handler);
@@ -59,4 +62,4 @@ const Supplier = inject("supplierStore", "globalStore")(
 })
 )
 
-export default withRouter(Supplier)
+export default withRouter(Tax)

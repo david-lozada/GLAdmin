@@ -9,6 +9,7 @@ import CustomerComponent from '../pages/Customer'
 import SupplierComponent from '../pages/Supplier'
 import CompanyComponent from '../pages/Company'
 import TaxComponent from '../pages/Tax'
+import StockComponent from '../pages/Stock'
 import Page404Component from '../pages/Page404'
 
 
@@ -32,6 +33,9 @@ const Company = () => (
 const Tax = () => (
     <Route path="/home/taxes" component={TaxComponent} />
 );
+const Stock = () => (
+    <Route path="/home/stock" component={StockComponent} />
+);
 const Page404 = () => (
     <Route component={Page404Component} />
 );
@@ -43,5 +47,6 @@ export {
   Supplier,
   Company,
   Tax,
+  Stock,
   Page404
 }

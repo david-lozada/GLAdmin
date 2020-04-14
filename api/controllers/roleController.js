@@ -16,6 +16,6 @@ exports.getAll = async function (req, res) {
   const role = await Role.findOne({
     where: { id: user.User.idRole }
   })
-  var names = [role.slug, 'common']
+  var names = ['common', role.slug]
   return res.status(200).json(names);
 }

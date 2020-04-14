@@ -1,4 +1,4 @@
-import { observable, action, decorate, autorun } from 'mobx';
+import { observable, action, decorate } from 'mobx';
 import axios from '../axios';
 
 class UserStore {
@@ -70,22 +70,20 @@ class UserStore {
     }
   ];
 
-  constructor() {
-    autorun(reaction => {
-      /**
-       *  Used to get all users in db
-      */
-      this.loading = true;
-      axios.User.getAllUsers()
-      .then(( res ) => {
-        this.records = res
-        this.loading = false;
-      })
-      .catch((err) => {
-        console.log(err)
-        this.loading = false;
-      })
-      reaction.dispose()
+  getAllRecords() {
+    /**
+     *  Used to get all users in db
+    */
+    this.loading = true;
+    axios.User.getAllUsers()
+    .then(( res ) => {
+      this.records = res
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => {
+      this.loading = false;
     })
   }
   /**
@@ -240,6 +238,7 @@ decorate(UserStore, {
   reset: action,
   save: action,
   getUser: action,
+  getAllRecords: action,
   delete: action,
   pullUser: action,
   update: action,

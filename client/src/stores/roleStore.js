@@ -1,20 +1,29 @@
-import { decorate, observable, action, autorun } from "mobx";
+import { decorate, observable, action, computed } from "mobx";
+import { uniqBy } from 'lodash';
+import rolesConfig from '../config/rolesConfig';
 
 // Stores
 import axios from "../axios";
 
 class RoleStore {
   roles = []
-  constructor() {
-    autorun(reaction => {
-      /**
-       *  Used to get all users in db
-      */
-      axios.Role.getRole()
-      .then(( res ) => {
-        this.roles = res
-      })
-      reaction.dispose()
+
+  get allowedRoutes() {
+    let allowedRoutes = this.roles.reduce((acc, role) => {
+      return [
+        ...acc,
+        ...rolesConfig[role].routes
+      ]
+    }, []);
+    // For removing duplicate entries.
+    allowedRoutes = uniqBy(allowedRoutes, 'component');
+    return allowedRoutes
+  }
+
+  getRole = () => {
+    axios.Role.getRole()
+    .then(( res ) => {
+      this.roles = res
     })
   }
   forgetRole = () => {
@@ -25,5 +34,6 @@ class RoleStore {
 decorate(RoleStore, {
     roles: observable,
     forgetRole: action,
+    allowedRoutes: computed,
 })
 export default new RoleStore();

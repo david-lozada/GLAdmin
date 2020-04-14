@@ -10,8 +10,6 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Navegation from '../components/Navegation';
-import { uniqBy } from 'lodash';
-import rolesConfig from '../config/rolesConfig';
 import * as Routes from '../components/PrivateComponents';
 import Page404 from './Page404'
 
@@ -89,12 +87,17 @@ const useStyles = makeStyles(theme => ({
 }));
 const Frame = inject("userStore", "authStore", "globalStore", "roleStore")(
   observer(({ match, authStore, userStore, globalStore, roleStore }) => {
+  React.useEffect(() => {
+    roleStore.getRole()
+  }, [roleStore])
   const history = useHistory();
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const user = JSON.parse(window.localStorage.getItem('userData'))
   const userNames = user ? user.firstName + " " + user.lastName : ''
+
+  // Drawer initialization
+  const [open, setOpen] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);
   }
@@ -107,23 +110,13 @@ const Frame = inject("userStore", "authStore", "globalStore", "roleStore")(
   const handleDrawerClose = () => {
     setOpen(false);
   }
+  // Drawer end
   const handleLogout = () => {
     authStore.logout()
     globalStore.setToken(undefined);
     userStore.forgetUser();
     history.push('/')
   }
-  const roles = roleStore.roles;
-
-  let allowedRoutes = roles.reduce((acc, role) => {
-    return [
-      ...acc,
-      ...rolesConfig[role].routes
-    ]
-  }, []);
-
-  // For removing duplicate entries.
-  allowedRoutes = uniqBy(allowedRoutes, 'component');
   return (
     <Router>
       <div className={classes.root}>
@@ -181,7 +174,7 @@ const Frame = inject("userStore", "authStore", "globalStore", "roleStore")(
           </div>
           <Divider />
           <List>
-            <Navegation routes={allowedRoutes} match={match}/>
+            <Navegation routes={roleStore.allowedRoutes} match={match}/>
           </List>
           <Divider />
           {/*<List>{secondaryListItems}</List>*/}
@@ -190,7 +183,7 @@ const Frame = inject("userStore", "authStore", "globalStore", "roleStore")(
           <div className={classes.appBarSpacer} />
           <Switch>
             {
-              allowedRoutes.map(({component, url}) => (
+              roleStore.allowedRoutes.map(({component, url}) => (
                 <Route
                   key={component}
                   path={`${match.path}${url}`}

@@ -1,79 +1,95 @@
 import { observable, action, decorate } from 'mobx';
 import axios from '../axios';
 
-class CompanyStore {
+class StockStore {
 
   records = [];
   currentUser;
   loading;
   submiting;
   record = {
-    documentNumber: '',
+    code: '',
     name: '',
-    address: '',
-    phoneNumber: '',
-    email: '',
-    website: '',
+    price: '',
+    existence: '',
+    entryDate: '',
+    idSupplier: '',
+    idTax: ''
   };
   columns = [
       { title: "#", field: "id" },
-      { title: "RIF", field: "documentNumber" },
+      { title: "Código", field: "code" },
       { title: "Nombre", field: "name" },
-      { title: "Dirección", field: "address" },
-      { title: "Teléfono", field: "phoneNumber" },
-      { title: "Correo", field: "email" },
-      { title: "Sitio Web", field: "website" },
+      { title: "Precio", field: "price" },
+      { title: "Existencia", field: "existence" },
+      { title: "Fecha de Ingreso", field: "entryDate" },
+      { title: "Proveedor", field: "idSupplier" },
+      { title: "Impuesto", field: "idTax" },
   ];
   fields = [
     {
-      name: 'documentNumber',
-      label: 'RIF',
-      placeholder: 'Ingrese RIF',
+      name: 'code',
+      label: 'Código',
+      placeholder: 'Ingrese Código',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
       name: 'name',
-      label: 'Empresa',
-      placeholder: 'Ingrese Apellido',
-      rules: 'required|string|between:2,20',  
+      label: 'Nombre',
+      placeholder: 'Ingrese Nombre',
+      rules: 'required|string|between:2,4',  
+      type: 'number'
+    }, {
+      name: 'price',
+      label: 'Precio',
+      placeholder: 'Ingrese Precio',
+      rules: 'required|string|between:2,4',  
+      type: 'number'
+    }, {
+      name: 'existence',
+      label: 'Existencia',
+      placeholder: 'Ingrese Existencia',
+      rules: 'required|string|between:2,4',  
+      type: 'number'
+    }, {
+      name: 'entryDate',
+      label: 'Fecha de Ingreso',
+      placeholder: 'Ingrese Fecha de Ingreso',
+      rules: 'required|string|between:2,4',  
+      type: 'date'
+    }, {
+      name: 'idSupplier',
+      label: 'Proveedor',
+      placeholder: 'Ingrese Proveedor',
+      rules: 'required|string|between:2,4',  
       type: 'text'
     }, {
-      name: 'email',
-      label: 'Correo',
-      placeholder: 'Ingrese Correo',
-      rules: 'required|string|between:5,25',  
-      type: 'email'
-    }, {
-      name: 'address',
-      label: 'Dirección',
-      placeholder: 'Ingrese Dirección',
-      rules: 'required|string|between:4,30',  
+      name: 'idTax',
+      label: 'Impuesto',
+      placeholder: 'Ingrese Impuesto',
+      rules: 'required|string|between:2,4',  
       type: 'text'
     }, {
-      name: 'phoneNumber',
-      label: 'Télefono',
-      placeholder: 'Ingrese Télefono',
-      rules: 'required|email|string|between:5,25',  
-      type: 'text'
-    }, {
-      name: 'website',
-      label: 'Sitio Web',
-      placeholder: 'Ingrese Sitio Web',
-      rules: 'notRequired|string|between:5,25',  
-      type: 'text'
+      name: 'available',
+      label: 'Disponible',
+      placeholder: '',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'checkbox'
     }, 
   ];
 
+  /**
+   *  Used to get all users in db
+  */
   getAllRecords() {
     this.loading = true;
-    axios.Company.getAllRecords()
+    axios.Stock.getAllRecords()
     .then(( res ) => {
       this.records = res
+      this.loading = false;
     })
     .catch((err) => {
       console.log(err)
-    })
-    .finally(() => {
       this.loading = false;
     })
   }
@@ -88,12 +104,8 @@ class CompanyStore {
   */
   reset() {
     this.record = {
-      documentNumber: '',
       name: '',
-      address: '',
-      phoneNumber: '',
-      email: '',
-      website: '',
+      percentage: ''
     };
   }
   /**
@@ -101,7 +113,7 @@ class CompanyStore {
   */
   save(record) {
     this.submiting = true;
-     return axios.Company.save(record)
+     return axios.Stock.save(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -116,7 +128,7 @@ class CompanyStore {
   */
   getRecord(id) {
     this.loading = true;
-    return axios.Company.getRecord(id)
+    return axios.Stock.getRecord(id)
     .then(( res ) => {
       this.record = res
       this.loading = false;
@@ -131,7 +143,7 @@ class CompanyStore {
   */
   update(record) {
     this.submiting = true;
-     return axios.Company.update(record)
+     return axios.Stock.update(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -146,7 +158,7 @@ class CompanyStore {
   */
   delete(id) {
     this.loading = true;
-    return axios.Company.delete(id) 
+    return axios.Stock.delete(id) 
     .then(( res ) => {
     this.loading = false;
       return res
@@ -195,7 +207,7 @@ class CompanyStore {
 
 }
 
-decorate(CompanyStore, {
+decorate(StockStore, {
   records: observable,
   loading: observable,
   submiting: observable,
@@ -211,4 +223,4 @@ decorate(CompanyStore, {
   update: action,
 })
 
-export default new CompanyStore();
+export default new StockStore();

@@ -125,6 +125,19 @@ const Tax = {
     requests.put('/taxes/update',  tax )
 };
 
+const Stock = {
+  getAllRecords: () =>
+    requests.get('/stock/all'),
+  getRecord: (id) =>
+    requests.get('/stock/product/'+id),
+  delete: (id) =>
+    requests.delete('/stock/delete/'+id),
+  save: (data) =>
+    requests.post('/stock/create', data ),
+  update: (stock) =>
+    requests.put('/stock/update',  stock )
+};
+
 const Role = {
   getRole: () =>
     requests.get('/roles/all')
@@ -137,5 +150,6 @@ export default {
   Supplier,
   Company,
   Tax,
+  Stock,
   Role,
 };

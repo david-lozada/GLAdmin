@@ -8,7 +8,8 @@ module.exports = (sequelize, DataTypes) => {
     entryDate: DataTypes.DATE,
     idSupplier: DataTypes.INTEGER,
     idTax: DataTypes.INTEGER,
-    observation: DataTypes.STRING
+    observation: DataTypes.STRING,
+    available: DataTypes.BOOLEAN
   }, {});
   Product.associate = function(models) {
     // associations can be defined here

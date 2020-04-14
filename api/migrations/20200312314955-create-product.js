@@ -23,6 +23,15 @@ module.exports = {
       entryDate: {
         type: Sequelize.DATE
       },
+      observation: {
+        allowNull: true,
+        type: Sequelize.TEXT
+      },
+      available: {
+        allowNull: true,
+        type: Sequelize.BOOLEAN,
+        default: true
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

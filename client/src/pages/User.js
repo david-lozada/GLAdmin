@@ -36,6 +36,9 @@ const useStyles = makeStyles(theme => ({
 
 const User = inject("userStore", "globalStore")(
   observer(({ userStore, globalStore }) => {
+    React.useEffect(() => {
+      userStore.getAllRecords()
+    }, [userStore])
     globalStore.setModule('Usuario')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];

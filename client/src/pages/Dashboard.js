@@ -56,9 +56,6 @@ const Dashboard = inject("globalStore")(
               </Paper>
             </Grid>
           </Grid>
-          {/*<Box pt={4}>
-                      <Copyright />
-                    </Box>*/}
         </Container>
     )
 })
