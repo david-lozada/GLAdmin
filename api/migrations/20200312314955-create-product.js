@@ -9,13 +9,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       code: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       price: {
-        type: Sequelize.DECIMAL
+        allowNull: false,
+        type: Sequelize.DECIMAL(20,2)
+      },
+      dollarPrice: {
+        type: Sequelize.DECIMAL(20,2)
       },
       existence: {
         type: Sequelize.INTEGER
@@ -31,6 +37,10 @@ module.exports = {
         allowNull: true,
         type: Sequelize.BOOLEAN,
         default: true
+      },
+      image: {
+        allowNull: true,
+        type: Sequelize.JSON
       },
       createdAt: {
         allowNull: false,

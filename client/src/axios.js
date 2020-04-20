@@ -134,8 +134,8 @@ const Stock = {
     requests.delete('/stock/delete/'+id),
   save: (data) =>
     requests.post('/stock/create', data ),
-  update: (stock) =>
-    requests.put('/stock/update',  stock )
+  update: (product) =>
+    requests.put('/stock/update',  product )
 };
 
 const Role = {

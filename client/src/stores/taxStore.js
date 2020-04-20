@@ -40,12 +40,12 @@ class TaxStore {
     axios.Tax.getAllRecords()
     .then(( res ) => {
       this.records = res
-      this.loading = false;
+      return res
     })
     .catch((err) => {
       console.log(err)
-      this.loading = false;
     })
+    .finally(() => this.loading = false)
   }
   /**
    *  Function used to set value of record on input change

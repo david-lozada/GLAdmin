@@ -1,5 +1,6 @@
 import { observable, action, decorate } from 'mobx';
 import axios from '../axios';
+import { validationContext, required } from 'validx'
 
 class StockStore {
 
@@ -7,14 +8,20 @@ class StockStore {
   currentUser;
   loading;
   submiting;
+  suppliers;
+  taxes;
   record = {
     code: '',
     name: '',
-    price: '',
     existence: '',
     entryDate: '',
     idSupplier: '',
-    idTax: ''
+    idTax: '',
+    observation: '',
+    image: '',
+    price: '000',
+    dollarPrice: '000',
+    available: true
   };
   columns = [
       { title: "#", field: "id" },
@@ -22,9 +29,8 @@ class StockStore {
       { title: "Nombre", field: "name" },
       { title: "Precio", field: "price" },
       { title: "Existencia", field: "existence" },
-      { title: "Fecha de Ingreso", field: "entryDate" },
-      { title: "Proveedor", field: "idSupplier" },
-      { title: "Impuesto", field: "idTax" },
+      { title: "Impuesto", field: "idTax", lookup: {} },
+      { title: "Disponible", field: "available", type: "boolean" },
   ];
   fields = [
     {
@@ -37,12 +43,6 @@ class StockStore {
       name: 'name',
       label: 'Nombre',
       placeholder: 'Ingrese Nombre',
-      rules: 'required|string|between:2,4',  
-      type: 'number'
-    }, {
-      name: 'price',
-      label: 'Precio',
-      placeholder: 'Ingrese Precio',
       rules: 'required|string|between:2,4',  
       type: 'number'
     }, {
@@ -70,13 +70,62 @@ class StockStore {
       rules: 'required|string|between:2,4',  
       type: 'text'
     }, {
+      name: 'observation',
+      label: 'Observación',
+      placeholder: 'Ingrese Observación',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'textarea'
+    }, {
+      name: 'image',
+      label: 'Imágen',
+      placeholder: 'Ingrese Imágen',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'file'
+    }, {
       name: 'available',
       label: 'Disponible',
       placeholder: '',
       rules: 'notRequired|string|between:2,4',  
       type: 'checkbox'
+    }, {
+      name: 'price',
+      label: 'Precio',
+      placeholder: 'Ingrese precio',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'number'
+    }, {
+      name: 'dollarPrice',
+      label: 'Precio en Dólar',
+      placeholder: 'Ingrese Precio en Dólar',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'number'
     }, 
   ];
+
+  validation = validationContext(this)
+
+  validate () {
+    this.validation.validate({
+      [this.record.code]: [required({ msg: 'Código es requerido' })],
+      [this.record.name]: [required({ msg: 'Nombre es requerido' })],
+      [this.record.existence]: [required({ msg: 'Existencia es requerida' })],
+      [this.record.price]: [required({ msg: 'Precio es requerido' })],
+    })
+  }
+
+  setFiles(files) {
+    this.record.image = files
+  }
+
+  setColumnLookup(options) {
+    console.log(options)
+    var parsed = {}
+    for(let option of options ){
+      Object.assign(parsed, {[option.id]: option.name})
+    }
+    console.log(parsed)
+    this.columns.lookup = parsed
+  }
 
   /**
    *  Used to get all users in db
@@ -104,8 +153,17 @@ class StockStore {
   */
   reset() {
     this.record = {
+      code: '',
       name: '',
-      percentage: ''
+      existence: '',
+      entryDate: '',
+      idSupplier: '',
+      idTax: '',
+      observation: '',
+      image: '',
+      price: '000',
+      dollarPrice: '000',
+      available: true,
     };
   }
   /**
@@ -115,12 +173,13 @@ class StockStore {
     this.submiting = true;
      return axios.Stock.save(record)
       .then(action((res) => { 
-        this.submiting = false;
         return res
       }))
       .catch((err) => {
-        this.submiting = false;
         console.log(err)
+      })
+      .finally(() => {
+        this.submiting = false;
       })
   }
   /**
@@ -212,6 +271,10 @@ decorate(StockStore, {
   loading: observable,
   submiting: observable,
   record: observable,
+  suppliers: observable,
+  taxes: observable,
+  validation: observable,
+  columns: observable,
   addRecord: action,
   updateRecord: action,
   deleteRecord: action,
@@ -221,6 +284,9 @@ decorate(StockStore, {
   getAllRecords: action,
   delete: action,
   update: action,
+  validate: action,
+  setFiles: action,
+  setColumnLookup: action,
 })
 
 export default new StockStore();

@@ -1,12 +1,13 @@
 import React from 'react';
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Button, CircularProgress, Grid } from '@material-ui/core';
+import { Grid, AppBar, Tabs, Tab, Typography, Box, IconButton, Button, CircularProgress } from '@material-ui/core';
+import { Add as AddIcon } from '@material-ui/icons'
 import alertify from 'alertifyjs'
 import { ValidatorForm } from 'react-material-ui-form-validator';
 
 // Components
-import TextFields from './TextFields'
+import { TextField1, TextField2, TextField3 } from './TextFields'
 
 const useStyles = makeStyles(theme => ({ 
   root: {
@@ -29,36 +30,66 @@ const useStyles = makeStyles(theme => ({
       },
     },
     width: '100%', // Fix IE 11 issue.
-    padding: theme.spacing(3),
-  },
-  input: {
-    color: '#fff',
-    width: theme.spacing(25),
-    marginLeft: theme.spacing(1),
+    // padding: theme.spacing(3),
   },
   button: {
-    height: theme.spacing(20),
-    textAlign: 'vertical'
-  }
+    height: theme.spacing(15),
+    marginTop: theme.spacing(2)
+  },
 }));
+
+function TabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <Typography
+      component="div"
+      role="tabpanel"
+      hidden={value !== index}
+      id={`scrollable-auto-tabpanel-${index}`}
+      aria-labelledby={`scrollable-auto-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box p={3}>{children}</Box>}
+    </Typography>
+  );
+}
+function a11yProps(index) {
+  return {
+    id: `scrollable-auto-tab-${index}`,
+    'aria-controls': `scrollable-auto-tabpanel-${index}`,
+  };
+}
+
 const Form = inject("stockStore", "globalStore")(
     observer(({ stockStore, globalStore }) => {
+    React.useEffect(() => {
+      globalStore.setFormMethod('create')
+    }, [globalStore])
     const classes = useStyles(); 
     /**
      *  Create handle method
     */
     const handleCreateSubmit = (e) => {
       e.preventDefault()
-      stockStore.save(stockStore.record).then((res) => {
-        stockStore.reset()
-        if (res.record){
-          stockStore.addRecord(res.record)
+      console.log(stockStore.validation)
+      if (stockStore.validation.isValid) {
+        stockStore.save(stockStore.record).then((res) => {
+          stockStore.reset()
+          if (res.record){
+            stockStore.addRecord(res.record)
+          }
+          alertify.success(res.es)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+      } else {
+        console.log(stockStore.validation.errors)
+        for (const err of stockStore.validation.errors) {
+          alertify.warning(err)
         }
-        alertify.success(res.es)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      }
     }
     /**
      *  Update handle method
@@ -77,6 +108,14 @@ const Form = inject("stockStore", "globalStore")(
       })
     }
     /**
+     * Method used for tabs
+     */
+    const [value, setValue] = React.useState(0);
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
+
+    /**
      *  Used to define submit button text
     */
     var btnText
@@ -89,26 +128,55 @@ const Form = inject("stockStore", "globalStore")(
         btnText = 'ACTUALIZAR'
       }
     }
+    
     return <ValidatorForm
                 className={classes.root}
                 onSubmit={globalStore.formMethod === 'create' ? handleCreateSubmit : handleUpdateSubmit}
                 onError={errors => console.log(errors)}
             >
             <Grid container spacing={1}> 
-              <Grid item xs={11}> 
-                <TextFields/>
+              <Grid item xs={11} className={classes.paper} style={{height: '100%'}}> 
+                <AppBar position="static">
+                  <Tabs
+                    value={value}
+                    onChange={handleChange}
+                    indicatorColor="secondary"
+                    textColor="secondary"
+                    variant="scrollable"
+                    scrollButtons="auto"
+                    aria-label=""
+                  >
+                    <Tab label="1" {...a11yProps(0)} />
+                    <Tab label="2" {...a11yProps(1)} />
+                    <Tab label="3" {...a11yProps(2)} />
+                  </Tabs>
+                </AppBar>
+                <TabPanel value={value} index={0}>
+                  <TextField1/>
+                </TabPanel>
+                <TabPanel value={value} index={1}>
+                  <TextField2/>
+                </TabPanel>
+                <TabPanel value={value} index={2}>
+                  <TextField3/>
+                </TabPanel>
               </Grid>
-              <Grid item xs={1}>
-                <Button
-                  className={classes.button}
-                  type={"submit"}
-                  fullWidth
-                  variant="contained"
-                  color="secondary"
-                  disabled={stockStore.submiting}
-                >
-                  { btnText }
-                </Button>
+              <Grid item xs={1} className={classes.paper}> 
+                <IconButton aria-label="delete" onClick={stockStore.reset}>
+                  <AddIcon color={"secondary"}/>
+                </IconButton>
+                <Grid item xs={12}>
+                  <Button
+                    className={classes.button}
+                    type={"submit"}
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    disabled={stockStore.submiting}
+                  >
+                    { btnText }
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
           </ValidatorForm>

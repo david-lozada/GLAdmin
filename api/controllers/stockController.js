@@ -11,12 +11,12 @@ exports.create = async function (req, res) {
             return res.status(201).json({
                 record: product,
                 en: 'Product has been created',
-                es: 'Impuesto creado'
+                es: 'Producto creado'
             });
         } else {
             return res.status(500).json({
                 en: 'Product not created',
-                es: 'El Impuesto no fué creado'
+                es: 'El Producto no fué creado'
             });
         }
     } catch(err) {
@@ -28,8 +28,7 @@ exports.create = async function (req, res) {
 exports.getProduct = async function(req, res) {
     try {
         let product = await Product.findOne({
-            where: { id: req.params.id },
-            attributes: ['id', 'name', 'percentage']
+            where: { id: req.params.id }
         });
         if (product) {
             return res.status(200).json(product);
@@ -40,7 +39,7 @@ exports.getProduct = async function(req, res) {
 }
 
 // Get all products
-exports.getAllProducts = async function(req, res) {
+exports.getAllStock = async function(req, res) {
     try {
         let products = await Product.findAll();
         if (products) {
@@ -61,7 +60,7 @@ exports.delete = async function(req, res) {
         if (deleted) {
             return res.status(200).json({
                 en: 'Product has been deleted',
-                es: 'El Impuesto fue eliminado'
+                es: 'El Producto fue eliminado'
             });
         }
     } catch(err) {
@@ -80,7 +79,7 @@ exports.update = async function(req, res) {
             return res.status(200).json({
                 record: product,
                 en: 'Product has been updated',
-                es: 'Impuesto actualizado'
+                es: 'Producto actualizado'
             });
         }
     } catch(err) {

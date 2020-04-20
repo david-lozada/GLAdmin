@@ -33,7 +33,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING
       },
-      available: {]
+      available: {
         type: Sequelize.BOOLEAN,
         default: true
       },

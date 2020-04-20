@@ -89,6 +89,7 @@ class SupplierStore {
     .then(( res ) => {
       this.records = res
       this.loading = false;
+      return res
     })
     .catch((err) => {
       console.log(err)

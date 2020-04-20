@@ -13,6 +13,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    // return queryInterface.removeConstraint('Licenses', 'licensesIdCompanyFKey');
+    return queryInterface.removeConstraint('Licenses', 'licensesIdCompanyFKey');
   }
 };

@@ -10,8 +10,9 @@ module.exports = (sequelize, DataTypes) => {
     email: DataTypes.STRING,
     available: DataTypes.BOOLEAN
   }, {});
-  Supplier.associate = function(models) {
+  Supplier.associate = function({ Product }) {
     // associations can be defined here
+    Supplier.hasMany(Product,  {as: 'supplier',foreignKey: 'idTax'});
   };
   return Supplier;
 };

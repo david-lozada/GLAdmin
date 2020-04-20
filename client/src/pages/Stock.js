@@ -4,12 +4,12 @@ import clsx from 'clsx';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid, Paper, Typography } from '@material-ui/core'
+import { Container, Grid, Paper, ButtonBase } from '@material-ui/core'
 
 // Components
 // import useEventListener from '../components/useEventListener'
 import Form from '../components/Stock/Form'
-import Orders from '../components/Orders'
+import DataTable from '../components/Stock/Datatable';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,13 +29,26 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: {
     height: 240,
   },
+  image: {
+    width: '100%',
+    height: 200,
+  },
+  img: {
+    margin: 'auto',
+    display: 'block',
+    maxWidth: '100%',
+    maxHeight: '100%',
+  }
 }));
 
-const Stock = inject("stockStore", "globalStore")(
-  observer(({ stockStore, globalStore }) => {
+const Stock = inject("stockStore", "globalStore", "supplierStore", "taxStore")(
+  observer(({ stockStore, globalStore, supplierStore, taxStore }) => {
     React.useEffect(() => {
       stockStore.getAllRecords()
-    }, [stockStore])
+      supplierStore.getAllRecords()
+      taxStore.getAllRecords()
+      stockStore.reset()
+    }, [stockStore, supplierStore, taxStore])
     globalStore.setModule('Inventario')
   	const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
@@ -43,47 +56,53 @@ const Stock = inject("stockStore", "globalStore")(
    /* const NEW_KEYS = ['112', 'F1'];
     function handler({ key }) {
       if (NEW_KEYS.includes(String(key))) {
-        globalStore.setIsUpdateSlide(false)
-        globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
-        stockStore.reset()
       }
     }
     useEventListener('keydown', handler);*/
-
+    var imagePreview
+    if (stockStore.record.image) {
+      if (typeof stockStore.record.image === 'string') {
+        const image = JSON.parse(stockStore.record.image)
+        imagePreview = <img className={classes.img} 
+          alt={image.name} 
+          src={image.base64}
+          />
+      } else {
+        imagePreview = <img className={classes.img} 
+          alt={stockStore.record.image.name} 
+          src={stockStore.record.image.base64}
+          />
+      }
+    } else {
+      imagePreview = <img className={classes.img} 
+        alt={"default"}
+        src={ process.env.PUBLIC_URL + '/assets/images/no-image.png' }
+        />
+    }
     return (
       <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
             {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
+            <Grid item xs={12} md={3} lg={2}>
               <Paper className={fixedHeightPaper}>
-                {/*<Deposits />*/}
+                <Grid item>
+                  <ButtonBase className={classes.image}>
+                  { imagePreview }
+                  </ButtonBase>
+                </Grid>
               </Paper>
             </Grid>
             {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={9} lg={10}>
               <Paper className={fixedHeightPaper}>
                 <Form/>
               </Paper>
             </Grid>
             {/* Recent Orders */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
+                <DataTable store={"stockStore"}/>
             </Grid>
           </Grid>
-          {/*<Grid container spacing={1}> 
-                      <Grid item xs={1}> 
-                      </Grid>
-                      <Grid item xs={10}> 
-                        <Paper className={classes.paper} variant={"outlined"}>
-                          <Typography component="h2" variant="h6" gutterBottom>
-                            Producto
-                          </Typography>
-                          <Form/>
-                        </Paper>
-                      </Grid>
-                    </Grid>*/}
       </Container>
     )
 })

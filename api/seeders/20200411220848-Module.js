@@ -5,34 +5,54 @@ module.exports = {
     return queryInterface.bulkInsert('Modules', [
       {
         name: 'Users',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'Customers',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'Suppliers',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'Users',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'AccountsPayables',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'AccountsReceivables',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'Products',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'PurchaseOrders',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'Sales',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       }, {
         name: 'Taxes',
-        available: true
+        available: true,
+        createdAt: new Date(),
+        updatedAt: new Date()
       },
     ], {});
     
