@@ -14,7 +14,7 @@ router.put('/update', stock_controller.update);
 router.get('/all', stock_controller.getAllStock);
 
 /* GET stock */
-router.get('/product/:id', stock_controller.getProduct);
+router.get('/stock/:id', stock_controller.getStock);
 
 /* DELETE stock */
 router.delete('/delete/:id', stock_controller.delete);

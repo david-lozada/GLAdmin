@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Products', {
+    return queryInterface.createTable('Stocks', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -9,32 +9,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       code: {
-        allowNull: false,
         type: Sequelize.STRING
       },
-      name: {
-        allowNull: false,
-        type: Sequelize.STRING
+      existence: {
+        type: Sequelize.INTEGER
       },
-      price: {
-        allowNull: false,
-        type: Sequelize.DECIMAL(20,0)
+      type: {
+        type: Sequelize.INTEGER
       },
-      dollarPrice: {
-        type: Sequelize.DECIMAL(20,0)
-      },
-      observation: {
+      entryDate: {
         allowNull: true,
-        type: Sequelize.TEXT
+        type: Sequelize.DATE
+      },
+      expiryDate: {
+        allowNull: true,
+        type: Sequelize.DATE
       },
       available: {
         allowNull: true,
         type: Sequelize.BOOLEAN,
         default: true
-      },
-      image: {
-        allowNull: true,
-        type: Sequelize.JSON
       },
       createdAt: {
         allowNull: false,
@@ -47,6 +41,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Products');
+    return queryInterface.dropTable('Stocks');
   }
 };

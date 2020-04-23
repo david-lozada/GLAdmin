@@ -34,7 +34,9 @@ var suppliersRouter = require('./routes/suppliers');
 var companiesRouter = require('./routes/companies');
 var taxesRouter = require('./routes/taxes');
 var rolesRouter = require('./routes/roles');
-var stockRouter = require('./routes/stock');
+var stocksRouter = require('./routes/stocks');
+var productsRouter = require('./routes/products');
+var foreignExchangesRouter = require('./routes/foreignExchanges');
 
 //App Routes
 app.use('/auth', authRouter);
@@ -44,7 +46,9 @@ app.use('/suppliers', suppliersRouter);
 app.use('/companies', companiesRouter);
 app.use('/taxes', taxesRouter);
 app.use('/roles', rolesRouter);
-app.use('/stock', stockRouter);
+app.use('/stocks', stocksRouter);
+app.use('/products', productsRouter);
+app.use('/foreign-exchanges', foreignExchangesRouter);
 // End Routes
 
 // catch 404 and forward to error handler

@@ -1,19 +1,12 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('ProductsCurrencies', {
+    return queryInterface.createTable('ProductsForeignExchanges', {
       idProduct: {
         type: Sequelize.INTEGER,
       },
-      idCurrency: {
+      idForeignExchange: {
         type: Sequelize.INTEGER,
-      },
-      value: {
-        type: Sequelize.STRING
-      },
-      default: {
-        type: Sequelize.BOOLEAN,
-        default: false
       },
       createdAt: {
         allowNull: false,
@@ -26,6 +19,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ProductsCurrencies');
+    return queryInterface.dropTable('ProductsForeignExchanges');
   }
 };

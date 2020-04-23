@@ -1,9 +1,9 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.addConstraint('ProductsCurrencies', ['idProduct'], {
+    return queryInterface.addConstraint('ProductsForeignExchanges', ['idProduct'], {
       type: 'foreign key',
-      name: 'idProductProductsCurrenciesFKey',
+      name: 'idProductProductsForeignExchangesFKey',
       references: { //Required field
         table: 'Products',
         field: 'id'
@@ -13,6 +13,6 @@ module.exports = {
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.removeConstraint('ProductsCurrencies', 'idProductProductsCurrenciesFKey');
+    return queryInterface.removeConstraint('ProductsForeignExchanges', 'idProductProductsForeignExchangesFKey');
   }
 };

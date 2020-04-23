@@ -5,6 +5,7 @@ var router = express.Router();
 var role_controller = require('../controllers/roleController');
 
 // GET me
-router.get('/all', role_controller.getAll);
+router.get('/current', role_controller.getCurrentRole);
+router.get('/all', role_controller.getAllRoles);
 
 module.exports = router;

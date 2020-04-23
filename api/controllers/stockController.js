@@ -1,66 +1,68 @@
 // Dependencies
 
-// Product Model
-var { Product } = require('../models');
+// Stock Model
+var { Stock } = require('../models');
 
-// Create Product
+// Create Stock
 exports.create = async function (req, res) {
     try {
-        let product = await Product.create(req.body);
-        if (product) {
+        const data = req.body
+        let stock = await Stock.create(data);
+        if (stock) {
+
             return res.status(201).json({
-                record: product,
-                en: 'Product has been created',
-                es: 'Producto creado'
+                record: stock,
+                en: 'Stock has been created',
+                es: 'Inventario creado'
             });
         } else {
             return res.status(500).json({
-                en: 'Product not created',
-                es: 'El Producto no fué creado'
+                en: 'Stock not created',
+                es: 'El Inventario no fué creado'
             });
         }
     } catch(err) {
-        return res.status(400).send(err);
+        return res.status(500).send(err);
     }
 }
 
-// Get Product
-exports.getProduct = async function(req, res) {
+// Get Stock
+exports.getStock = async function(req, res) {
     try {
-        let product = await Product.findOne({
-            where: { id: req.params.id }
+        let stock = await Stock.findOne({
+            where: { id: req.params.id, available: true }
         });
-        if (product) {
-            return res.status(200).json(product);
+        if (stock) {
+            return res.status(200).json(stock);
         }
     } catch(err) {
         return res.status(400).send(err);
     }
 }
 
-// Get all products
+// Get all stocks
 exports.getAllStock = async function(req, res) {
     try {
-        let products = await Product.findAll();
-        if (products) {
-            return res.status(200).json(products);
+        let stocks = await Stock.findAll();
+        if (stocks) {
+            return res.status(200).json(stocks);
         }
     } catch(err) {
         return res.status(400).send(err);
     }
 }
 
-// Delete Product
+// Delete Stock
 exports.delete = async function(req, res) {
     try {
-        const product = await Product.findOne({
+        const stock = await Stock.findOne({
             where: { id: req.params.id }
         })
-        const deleted = await product.destroy()
+        const deleted = await stock.destroy()
         if (deleted) {
             return res.status(200).json({
-                en: 'Product has been deleted',
-                es: 'El Producto fue eliminado'
+                en: 'Stock has been deleted',
+                es: 'El Inventario fue eliminado'
             });
         }
     } catch(err) {
@@ -68,18 +70,19 @@ exports.delete = async function(req, res) {
     }
 }
 
-// Update Product
+// Update Stock
 exports.update = async function(req, res) {
     try {
-        let product = await Product.findOne({
+        let stock = await Stock.findOne({
             where: { id: req.body.id },
         });
-        if (product) {
-            product.update(req.body);
+        if (stock) {
+            const data = req.body
+            stock.update(data);
             return res.status(200).json({
-                record: product,
-                en: 'Product has been updated',
-                es: 'Producto actualizado'
+                record: stock,
+                en: 'Stock has been updated',
+                es: 'Inventario actualizado'
             });
         }
     } catch(err) {
