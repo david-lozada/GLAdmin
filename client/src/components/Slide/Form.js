@@ -37,8 +37,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
   },
 }));
-const Form = inject("userStore", "globalStore", "customerStore", "supplierStore", "companyStore", "taxStore")(
-    observer(({ store, userStore, globalStore, customerStore, supplierStore, companyStore, taxStore }) => {
+const Form = inject("userStore", "globalStore", "customerStore", "supplierStore", "companyStore", "taxStore", "productStore", "batchStore")(
+    observer(({ store, userStore, globalStore, customerStore, supplierStore, companyStore, taxStore, productStore, batchStore }) => {
     const classes = useStyles();  
     var Store
     switch(store){
@@ -56,6 +56,12 @@ const Form = inject("userStore", "globalStore", "customerStore", "supplierStore"
         break
       case 'taxStore':
         Store = taxStore
+        break
+      case 'productStore':
+        Store = productStore
+        break
+      case 'batchStore':
+        Store = batchStore
         break
       default:
         return null

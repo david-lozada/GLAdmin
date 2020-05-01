@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid/*, Button*/ } from '@material-ui/core'
+import { Container, Grid, Fade } from '@material-ui/core'
 
 // Components
 import DataTable from '../components/DataTable'
@@ -34,11 +34,14 @@ const useStyles = makeStyles(theme => ({
   })}
 }));
 
-const User = inject("userStore", "globalStore")(
-  observer(({ userStore, globalStore }) => {
+const User = inject("userStore", "globalStore", "roleStore")(
+  observer(({ userStore, globalStore, roleStore }) => {
     React.useEffect(() => {
+      globalStore.swipeInForm()
       userStore.getAllRecords()
-    }, [userStore])
+      roleStore.getAllRecords()
+        .then(() => userStore.setFieldOptions(roleStore.records, 5))
+    }, [userStore, roleStore, globalStore])
     globalStore.setModule('Usuario')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];
@@ -59,9 +62,11 @@ const User = inject("userStore", "globalStore")(
               <Grid item xs={globalStore.gridCells.table}> 
                 <DataTable store={"userStore"}/>
               </Grid>
-              <Grid item xs={globalStore.gridCells.form}> 
-                <Slide store={"userStore"}/>
-              </Grid>
+              <Fade in={globalStore.gridCells.isOpen}>
+                <Grid item xs={globalStore.gridCells.form}> 
+                  <Slide store={"userStore"}/>
+                </Grid>
+              </Fade>
             </Grid>
         </Container>
     )

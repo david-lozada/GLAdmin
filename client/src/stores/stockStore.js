@@ -1,62 +1,39 @@
-import { observable, action, decorate } from 'mobx';
+import { observable, action, decorate, computed } from 'mobx';
 import axios from '../axios';
-import { validationContext, required } from 'validx'
+import numeral from 'numeral'
 
 class StockStore {
 
   records = [];
-  currentUser;
+  currentUser; 
   loading;
   submiting;
   suppliers;
   taxes;
   record = {
-    code: '',
-    name: '',
+    type: 1,
+    idSupplier: null,
+    idProduct: null,
     existence: '',
-    entryDate: '',
-    idSupplier: '',
-    idTax: '',
-    observation: '',
-    image: '',
-    price: '000',
-    dollarPrice: '000',
+    idBatch: null,
+    expiryDate: '',
     available: true
   };
   columns = [
       { title: "#", field: "id" },
       { title: "Código", field: "code" },
-      { title: "Nombre", field: "name" },
-      { title: "Precio", field: "price" },
+      { title: "Producto", field: "idProduct", lookup: {} },
+      { title: "Lote", field: "idBatch", lookup: {} },
       { title: "Existencia", field: "existence" },
-      { title: "Impuesto", field: "idTax", lookup: {} },
-      { title: "Disponible", field: "available", type: "boolean" },
+      { title: "Caducidad", field: "expiryDate" },
   ];
   fields = [
     {
-      name: 'code',
-      label: 'Código',
-      placeholder: 'Ingrese Código',
+      name: 'type',
+      label: 'Tipo',
+      placeholder: 'Ingrese Tipo',
       rules: 'required|string|between:2,20',  
-      type: 'text'
-    }, {
-      name: 'name',
-      label: 'Nombre',
-      placeholder: 'Ingrese Nombre',
-      rules: 'required|string|between:2,4',  
-      type: 'number'
-    }, {
-      name: 'existence',
-      label: 'Existencia',
-      placeholder: 'Ingrese Existencia',
-      rules: 'required|string|between:2,4',  
-      type: 'number'
-    }, {
-      name: 'entryDate',
-      label: 'Fecha de Ingreso',
-      placeholder: 'Ingrese Fecha de Ingreso',
-      rules: 'required|string|between:2,4',  
-      type: 'date'
+      type: 'select'
     }, {
       name: 'idSupplier',
       label: 'Proveedor',
@@ -64,67 +41,86 @@ class StockStore {
       rules: 'required|string|between:2,4',  
       type: 'text'
     }, {
-      name: 'idTax',
-      label: 'Impuesto',
-      placeholder: 'Ingrese Impuesto',
+      name: 'idProduct',
+      label: 'Producto',
+      placeholder: 'Ingrese Producto',
       rules: 'required|string|between:2,4',  
       type: 'text'
     }, {
-      name: 'observation',
-      label: 'Observación',
-      placeholder: 'Ingrese Observación',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'textarea'
+      name: 'existence',
+      label: 'Unidades',
+      placeholder: 'Ingrese Unidades',
+      rules: 'required|string|between:2,4',  
+      type: 'number'
     }, {
-      name: 'image',
-      label: 'Imágen',
-      placeholder: 'Ingrese Imágen',
+      name: 'selectBatch',
+      label: 'Seleccione Lote',
+      placeholder: 'Ingrese Lote',
       rules: 'notRequired|string|between:2,4',  
-      type: 'file'
+      type: 'select',
+      options: {}
+    }, {
+      name: 'idBatch',
+      label: 'Lote',
+      placeholder: 'Ingrese Lote',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'text'
+    }, {
+      name: 'expiryDate',
+      label: 'Fecha de Caducidad',
+      placeholder: 'Ingrese Fecha de Caducidad',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'date'
     }, {
       name: 'available',
       label: 'Disponible',
       placeholder: '',
       rules: 'notRequired|string|between:2,4',  
       type: 'checkbox'
-    }, {
-      name: 'price',
-      label: 'Precio',
-      placeholder: 'Ingrese precio',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'number'
-    }, {
-      name: 'dollarPrice',
-      label: 'Precio en Dólar',
-      placeholder: 'Ingrese Precio en Dólar',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'number'
     }, 
   ];
 
-  validation = validationContext(this)
 
-  validate () {
-    this.validation.validate({
-      [this.record.code]: [required({ msg: 'Código es requerido' })],
-      [this.record.name]: [required({ msg: 'Nombre es requerido' })],
-      [this.record.existence]: [required({ msg: 'Existencia es requerida' })],
-      [this.record.price]: [required({ msg: 'Precio es requerido' })],
-    })
-  }
-
-  setFiles(files) {
-    this.record.image = files
-  }
-
-  setColumnLookup(options) {
-    console.log(options)
-    var parsed = {}
+  setColumnLookup(options, index) {
+    const parsed = {}
     for(let option of options ){
       Object.assign(parsed, {[option.id]: option.name})
     }
-    console.log(parsed)
-    this.columns.lookup = parsed
+    this.columns[index].lookup = parsed
+  }
+
+  /**
+   * Method to add options(lookup) to a field in datatable
+   */
+  setFieldOptions(options, index) {
+    const parsed = []
+    for(let option of options ){
+      parsed.push({ 'id': option.id, 'code': option.code })
+    }
+    this.fields[index].options = parsed
+  }
+
+  setCurrencyFormat(rows) {
+    for(let row of rows){
+      row.price = numeral(row.price).format('0,0') + ' Bs'
+    }
+    return rows
+  }
+
+  get fullRecords() {
+    const records = []
+    for(let row of this.records) {
+      let obj = { 
+        id: row.id,
+        code: row.product.code, 
+        idProduct: row.idProduct, 
+        idBatch: row.idBatch,
+        existence: row.existence,
+        expiryDate: row.expiryDate
+      }
+      records.push(obj)
+    }
+    return records
   }
 
   /**
@@ -132,38 +128,35 @@ class StockStore {
   */
   getAllRecords() {
     this.loading = true;
-    axios.Stock.getAllRecords()
-    .then(( res ) => {
-      this.records = res
-      this.loading = false;
-    })
-    .catch((err) => {
-      console.log(err)
-      this.loading = false;
-    })
+    return axios.Stock.getAllRecords()
+      .then(( res ) => {
+        this.records = this.setCurrencyFormat(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => this.loading = false)
   }
   /**
    *  Function used to set value of record on input change
   */
   setField(name, value) {
     this.record[name] = value
+    console.log(this.record[name])
   }
   /**
    *  Function used to clear form inputs
   */
   reset() {
     this.record = {
-      code: '',
-      name: '',
-      existence: '',
-      entryDate: '',
+      type: 1,
       idSupplier: '',
-      idTax: '',
-      observation: '',
-      image: '',
-      price: '000',
-      dollarPrice: '000',
-      available: true,
+      idProduct: '',
+      existence: '',
+      selectBatch: '',
+      idBatch: '',
+      expiryDate: '',
+      available: true
     };
   }
   /**
@@ -175,9 +168,9 @@ class StockStore {
       .then(action((res) => { 
         return res
       }))
-      .catch((err) => {
+      .catch(action((err) => {
         console.log(err)
-      })
+      }))
       .finally(() => {
         this.submiting = false;
       })
@@ -190,12 +183,11 @@ class StockStore {
     return axios.Stock.getRecord(id)
     .then(( res ) => {
       this.record = res
-      this.loading = false;
     })
     .catch((err) => {
-      this.loading = false;
       console.log(err)
     })
+    .finally(() => this.loading = false)
   }
   /**
    *  Function used to update user info
@@ -219,14 +211,12 @@ class StockStore {
     this.loading = true;
     return axios.Stock.delete(id) 
     .then(( res ) => {
-    this.loading = false;
       return res
     })
     .catch((err) => {
-      this.loading = false;
-      console.log(err)
-
+      throw err
     })
+    .finally(() => this.loading = false)
   }
   /**
    *  Function used to add a record to list of records
@@ -235,6 +225,7 @@ class StockStore {
     const records = this.records
     delete record.password
     this.records = [ ...records, record ]
+    this.setCurrencyFormat(this.records)
   }
   /**
    *  Function used to update record in list of records
@@ -251,7 +242,7 @@ class StockStore {
       }
       return null
     })
-    this.records = updated
+    this.records = this.setCurrencyFormat(updated)
   }
   /**
    *  Function used to delete record in list of records
@@ -275,6 +266,7 @@ decorate(StockStore, {
   taxes: observable,
   validation: observable,
   columns: observable,
+  fields: observable,
   addRecord: action,
   updateRecord: action,
   deleteRecord: action,
@@ -287,6 +279,8 @@ decorate(StockStore, {
   validate: action,
   setFiles: action,
   setColumnLookup: action,
+  setCurrencyFormat: action,
+  fullRecords: computed,
 })
 
 export default new StockStore();

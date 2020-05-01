@@ -3,7 +3,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid } from '@material-ui/core'
+import { Container, Grid, Fade } from '@material-ui/core'
 
 // Components
 import DataTable from '../components/DataTable'
@@ -32,8 +32,9 @@ const useStyles = makeStyles(theme => ({
 const Supplier = inject("companyStore", "globalStore")(
   observer(({ companyStore, globalStore }) => {
     React.useEffect(() => {
-        companyStore.getAllRecords()
-    }, [companyStore])
+      globalStore.swipeInForm()
+      companyStore.getAllRecords()
+    }, [companyStore, globalStore])
     globalStore.setModule('Empresa')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];
@@ -53,9 +54,11 @@ const Supplier = inject("companyStore", "globalStore")(
             <Grid item xs={globalStore.gridCells.table}> 
               <DataTable store={"companyStore"}/>
             </Grid>
-            <Grid item xs={globalStore.gridCells.form}> 
-              <Slide store={"companyStore"}/>
-            </Grid>
+            <Fade in={globalStore.gridCells.isOpen}>
+              <Grid item xs={globalStore.gridCells.form}> 
+                <Slide store={"companyStore"}/>
+              </Grid>
+            </Fade>
           </Grid>
       </Container>
     )

@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid, Paper, ButtonBase } from '@material-ui/core'
+import { Container, Grid, Paper, Typography } from '@material-ui/core'
 
 // Components
 // import useEventListener from '../components/useEventListener'
@@ -14,42 +14,39 @@ import DataTable from '../components/Stock/Datatable';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
   },
   paper: {
     backgroundColor: theme.palette.primary.dark,
     color: '#fff',
     padding: theme.spacing(2),
+    paddingLeft: theme.spacing(5),
     display: 'flex',
     overflow: 'auto',
     flexDirection: 'column',
-    height: theme.spacing(35),
-  },
-  fixedHeight: {
-    height: 240,
-  },
-  image: {
-    width: '100%',
-    height: 200,
-  },
-  img: {
-    margin: 'auto',
-    display: 'block',
-    maxWidth: '100%',
-    maxHeight: '100%',
+    height: theme.spacing(28),
   }
 }));
 
-const Stock = inject("stockStore", "globalStore", "supplierStore", "taxStore")(
-  observer(({ stockStore, globalStore, supplierStore, taxStore }) => {
+const Stock = inject("stockStore", "globalStore", "supplierStore", "batchStore", "productStore")(
+  observer(({ stockStore, globalStore, supplierStore, batchStore, productStore }) => {
     React.useEffect(() => {
-      stockStore.getAllRecords()
+      batchStore.getAllRecords()
+        .then(() => {
+          stockStore.setColumnLookup(batchStore.records, 3)
+        })
       supplierStore.getAllRecords()
-      taxStore.getAllRecords()
+      productStore.getAllRecords()
+        .then(() => {
+          stockStore.setColumnLookup(productStore.records, 2)
+        })
+      stockStore.getAllRecords()
+        .then(() => stockStore.setCurrencyFormat(stockStore.records))
       stockStore.reset()
-    }, [stockStore, supplierStore, taxStore])
+    }, [stockStore, supplierStore, batchStore, productStore])
     globalStore.setModule('Inventario')
+    globalStore.setSlideTitle('Movimiento de ' + globalStore.module)
   	const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
     // Get all users
@@ -59,43 +56,20 @@ const Stock = inject("stockStore", "globalStore", "supplierStore", "taxStore")(
       }
     }
     useEventListener('keydown', handler);*/
-    var imagePreview
-    if (stockStore.record.image) {
-      if (typeof stockStore.record.image === 'string') {
-        const image = JSON.parse(stockStore.record.image)
-        imagePreview = <img className={classes.img} 
-          alt={image.name} 
-          src={image.base64}
-          />
-      } else {
-        imagePreview = <img className={classes.img} 
-          alt={stockStore.record.image.name} 
-          src={stockStore.record.image.base64}
-          />
-      }
-    } else {
-      imagePreview = <img className={classes.img} 
-        alt={"default"}
-        src={ process.env.PUBLIC_URL + '/assets/images/no-image.png' }
-        />
-    }
     return (
       <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={3} lg={2}>
-              <Paper className={fixedHeightPaper}>
-                <Grid item>
-                  <ButtonBase className={classes.image}>
-                  { imagePreview }
-                  </ButtonBase>
-                </Grid>
-              </Paper>
-            </Grid>
+          <Grid container spacing={2}>
             {/* Chart */}
-            <Grid item xs={12} md={9} lg={10}>
+            <Grid item xs={12} md={12} lg={12}>
               <Paper className={fixedHeightPaper}>
-                <Form/>
+                <Grid container spacing={2}> 
+                  <Grid item xs={12}> 
+                    <Typography component="h2" variant="h6" gutterBottom>
+                      {globalStore.slideTitle}
+                    </Typography>
+                    <Form/>
+                  </Grid>
+                </Grid>
               </Paper>
             </Grid>
             {/* Recent Orders */}

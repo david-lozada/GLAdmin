@@ -12,7 +12,6 @@ exports.getForeignExchange = async function (req, res) {
         limit: 1,
         order: [ [ 'createdAt', 'DESC' ]]
       });
-      console.log(foreingExchange)
       if (foreingExchange) {
           return res.status(200).json(foreingExchange);
       }

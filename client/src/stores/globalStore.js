@@ -1,5 +1,6 @@
 import { observable, action, reaction, decorate } from 'mobx';
 
+
 class GlobalStore {
 
   appName = 'Administrative';
@@ -10,11 +11,12 @@ class GlobalStore {
   slideTitle = ''
   formMethod = '';
   gridCells = {
-    table: 11,
-    form: 1,
+    table: 12,
+    form: false,
     isOpen: false,
   }
   tableLoading = false;
+  foreignExchange = null;
 
   constructor() {
     reaction(
@@ -42,8 +44,8 @@ class GlobalStore {
 
   swipeInForm = () => {
     this.gridCells = {
-      table: 11,
-      form: 1,
+      table: 12,
+      form: false,
       isOpen: false,
     }
   }

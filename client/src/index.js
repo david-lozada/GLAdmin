@@ -13,8 +13,10 @@ import customerStore from "./stores/customerStore";
 import supplierStore from "./stores/supplierStore";
 import companyStore from "./stores/companyStore";
 import taxStore from "./stores/taxStore";
+import batchStore from "./stores/batchStore";
 import roleStore from "./stores/roleStore";
 import stockStore from "./stores/stockStore";
+import productStore from "./stores/productStore";
 
 const stores = {
     authStore,
@@ -24,8 +26,10 @@ const stores = {
     supplierStore,
     companyStore,
     taxStore,
+    batchStore,
     roleStore,
     stockStore,
+    productStore,
 };
 
 ReactDOM.render(

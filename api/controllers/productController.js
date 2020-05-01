@@ -7,13 +7,6 @@ var { Product } = require('../models');
 exports.create = async function (req, res) {
     try {
         const data = req.body
-        console.log(data)
-        if (data.price || data.dollarPrice) {
-            console.log(data.price, data.dollarPrice)
-            const price = data.price.replace(/,/g, "");
-            const dollarPrice = data.dollarPrice.replace(/,/g, "");
-            Object.assign(data, { price, dollarPrice })
-        } 
         let product = await Product.create(data);
         if (product) {
 
@@ -85,11 +78,6 @@ exports.update = async function(req, res) {
         });
         if (product) {
             const data = req.body
-            if (data.price || data.dollarPrice) {
-                const price = data.price.replace(/,/g, "");
-                const dollarPrice = data.dollarPrice.replace(/,/g, "");
-                Object.assign(data, { price, dollarPrice})
-            } 
             product.update(data);
             return res.status(200).json({
                 record: product,

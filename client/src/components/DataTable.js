@@ -7,8 +7,8 @@ import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteO
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
         from '@material-ui/icons';
 
-const DataTable = inject("userStore", "customerStore", "globalStore", "supplierStore", "companyStore", "taxStore")(
-  observer(({ store, userStore, customerStore, globalStore, supplierStore, companyStore, taxStore }) => {
+const DataTable = inject("userStore", "customerStore", "globalStore", "supplierStore", "companyStore", "taxStore", "productStore", "batchStore")(
+  observer(({ store, userStore, customerStore, globalStore, supplierStore, companyStore, taxStore, productStore, batchStore }) => {
   var Store
   switch(store){
     case 'userStore':
@@ -26,6 +26,12 @@ const DataTable = inject("userStore", "customerStore", "globalStore", "supplierS
     case 'taxStore':
       Store = taxStore
       break
+    case 'productStore':
+      Store = productStore
+      break
+      case 'batchStore':
+        Store = batchStore
+        break
     default:
       return null
   }
@@ -107,7 +113,7 @@ const DataTable = inject("userStore", "customerStore", "globalStore", "supplierS
               },
               {
     		        icon: tableIcons.Edit,
-    		        tooltip: 'Editar Usuario',
+    		        tooltip: 'Editar ' + globalStore.module,
     		        onClick: (event, rowData) => {
                     Store.reset()
                     globalStore.setIsUpdateSlide(true)
@@ -122,11 +128,15 @@ const DataTable = inject("userStore", "customerStore", "globalStore", "supplierS
                   alertify.confirm("!ALERTA¡", "Desea eliminar "+ globalStore.module +"?",
                   function(){
                     globalStore.setTableLoaded()
-                    Store.delete(rowData.id).then((res) => {
-                      Store.deleteRecord(rowData.id)
-                      globalStore.setTableLoaded()
-                      alertify.success(res.es)
-                    })
+                    Store.delete(rowData.id)
+                      .then((res) => {
+                        Store.deleteRecord(rowData.id)
+                        globalStore.setTableLoaded()
+                        alertify.success(res.es)
+                      })
+                      .catch((err) => {
+                        alertify.error('Usuario Master no puede ser eliminado')
+                      })
                   },
                   function(){
                   });

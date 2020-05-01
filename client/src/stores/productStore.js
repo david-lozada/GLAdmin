@@ -1,78 +1,127 @@
-import { observable, action, decorate } from 'mobx';
+import { observable, action, decorate, autorun, reaction } from 'mobx';
 import axios from '../axios';
+import numeral from 'numeral'
 
-class UserStore {
+class ProductStore {
 
   records = [];
   currentUser;
   loading;
   submiting;
   record = {
-    firstName: '',
-    lastName: '',
-    userName: '',
-    password: '',
-    email: '',
-    idRole: '',
-    available: '',
+    code: '',
+    name: '',
+    price: '',
+    dollarPrice: '',
+    idTax: '',
+    observation: '',
+    image: '',
+    available: false,
   };
   columns = [
       { title: "#", field: "id" },
-      { title: "Nombre", field: "firstName" },
-      { title: "Apellido", field: "lastName" },
-      { title: "Correo", field: "email" },
-      { title: "Ocupación", field: "idRole", lookup: { 1: "Master", 2: "Administrador", 3: "Empleado" }},
+      { title: "Código", field: "code" },
+      { title: "Nombre", field: "name" },
+      { title: "Precio", field: "price" },
+      { title: "Impuesto", field: "idTax", lookup: {} },
       { title: "Disponible", field: "available", type: "boolean" },
   ];
   fields = [
     {
-      name: 'firstName',
+      name: 'code',
+      label: 'Código',
+      placeholder: 'Ingrese Código',
+      rules: 'required|string|between:2,20',  
+      type: 'text'
+    }, {
+      name: 'name',
       label: 'Nombre',
       placeholder: 'Ingrese Nombre',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
-      name: 'lastName',
-      label: 'Apellido',
-      placeholder: 'Ingrese Apellido',
-      rules: 'required|string|between:2,20',  
-      type: 'text'
-    }, {
-      name: 'userName',
-      label: 'Usuario',
-      placeholder: 'Ingrese Usuario',
-      rules: 'required|string|between:4,30',  
-      type: 'text'
-    }, {
-      name: 'email',
-      label: 'Correo',
-      placeholder: 'Ingrese Correo',
-      rules: 'required|email|string|between:5,25',  
-      type: 'email'
-    }, {
-      name: 'password',
-      label: 'Contraseña',
-      placeholder: 'Ingrese Contraseña',
-      rules: 'required|string|between:5,25',  
-      type: 'password'
-    }, {
-      name: 'idRole',
-      label: 'Ocupación',
-      placeholder: 'Seleccione Rol',
-      rules: 'required|number|max:1', 
+      name: 'idTax',
+      label: 'Impuesto',
+      placeholder: 'Ingrese Impuesto',
+      rules: 'required|string|between:2,4',  
       type: 'select',
       options: {}
+    }, {
+      name: 'dollarPrice',
+      label: 'Precio en Dólar',
+      placeholder: 'Ingrese Precio en Dólar',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'currency'
+    }, {
+      name: 'price',
+      label: 'Precio',
+      placeholder: 'Ingrese Precio',
+      rules: 'required|email|string|between:5,25',  
+      type: 'currency'
+    }, {
+      name: 'observation',
+      label: 'Observación',
+      placeholder: 'Ingrese Observación',
+      rules: 'notRequired|string|between:4,30',  
+      type: 'text'
     }, {
       name: 'available',
       label: 'Disponible',
       placeholder: '',
       rules: 'boolean', 
       type: 'checkbox'
-    }
+    }, {
+      name: 'image',
+      label: 'Imágen',
+      placeholder: '',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'file'
+    }, 
   ];
+  foreignExchange = 0;
+
+  constructor() {
+    autorun(() => {
+      return axios.ForeignExchange.getForeignExchange()
+        .then(( res ) => {
+          this.foreignExchange = res[0].value
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    })
+    reaction(
+      () => this.record.dollarPrice,
+      dollarPrice => {
+        if (dollarPrice) {
+          const dollar = parseInt(dollarPrice)
+          const foreignExchange = parseInt(this.foreignExchange)
+          this.record.price = dollar * foreignExchange
+        }
+      }
+    );
+  }
 
   /**
-   * Method to add options(select) to a field
+   *  Method to set file to record object
+   */
+  setFiles(files) {
+    this.record.image = files
+  }
+
+  /**
+   * Method to add options(lookup) to a field in datatable
+   */
+  setColumnLookup(options, index) {
+    const parsed = {}
+    for(let option of options ){
+      Object.assign(parsed, {[option.id]: option.name})
+    }
+    this.columns[index].lookup = parsed
+  }
+
+  /**
+   * Method to add options(lookup) to a field in datatable
    */
   setFieldOptions(options, index) {
     const parsed = []
@@ -82,21 +131,31 @@ class UserStore {
     this.fields[index].options = parsed
   }
 
+  /**
+   *  Methos to format number to currency
+   */
+  setCurrencyFormat(rows) {
+    for(let row of rows){
+      row.price = numeral(row.price).format('0,0') + ' Bs'
+    }
+    return rows
+  }
+
   getAllRecords() {
     /**
      *  Used to get all users in db
     */
     this.loading = true;
-    axios.User.getAllUsers()
-    .then(( res ) => {
-      this.records = res
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    .finally(() => {
-      this.loading = false;
-    })
+    return axios.Product.getAllRecords()
+      .then(( res ) => {
+        this.records = res
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        this.loading = false;
+      })
   }
   /**
    *  Function used to set value of record on input change
@@ -109,12 +168,12 @@ class UserStore {
   */
   reset() {
     this.record = {
-      firstName: '',
-      lastName: '',
-      userName: '',
-      password: '',
-      email: '',
-      idRole: '',
+      code: '',
+      name: '',
+      price: 0,
+      dollarPrice: 0,
+      idTax: '',
+      observation: '',
       available: false,
     };
   }
@@ -123,7 +182,7 @@ class UserStore {
   */
   save(record) {
     this.submiting = true;
-     return axios.User.save(record)
+     return axios.Product.save(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -134,26 +193,11 @@ class UserStore {
       })
   }
   /**
-   *  Function used to get current user info
-  */
-  pullUser() {
-    this.loading = true;
-    return axios.User.current()
-    .then(action(( res ) => { 
-      this.currentUser = res.user.User;
-      this.loading = false
-    }))
-      .catch((err) => {
-        this.loading = false;
-        console.log(err)
-      })
-  }
-  /**
    *  Function used to get user by id
   */
   getRecord(id) {
     this.loading = true;
-    return axios.User.getUser(id)
+    return axios.Product.getRecord(id)
     .then(( res ) => {
       this.record = res
       this.loading = false;
@@ -166,9 +210,9 @@ class UserStore {
   /**
    *  Function used to update user info
   */
-  update(user) {
+  update(record) {
     this.submiting = true;
-     return axios.User.update(user)
+     return axios.Product.update(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -179,17 +223,11 @@ class UserStore {
       })
   }
   /**
-   *  Function used to clear current user data
-  */
-  forgetUser() {
-    this.currentUser = undefined;
-  }
-  /**
    *  Function used to delete user
   */
   delete(id) {
     this.loading = true;
-    return axios.User.delete(id) 
+    return axios.Product.delete(id) 
     .then(( res ) => {
     this.loading = false;
       return res
@@ -238,24 +276,23 @@ class UserStore {
 
 }
 
-decorate(UserStore, {
+decorate(ProductStore, {
   records: observable,
-  currentUser: observable,
   loading: observable,
   submiting: observable,
   record: observable,
   fields: observable,
+  columns: observable,
+  foreignExchange: observable,
   addRecord: action,
   updateRecord: action,
   deleteRecord: action,
   reset: action,
   save: action,
-  getUser: action,
+  getRecord: action,
   getAllRecords: action,
   delete: action,
-  pullUser: action,
   update: action,
-  forgetUser: action,
 })
 
-export default new UserStore();
+export default new ProductStore();

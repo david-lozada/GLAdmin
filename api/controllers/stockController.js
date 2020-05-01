@@ -1,29 +1,40 @@
 // Dependencies
 
 // Stock Model
-var { Stock } = require('../models');
+var { Stock, Product, Batch } = require('../models');
 
 // Create Stock
 exports.create = async function (req, res) {
     try {
         const data = req.body
-        let stock = await Stock.create(data);
-        if (stock) {
-
+        console.log(data)
+        const [stock, created] = await User.findOrCreate({
+            where: { 
+                idProduct: data.idProduct, 
+                idSupplier: data.idSupplier, 
+                idBatch: data.idBatch 
+            },
+            defaults: data
+        });
+        if (created) {
             return res.status(201).json({
                 record: stock,
                 en: 'Stock has been created',
                 es: 'Inventario creado'
             });
         } else {
-            return res.status(500).json({
-                en: 'Stock not created',
-                es: 'El Inventario no fué creado'
+            return res.status(200).json({
+                en: 'Stock already exists',
+                es: 'Inventario ya existente'
             });
         }
     } catch(err) {
         return res.status(500).send(err);
     }
+}
+
+entry = function(stock) {
+
 }
 
 // Get Stock
@@ -43,7 +54,12 @@ exports.getStock = async function(req, res) {
 // Get all stocks
 exports.getAllStock = async function(req, res) {
     try {
-        let stocks = await Stock.findAll();
+        let stocks = await Stock.findAll({
+          include: [ 
+            { model: Product, as: 'product' },
+            { model: Batch, as: 'batch' }
+          ]
+        });
         if (stocks) {
             return res.status(200).json(stocks);
         }
@@ -51,6 +67,16 @@ exports.getAllStock = async function(req, res) {
         return res.status(400).send(err);
     }
 }
+
+/**
+ *  Function used to add ralated model fields to main object
+ */
+/*joinModelFields = function(model, fields) {
+    const jointObject = {}
+    for(let row of model) {
+        
+    }
+}*/
 
 // Delete Stock
 exports.delete = async function(req, res) {

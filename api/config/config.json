@@ -5,7 +5,8 @@
     "database": "administrative",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "timezone": "-04:00"
   },
   "test": {
     "username": "root",
@@ -21,6 +22,7 @@
     "database": "administrative",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "timezone": "-04:00"
   }
 }

@@ -96,7 +96,7 @@ const Frame = inject("userStore", "authStore", "globalStore", "roleStore")(
   const userNames = user ? user.firstName + " " + user.lastName : ''
 
   // Drawer initialization
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const handleClick = event => {
     setAnchorEl(event.currentTarget);

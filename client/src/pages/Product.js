@@ -29,20 +29,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Tax = inject("taxStore", "globalStore")(
-  observer(({ taxStore, globalStore }) => {
+const Product = inject("productStore", "globalStore", "taxStore")(
+  observer(({ productStore, globalStore, taxStore }) => {
     React.useEffect(() => {
       globalStore.swipeInForm()
+      productStore.getAllRecords()
       taxStore.getAllRecords()
-    }, [taxStore, globalStore])
-    globalStore.setModule('Impuesto')
+      .then(() => { 
+          productStore.setColumnLookup(taxStore.records, 4)
+          productStore.setFieldOptions(taxStore.records, 2)
+      })
+    }, [productStore, taxStore, globalStore])
+    globalStore.setModule('Producto')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];
     function handler({ key }) {
       if (NEW_KEYS.includes(String(key))) {
         globalStore.setIsUpdateSlide(false)
         globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
-        taxStore.reset()
+        productStore.reset()
       }
     }
     useEventListener('keydown', handler);
@@ -52,11 +57,11 @@ const Tax = inject("taxStore", "globalStore")(
       <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={1}> 
             <Grid item xs={globalStore.gridCells.table}> 
-              <DataTable store={"taxStore"}/>
+              <DataTable store={"productStore"}/>
             </Grid>
             <Fade in={globalStore.gridCells.isOpen}>
               <Grid item xs={globalStore.gridCells.form}> 
-                <Slide store={"taxStore"}/>
+                <Slide store={"productStore"}/>
               </Grid>
             </Fade>
           </Grid>
@@ -65,4 +70,4 @@ const Tax = inject("taxStore", "globalStore")(
 })
 )
 
-export default withRouter(Tax)
+export default withRouter(Product)

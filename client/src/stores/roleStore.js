@@ -7,6 +7,7 @@ import axios from "../axios";
 
 class RoleStore {
   roles = []
+  records= []
 
   get allowedRoutes() {
     let allowedRoutes = this.roles.reduce((acc, role) => {
@@ -18,6 +19,23 @@ class RoleStore {
     // For removing duplicate entries.
     allowedRoutes = uniqBy(allowedRoutes, 'component');
     return allowedRoutes
+  }
+
+  /**
+   *  Used to get all users in db
+  */
+  getAllRecords() {
+    this.loading = true;
+    return axios.Role.getAllRecords()
+      .then(( res ) => {
+        this.records = res
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+      .finally(() => {
+        this.loading = false;
+      })
   }
 
   getRole = () => {
@@ -33,6 +51,7 @@ class RoleStore {
 }
 decorate(RoleStore, {
     roles: observable,
+    records: observable,
     forgetRole: action,
     allowedRoutes: computed,
 })

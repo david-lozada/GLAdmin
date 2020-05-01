@@ -39,19 +39,31 @@ module.exports = (sequelize, DataTypes) => {
     User.belongsTo(Role,  {as: 'role',foreignKey: 'idRole'});
   };
 
+  User.beforeDestroy(async (user, options) => {
+    const master = await sequelize.models.Role.findOne({
+      where: { slug: 'master' }
+    })
+    if (user.idRole === master.id) {
+      return Promise.reject(new Error("Usuario con rol Master no puese ser eliminado"));
+    }
+  });
+
   // This is a class method, it is not called on an individual
   // user object, but rather the class as a whole.
   // e.g. User.authenticate('user1', 'password1234')
-  User.authenticate = async function(userName, password) {    
-    const user = await User.findOne({ where: { userName } });
-    // bcrypt is a one-way hashing algorithm that allows us to 
-    // store strings on the database rather than the raw
-    // passwords. Check out the docs for more detail
-    const match = await bcrypt.compare(password, user.password);
-    if(match) {
-      return user.authorize();
+  User.authenticate = async function(userName, password) {
+    try {
+      const user = await User.findOne({ where: { userName } });
+      // bcrypt is a one-way hashing algorithm that allows us to 
+      // store strings on the database rather than the raw
+      // passwords. Check out the docs for more detail
+      const match = await bcrypt.compare(password, user.password);
+      if(match) {
+        return user.authorize();
+      }
+    } catch (err) {
+      return Promise.reject(err);
     }
-    throw new Error('Contraseña incorrecta');
   }
   // in order to define an instance method, we have to access
   // the User model prototype. This can be found in the

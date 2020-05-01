@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import { ListItem, ListItemIcon, ListItemText, Tooltip } from '@material-ui/core';
 // import ListSubheader from '@material-ui/core/ListSubheader';
 import { Dashboard as DashboardIcon, LocalShipping, People as PeopleIcon,
           PeopleOutline as PeopleOutlineIcon,/* Assignment as AssignmentIcon, */
           Business as BusinessIcon, MonetizationOn as MonetizationOnIcon,
-          ListAlt as ListAltIcon  } from '@material-ui/icons';
+          ListAlt as ListAltIcon, Fastfood as FastfoodIcon, 
+          LocalOffer as LocalOfferIcon  } from '@material-ui/icons';
 
 const link = { textDecoration: 'none', color: 'inherit' }
 const Navegation = ({routes, match}) => (
@@ -18,13 +17,15 @@ const Navegation = ({routes, match}) => (
           <ListItemIcon>
           {
             {
-              'User': <PeopleIcon color={"primary"}/>,
-              'Dashboard': <DashboardIcon color={"primary"}/>,
-              'Customer': <PeopleOutlineIcon color={"primary"}/>,
-              'Supplier': <LocalShipping color={"primary"}/>,
-              'Company': <BusinessIcon color={"primary"}/>,
-              'Stock': <ListAltIcon color={"primary"}/>,
-              'Tax': <MonetizationOnIcon color={"primary"}/>
+              'User': <Tooltip title={'Usuarios'} placement={"right"}><PeopleIcon color={"primary"}/></Tooltip>,
+              'Dashboard': <Tooltip title={'Inicio'} placement={"right"}><DashboardIcon color={"primary"}/></Tooltip>,
+              'Customer': <Tooltip title={'Clientes'} placement={"right"}><PeopleOutlineIcon color={"primary"}/></Tooltip>,
+              'Supplier': <Tooltip title={'Proveedores'} placement={"right"}><LocalShipping color={"primary"}/></Tooltip>,
+              'Company': <Tooltip title={'Empresa'} placement={"right"}><BusinessIcon color={"primary"}/></Tooltip>,
+              'Stock': <Tooltip title={'Inventario'} placement={"right"}><ListAltIcon color={"primary"}/></Tooltip>,
+              'Tax': <Tooltip title={'Impuestos'} placement={"right"}><MonetizationOnIcon color={"primary"}/></Tooltip>,
+              'Batch': <Tooltip title={'Lotes'} placement={"right"}><LocalOfferIcon color={"primary"}/></Tooltip>,
+              'Product': <Tooltip title={'Productos'} placement={"right"}><FastfoodIcon color={"primary"}/></Tooltip>
             }[route.component]
           }
           </ListItemIcon>

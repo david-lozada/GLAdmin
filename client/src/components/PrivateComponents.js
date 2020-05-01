@@ -9,7 +9,9 @@ import CustomerComponent from '../pages/Customer'
 import SupplierComponent from '../pages/Supplier'
 import CompanyComponent from '../pages/Company'
 import TaxComponent from '../pages/Tax'
+import BatchComponent from '../pages/Batch'
 import StockComponent from '../pages/Stock'
+import ProductComponent from '../pages/Product'
 import Page404Component from '../pages/Page404'
 
 
@@ -33,8 +35,14 @@ const Company = () => (
 const Tax = () => (
     <Route path="/home/taxes" component={TaxComponent} />
 );
+const Batch = () => (
+    <Route path="/home/batches" component={BatchComponent} />
+);
 const Stock = () => (
-    <Route path="/home/stock" component={StockComponent} />
+    <Route path="/home/stocks" component={StockComponent} />
+);
+const Product = () => (
+    <Route path="/home/products" component={ProductComponent} />
 );
 const Page404 = () => (
     <Route component={Page404Component} />
@@ -47,6 +55,8 @@ export {
   Supplier,
   Company,
   Tax,
+  Batch,
   Stock,
+  Product,
   Page404
 }

@@ -4,7 +4,7 @@ export default {
     routes: [
       {
         component: 'Stock', 
-        url: '/stock',
+        url: '/stocks',
         name: 'Inventario'
       },
       {
@@ -16,6 +16,16 @@ export default {
         component: 'Supplier', 
         url: '/suppliers',
         name: 'Proveedores'
+      },
+      {
+        component: 'Product', 
+        url: '/products',
+        name: 'Productos'
+      },
+      {
+        component: 'Batch', 
+        url: '/batches',
+        name: 'Lotes'
       },
       {
         component: 'Tax', 
@@ -38,7 +48,7 @@ export default {
     routes: [
       {
         component: 'Stock', 
-        url: '/stock',
+        url: '/stocks',
         name: 'Inventario'
       },
       {
@@ -50,6 +60,16 @@ export default {
         component: 'Supplier', 
         url: '/suppliers',
         name: 'Proveedores'
+      },
+      {
+        component: 'Product', 
+        url: '/products',
+        name: 'Productos'
+      },
+      {
+        component: 'Batch', 
+        url: '/batches',
+        name: 'Lotes'
       },
       {
         component: 'Tax', 

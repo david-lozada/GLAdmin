@@ -1,11 +1,9 @@
 import React from 'react';
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControlLabel, Checkbox, MenuItem, TextField, Grid, FormControl, 
-  InputLabel, Select, Tooltip } from '@material-ui/core';
-import { TextValidator } from 'react-material-ui-form-validator';
-import FileBase from 'react-file-base64';
-import numeral from 'numeral'
+import { MenuItem, TextField, Grid, FormControl, 
+  InputLabel, Select, Tooltip, FormControlLabel, Checkbox, Fade } from '@material-ui/core';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 
  
 const useStyles = makeStyles(theme => ({ 
@@ -20,10 +18,20 @@ const useStyles = makeStyles(theme => ({
     width: '100%'
   }
 })); 
+const filter = createFilterOptions();
 
-const TextField1 = inject("globalStore", "stockStore", "supplierStore", "taxStore")(
-  observer(({ globalStore, stockStore, supplierStore, taxStore }) => {
+const TextFields = inject("globalStore", "stockStore", "supplierStore", "productStore", "batchStore")(
+  observer(({ globalStore, stockStore, supplierStore, productStore, batchStore }) => {
   const classes = useStyles(); 
+  const [batchChecked, setBatchChecked] = React.useState(false)
+  const [def, setDef] = React.useState(null)
+  React.useEffect(() => {
+
+    return () => {
+      let defaultOption = (productStore.records !== [] || !productStore.records || productStore.records !== null) ? productStore.records[0] : null
+      setDef(defaultOption)
+    }
+  }, [productStore])
   /**
    *  Function used to change input value
   */
@@ -32,263 +40,180 @@ const TextField1 = inject("globalStore", "stockStore", "supplierStore", "taxStor
     stockStore.setField(input.name, input.checked ? input.checked : input.value)
     
   }
+  const handleBatchSelect = (e) => {
+    setBatchChecked(!batchChecked)
+  }
+
+  const handleInputValidation = (e) => {
+    e.persist()
+    const regex = /^[0-9\b]+$/;
+    const element = e.target;
+    if (element.value === '' || regex.test(element.value)) return stockStore.setField(element.name, element.value)
+  }
   return (
-    <Grid container spacing={1}>
-     <Grid container item xs={12} spacing={1}>
-        <Grid item xs={2}>
-          <Tooltip title={stockStore.fields[0].label} placement={"top"}>
-            <TextValidator
-              validators={['required']}
-              errorMessages={['Campo requerido']}
-              variant={"outlined"}
-              margin={"normal"}
-              name={stockStore.fields[0].name}
-              id={stockStore.fields[0].name}
-              label={stockStore.fields[0].label}
-              autoComplete={stockStore.fields[0].name}
-              color={"secondary"}
-              value={stockStore.record[stockStore.fields[0].name]}
-              InputProps={{className: classes.input}}
-              onChange={handleFieldChange}
-              disabled={stockStore.submiting}
-              autoFocus={true}
-              />
-          </Tooltip>
-        </Grid>
-        <Grid item xs={3}>
-          <Tooltip title={stockStore.fields[1].label} placement={"top"}>
-              <TextValidator
-              className={classes.input}
-              validators={['required']}
-              errorMessages={['Campo requerido']}
-              variant={"outlined"}
-              margin={"normal"}
-              name={stockStore.fields[1].name}
-              id={stockStore.fields[1].name}
-              label={stockStore.fields[1].label}
-              autoComplete={stockStore.fields[1].name}
-              color={"secondary"}
-              value={stockStore.record[stockStore.fields[1].name]}
-              onChange={handleFieldChange}
-              disabled={stockStore.submiting}
-              />
-          </Tooltip>
-        </Grid>
-        <Grid item xs={2}>
-          <Tooltip title={stockStore.fields[5].label} placement={"top"}>
+    <Grid container spacing={2}>
+     <Grid container item xs={6} spacing={1}>
+        <Grid item xs={12} md={6} lg={3}>
+          <Tooltip title={stockStore.fields[0].label} placement={"top"} size={"small"}>
             <FormControl className={classes.select}>
-              <InputLabel id={stockStore.fields[5].label}>{stockStore.fields[5].label}</InputLabel>
-              <Select
-                variant={"outlined"}
-                labelId={stockStore.fields[5].label}
-                id={stockStore.fields[5].name}
-                name={stockStore.fields[5].name}
-                value={stockStore.record[stockStore.fields[5].name]}
-                onChange={handleFieldChange}
-                disabled={stockStore.submiting}
-              >
-                  <MenuItem value={stockStore.record[stockStore.fields[5].name]}>Seleccione Impuesto</MenuItem>
-              {
-                taxStore.records.map((record) => (
-                  <MenuItem key={record.name+record.id} value={record.id}>{record.name}</MenuItem>
-                ))
-              }
-              </Select>
-            </FormControl>
-          </Tooltip>
-        </Grid>
-          <Grid item xs={2}>
-            <Tooltip title={stockStore.fields[4].label} placement={"top"}>
-              <FormControl className={classes.select}>
-                <InputLabel id={stockStore.fields[4].label}>{stockStore.fields[4].label}</InputLabel>
+                <InputLabel id={stockStore.fields[0].label}>{stockStore.fields[0].label}</InputLabel>
                 <Select
+                  style={{color: stockStore.record[stockStore.fields[0].name] === 1 ? '#04c62b' : '#ff0101'}}
                   variant={"outlined"}
-                  labelId={stockStore.fields[4].label}
-                  id={stockStore.fields[4].name}
-                  name={stockStore.fields[4].name}
-                  value={stockStore.record[stockStore.fields[4].name]}
+                  className={classes.input}
+                  labelId={stockStore.fields[0].label}
+                  id={stockStore.fields[0].name}
+                  name={stockStore.fields[0].name}
+                  required
+                  value={stockStore.record[stockStore.fields[0].name]}
                   onChange={handleFieldChange}
                   disabled={stockStore.submiting}
                 >
-                  <MenuItem value={stockStore.record[stockStore.fields[4].name]}>Seleccione Proveedor</MenuItem>
-                {
-                  supplierStore.records.map((record) => (
-                    <MenuItem key={record.firstName+record.id} value={record.id}>{record.firstName + ' ' + record.lastName}</MenuItem>
-                  ))
-                }
+                  <MenuItem value={1}>Entrada</MenuItem>
+                  <MenuItem value={2}>Salida</MenuItem>
                 </Select>
               </FormControl>
-            </Tooltip>
-          </Grid>
-        <Grid item xs={3}>
+          </Tooltip>
+        </Grid>
+        <Grid item xs={12} md={6} lg={9}>
+          <Tooltip title={stockStore.fields[2].label} placement={"top"}>
+              <Autocomplete
+                id="combobox-product" 
+                options={productStore.records}
+                getOptionLabel={(option) => option.name}
+                className={classes.select}
+                noOptionsText={"No hay opciones"}
+                value={def || null}
+                getOptionSelected={(option, value) => option.name === value.name}
+                onChange={(event, newValue) => {
+                  if (!newValue || newValue === null) return
+                  stockStore.setField('idProduct', newValue.id)
+                }}
+                renderInput={(params) => <TextField {...params} InputProps={{ ...params.InputProps, className: classes.input }} autoFocus required disabled={stockStore.submiting} size={"small"} label="Producto" variant="outlined" />}
+              />
+          </Tooltip>
+        </Grid>
+        <Grid item xs={12} md={6} lg={12}>
+          <Tooltip title={stockStore.fields[1].label} placement={"top"}>
+            <Autocomplete
+                id="combobox-supplier" 
+                options={supplierStore.records}
+                getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
+                className={classes.select}
+                name={stockStore.fields[1].name}
+                onChange={(event, newValue) => {
+                  if (!newValue || newValue === null) return
+                  stockStore.setField('idSupplier', newValue.id)
+                }}
+                renderInput={(params) => <TextField {...params} InputProps={{ ...params.InputProps, className: classes.input }} disabled={stockStore.submiting} size={"small"} label="Proveedor" variant="outlined" />}
+              />
+          </Tooltip>
+        </Grid>
+      </Grid>
+      <Grid container item xs={6} spacing={2}>
+        <Grid item xs={12} md={6} lg={6}>
           <Tooltip title={stockStore.fields[3].label} placement={"top"}>
             <TextField
-            className={classes.input}
-            variant={"outlined"}
-            margin={"normal"}
-            name={stockStore.fields[3].name}
-            id={stockStore.fields[3].name}
-            label={stockStore.fields[3].label}
-            color={"secondary"}
-            type={"date"}
-            defaultValue={stockStore.record[stockStore.fields[3].name]}
-            onChange={handleFieldChange}
-            disabled={stockStore.submiting}
-            />
-          </Tooltip>
-        </Grid>
-      </Grid>
-    </Grid>
-  )}
-))
-
-const TextField2 = inject("globalStore", "stockStore")(
-    observer(({ globalStore, stockStore }) => {
-      const classes = useStyles(); 
-    /**
-     *  Function used to change input value
-    */
-    const handleFieldChange = (e) => {
-    	const input = e.target
-    	stockStore.setField(input.name, input.checked ? input.checked : input.value)
-    }
-     // function to capture base64 format of an image
-    const handleFile = (files) => {
-      stockStore.setFiles(files)
-    }
-    return (
-      <Grid container spacing={1}>
-        <Grid container item xs={12} spacing={1}>
-          <Grid item xs={6}>
-            <Tooltip title={stockStore.fields[2].label} placement={"top"}>
-              <FileBase
-                name={stockStore.fields[2].name}
-                id={stockStore.fields[2].name}
-                multiple={ false }
-                onDone={ handleFile }
-                className={classes.file}
-                disabled={stockStore.submiting}
-                />
-            </Tooltip>
-          </Grid>
-          <Grid item xs={3}>
-            <Tooltip title={stockStore.fields[9].label} placement={"top"}>
-              <TextValidator
-                validators={['required']}
-                errorMessages={['Campo requerido']}
-                variant={"outlined"}
-                margin={"normal"}
-                name={stockStore.fields[9].name}
-                id={stockStore.fields[9].name}
-                label={stockStore.fields[9].label}
-                autoComplete={stockStore.fields[9].name}
-                color={"secondary"}
-                value={numeral(stockStore.record[stockStore.fields[9].name]).format('0,0')}
-                className={classes.input}
-                onChange={handleFieldChange}
-                disabled={stockStore.submiting}
-                />
-            </Tooltip>
-          </Grid>
-          <Grid item xs={3}>
-            <Tooltip title={stockStore.fields[10].label} placement={"top"}>
-             <TextField
-              className={classes.input}
+              InputProps={{className: classes.input}}
+              fullWidth
               variant={"outlined"}
               margin={"normal"}
-              name={stockStore.fields[10].name}
-              id={stockStore.fields[10].name}
-              label={stockStore.fields[10].label}
-              autoComplete={stockStore.fields[10].name}
+              required
+              name={stockStore.fields[3].name}
+              id={stockStore.fields[3].name}
+              label={stockStore.fields[3].label}
               color={"secondary"}
               type={"text"}
-              value={numeral(stockStore.record[stockStore.fields[10].name]).format( '0,0')}
+              size={"small"}
+              pattern={"[0-9]*"}
+              value={stockStore.record[stockStore.fields[3].name]}
+              onChange={handleInputValidation}
+              disabled={stockStore.submiting}
+              />
+          </Tooltip>
+        </Grid>
+        <Grid item xs={12} md={6} lg={6}>
+          <Tooltip title={stockStore.fields[6].label} placement={"top"}>
+            <TextField
               InputProps={{className: classes.input}}
+              fullWidth
+              variant={"outlined"}
+              margin={"normal"}
+              name={stockStore.fields[6].name}
+              id={stockStore.fields[6].name}
+              color={"secondary"}
+              type={"date"}
+              size={"small"}
+              value={stockStore.record[stockStore.fields[6].name] || ''}
               onChange={handleFieldChange}
               disabled={stockStore.submiting}
-             />
-            </Tooltip>
-          </Grid>
-        </Grid>
-      </Grid>
-    )}
-))
-
-const TextField3 = inject("globalStore", "stockStore")(
-  observer(({ globalStore, stockStore }) => {
-    const classes = useStyles(); 
-  /**
-   *  Function used to change input value
-  */
-  const handleFieldChange = (e) => {
-    const input = e.target
-    stockStore.setField(input.name, input.checked ? input.checked : input.value)
-  }
-  return (
-    <Grid container spacing={1}>
-      <Grid container item xs={11} spacing={1}>
-      <Grid item xs={2}>
-        <Tooltip title={stockStore.fields[2].label} placement={"top"}>
-          <TextValidator
-            validators={['required']}
-            errorMessages={['Campo requerido']}
-            variant={"outlined"}
-            margin={"normal"}
-            name={stockStore.fields[2].name}
-            id={stockStore.fields[2].name}
-            label={stockStore.fields[2].label}
-            autoComplete={stockStore.fields[2].name}
-            color={"secondary"}
-            value={stockStore.record[stockStore.fields[2].name]}
-            InputProps={{className: classes.input}}
-            onChange={handleFieldChange}
-            disabled={stockStore.submiting}
-            />
-        </Tooltip>
-      </Grid>
-        <Grid item xs={8}>
-          <Tooltip title={stockStore.fields[6].label} placement={"top"}>
-           <TextField
-            className={classes.input}
-            variant={"outlined"}
-            margin={"normal"}
-            name={stockStore.fields[6].name}
-            id={stockStore.fields[6].name}
-            label={stockStore.fields[6].label}
-            autoComplete={stockStore.fields[6].name}
-            color={"secondary"}
-            type={"text"}
-            value={stockStore.record[stockStore.fields[6].name]}
-            InputProps={{className: classes.input}}
-            onChange={handleFieldChange}
-            disabled={stockStore.submiting}
-           />
+              />
           </Tooltip>
         </Grid>
-        <Grid item xs={2}>
-          <Tooltip title={stockStore.fields[8].label} placement={"top"}>
-           <FormControlLabel
+        <Grid item xs={12} md={6} lg={2}>
+          <Tooltip title={"Lote"} placement={"top"}>
+            <FormControlLabel
               control={
                 <Checkbox
-                  disabled={stockStore.submiting}
+                  checked={batchChecked}
+                  onChange={handleBatchSelect}
+                  name="loteCheck"
                   color="secondary"
-                  name={"available"}
-                  id={"available"}
-                  onChange={handleFieldChange}
-                  value={stockStore.record[stockStore.fields[8].name]}
-                  checked={stockStore.record[stockStore.fields[8].name] ? true : false}
                 />
               }
-            />
+              label={"Lote"}
+                />
           </Tooltip>
         </Grid>
+        <Fade in={batchChecked}>
+          <Grid item xs={12} md={6} lg={10}>
+            <Tooltip title={"Lote"} placement={"top"}>
+              <Autocomplete
+                className={classes.select}
+                value={stockStore.record[stockStore.fields[5].name]}
+                onChange={(event, newValue) => {
+                  if (newValue && newValue.inputValue) {
+                    stockStore.setField('idBatch', newValue.inputValue);
+                    return;
+                  }
+                  stockStore.setField('idBatch', newValue);
+                }}
+                filterOptions={(options, params) => {
+                  const filtered = filter(options, params);
+
+                  if (params.inputValue !== '') {
+                    filtered.push({
+                      inputValue: params.inputValue,
+                      code: `Agregar "${params.inputValue}"`,
+                    });
+                  }
+
+                  return filtered;
+                }}
+                id={"batch"}
+                options={batchStore.records}
+                getOptionLabel={(option) => {
+                  // e.g value selected with enter, right from the input
+                  if (typeof option === 'string') {
+                    return option;
+                  }
+                  if (option.inputValue) {
+                    return option.inputValue;
+                  }
+                  return option.code;
+                }}
+                renderOption={(option) => option.code}
+                freeSolo
+                renderInput={(params) => (
+                  <TextField {...params} label="Lote" size={"small"} variant="outlined" InputProps={{ ...params.InputProps, className: classes.input }}/>
+                )}
+              />
+            </Tooltip>
+          </Grid>
+        </Fade>
       </Grid>
     </Grid>
   )}
 ))
 
-export {
-  TextField1,
-  TextField2,
-  TextField3
-};
+export default TextFields

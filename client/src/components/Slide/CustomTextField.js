@@ -1,9 +1,10 @@
 import React from 'react';
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { FormControlLabel, Checkbox, MenuItem, TextField } from '@material-ui/core';
+import { FormControlLabel, Checkbox, MenuItem, TextField, Tooltip } from '@material-ui/core';
 import { TextValidator, SelectValidator } from 'react-material-ui-form-validator';
-
+import FileBase from 'react-file-base64';
+import numeral from 'numeral'
  
 const useStyles = makeStyles(theme => ({ 
   input: {
@@ -12,9 +13,15 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(1),
     // marginTop: theme.spacing(2),
   },
+  select: {
+    color: '#fff',
+    width: theme.spacing(31),
+    marginTop: theme.spacing(2),
+    marginRight: theme.spacing(1)
+  }
 }));
-const CustomTextField = inject("userStore", "globalStore", "customerStore", "supplierStore", "companyStore", "taxStore")(
-    observer(({ store, customerStore, userStore, globalStore, supplierStore, companyStore, taxStore, field, index }) => {
+const CustomTextField = inject("userStore", "globalStore", "customerStore", "supplierStore", "companyStore", "taxStore", "productStore", "batchStore")(
+    observer(({ store, customerStore, userStore, globalStore, supplierStore, companyStore, taxStore, productStore, batchStore, field, index }) => {
     const classes = useStyles();  
     var Store
     switch(store){
@@ -33,6 +40,12 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
       case 'taxStore':
         Store = taxStore
         break
+      case 'productStore':
+        Store = productStore
+        break
+      case 'batchStore':
+        Store = batchStore
+        break
       default:
         return null
     } 
@@ -43,10 +56,16 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
     	const input = e.target
     	Store.setField(input.name, input.checked ? input.checked : input.value)
     }
+     // function to capture base64 format of an image
+    const handleFile = (files) => {
+      productStore.setFiles(files)
+    }
+
     const required = field.rules.split('|')[0] === 'required'
     switch(field.type) {
       case 'checkbox':
-        return <FormControlLabel
+        return <Tooltip title={field.label} placement={"top"}>
+                <FormControlLabel
                   key={field.name}
                   className={classes.input}
                   control={
@@ -62,77 +81,91 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                   }
                   label={field.label}
                 />
+              </Tooltip>
       case 'password':
         if (globalStore.formMethod === 'create') {
-          return <TextValidator
-                  validators={['required']}
-                  errorMessages={['Campo requerido']}
-                  variant={"outlined"}
-                  margin={"normal"}
-                  name={field.name}
-                  id={field.name}
-                  type={"password"}
-                  label={field.label}
-                  autoComplete={field.name}
-                  color={"secondary"}
-                  value={Store.record[field.name] || ''}
-                  InputProps={{className: classes.input}}
-                  onChange={handleFieldChange}
-                  disabled={Store.submiting}
-              />
+          return <Tooltip title={field.label} placement={"top"}>
+                  <TextValidator
+                    validators={['required']}
+                    errorMessages={['Campo requerido']}
+                    variant={"outlined"}
+                    margin={"normal"}
+                    name={field.name}
+                    id={field.name}
+                    type={"password"}
+                    label={field.label}
+                    autoComplete={field.name}
+                    color={"secondary"}
+                    value={Store.record[field.name] || ''}
+                    InputProps={{className: classes.input}}
+                    onChange={handleFieldChange}
+                    disabled={Store.submiting}
+                  />
+                </Tooltip>
         } else {
-          return <TextField
-                  variant={"outlined"}
-                  margin={"normal"}
-                  name={field.name}
-                  id={field.name}
-                  type={"password"}
-                  label={field.label}
-                  autoComplete={field.name}
-                  color={"secondary"}
-                  value={Store.record[field.name] || ''}
-                  InputProps={{className: classes.input}}
-                  onChange={handleFieldChange}
-                  disabled={Store.submiting}
-              />
+          return <Tooltip title={field.label} placement={"top"}>
+                  <TextField
+                    variant={"outlined"}
+                    margin={"normal"}
+                    name={field.name}
+                    id={field.name}
+                    type={"password"}
+                    label={field.label}
+                    autoComplete={field.name}
+                    color={"secondary"}
+                    value={Store.record[field.name] || ''}
+                    InputProps={{className: classes.input}}
+                    onChange={handleFieldChange}
+                    disabled={Store.submiting}
+                  />
+                </Tooltip>
         }
       case 'email':
-        return <TextValidator
-                validators={ required ? ['required', 'isEmail'] : ['isEmail']}
-                errorMessages={ required ? ['Campo requerido', 'Correo inválido'] : ['Correo inválido']}
-                variant={"outlined"}
-                margin={"normal"}
-                name={field.name}
-                id={field.name}
-                label={field.label}
-                autoComplete={field.name}
-                color={"secondary"}
-                value={Store.record[field.name]}
-                InputProps={{className: classes.input}}
-                onChange={handleFieldChange}
-                disabled={Store.submiting}
-               />
+        return <Tooltip title={field.label} placement={"top"}>
+                <TextValidator
+                  validators={ required ? ['required', 'isEmail'] : ['isEmail']}
+                  errorMessages={ required ? ['Campo requerido', 'Correo inválido'] : ['Correo inválido']}
+                  variant={"outlined"}
+                  margin={"normal"}
+                  name={field.name}
+                  id={field.name}
+                  label={field.label}
+                  autoComplete={field.name}
+                  color={"secondary"}
+                  value={Store.record[field.name]}
+                  InputProps={{className: classes.input}}
+                  onChange={handleFieldChange}
+                  disabled={Store.submiting}
+                 />
+                </Tooltip>
       case 'select':
-        return  <SelectValidator
-                select
-                disabled={Store.submiting}
-                label={field.label}
-                variant={"outlined"}
-                value={Store.record[field.name]}
-                onChange={handleFieldChange}
-                name={field.name}
-                id={field.name}
-                validators={['required']}
-                errorMessages={['Campo requerido']}
-                InputProps={{className: classes.input}}
-                >
-                  <MenuItem value={''}>Seleccione Ocupación</MenuItem>
-                  <MenuItem value={1}>Master</MenuItem>
-                  <MenuItem value={2}>Administrador</MenuItem>
-                  <MenuItem value={3}>Empleado</MenuItem>
+        return <Tooltip title={field.label} placement={"top"}>
+                <SelectValidator
+                  select
+                  disabled={Store.submiting}
+                  label={field.label}
+                  variant={"outlined"}
+                  onChange={handleFieldChange}
+                  name={field.name}
+                  id={field.name}
+                  validators={['required']}
+                  errorMessages={['Campo requerido']}
+                  InputProps={{className: classes.select}}
+                  value={Store.record[field.name] || ''}
+                  >
+                  <MenuItem value={''}>Seleccione {field.label}</MenuItem>
+                  {
+                    field.options.length > 0 ? (
+                      field.options.map((option) => (
+                        <MenuItem key={option.id} value={option.id}>{option.name}</MenuItem>
+                      ))
+                    ) : (null)
+                  }
                 </SelectValidator>
+              </Tooltip>
       case 'number':
-        return <TextValidator
+        return <Tooltip title={field.label} placement={"top"}>
+                <TextValidator
                   validators={ required ? ['required'] : []}
                   errorMessages={ required ? ['Campo requerido'] : []}
                   variant={"outlined"}
@@ -149,8 +182,41 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                   onChange={handleFieldChange}
                   disabled={Store.submiting}
                 />
+                </Tooltip>
+      case 'currency':
+        return <Tooltip title={field.label} placement={"top"}>
+                <TextValidator
+                  validators={ required ? ['required'] : []}
+                  errorMessages={ required ? ['Campo requerido'] : []}
+                  variant={"outlined"}
+                  margin={"normal"}
+                  name={field.name}
+                  id={field.name}
+                  autoFocus={index === 0 ? true : false}
+                  label={field.label}
+                  autoComplete={field.name}
+                  color={"secondary"}
+                  type={"text"}
+                  value={numeral(Store.record[field.name]).format('0,0')}
+                  InputProps={{className: classes.input}}
+                  onChange={handleFieldChange}
+                  disabled={Store.submiting}
+                />
+                </Tooltip>
+      case 'file':
+        return <Tooltip title={field.label} placement={"top"}>
+                <FileBase
+                  name={field.name}
+                  id={field.name}
+                  multiple={ false }
+                  onDone={ handleFile }
+                  disabled={Store.submiting}
+                  value={Store.record[field.name] || ''}
+                  />
+              </Tooltip>
       default:
-        return <TextValidator
+        return <Tooltip title={field.label} placement={"top"}>
+                <TextValidator
                   validators={ required ? ['required'] : []}
                   errorMessages={ required ? ['Campo requerido'] : []}
                   variant={"outlined"}
@@ -166,6 +232,7 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                   onChange={handleFieldChange}
                   disabled={Store.submiting}
                 />
+              </Tooltip>
     }
 })
 )

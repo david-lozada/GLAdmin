@@ -29,20 +29,20 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Tax = inject("taxStore", "globalStore")(
-  observer(({ taxStore, globalStore }) => {
+const Batch = inject("batchStore", "globalStore")(
+  observer(({ batchStore, globalStore }) => {
     React.useEffect(() => {
       globalStore.swipeInForm()
-      taxStore.getAllRecords()
-    }, [taxStore, globalStore])
-    globalStore.setModule('Impuesto')
+      batchStore.getAllRecords()
+    }, [batchStore, globalStore])
+    globalStore.setModule('Lote')
     // Get all users
     const NEW_KEYS = ['112', 'F1'];
     function handler({ key }) {
       if (NEW_KEYS.includes(String(key))) {
         globalStore.setIsUpdateSlide(false)
         globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
-        taxStore.reset()
+        batchStore.reset()
       }
     }
     useEventListener('keydown', handler);
@@ -52,11 +52,11 @@ const Tax = inject("taxStore", "globalStore")(
       <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={1}> 
             <Grid item xs={globalStore.gridCells.table}> 
-              <DataTable store={"taxStore"}/>
+              <DataTable store={"batchStore"}/>
             </Grid>
             <Fade in={globalStore.gridCells.isOpen}>
               <Grid item xs={globalStore.gridCells.form}> 
-                <Slide store={"taxStore"}/>
+                <Slide store={"batchStore"}/>
               </Grid>
             </Fade>
           </Grid>
@@ -65,4 +65,4 @@ const Tax = inject("taxStore", "globalStore")(
 })
 )
 
-export default withRouter(Tax)
+export default withRouter(Batch)

@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     available: DataTypes.BOOLEAN,
     image: DataTypes.JSON
   }, {});
-  Product.associate = function({ Tax }) {
+  Product.associate = function({ Tax, Stock }) {
     // associations can be defined here
     Product.belongsTo(Tax,  {as: 'tax',foreignKey: 'idTax'});
   };

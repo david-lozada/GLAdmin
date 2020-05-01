@@ -4,7 +4,7 @@ import { observer, inject } from "mobx-react"
 import alertify from "alertifyjs";
 import theme from '../../Theme';
 import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteOutline,
-        Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn } 
+        Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn, Visibility } 
         from '@material-ui/icons';
 
 const DataTable = inject("userStore", "customerStore", "globalStore", 
@@ -51,17 +51,23 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
 	    Search: forwardRef((props, ref) => <Search color={"secondary"} {...props} ref={ref} />),
 	    SortArrow: forwardRef((props, ref) => <ArrowDownward color={"secondary"} {...props} ref={ref} />),
 	    ThirdStateCheck: forwardRef((props, ref) => <Remove color={"secondary"} {...props} ref={ref} />),
-	    ViewColumn: forwardRef((props, ref) => <ViewColumn color={"secondary"} {...props} ref={ref} />)
+      ViewColumn: forwardRef((props, ref) => <ViewColumn color={"secondary"} {...props} ref={ref} />),
+	    Visibility: forwardRef((props, ref) => <Visibility color={"primary"} {...props} ref={ref} />)
 	};
     return (
         <MaterialTable
-            style={{ backgroundColor: theme.palette.primary.dark, color: '#fff', padding: '2% 2% 2% 2%'}}
+            style={{ backgroundColor: theme.palette.primary.dark, color: '#fff', padding: '0 2% 0 2%'}}
             icons={tableIcons}
             title={globalStore.module}
             columns={Store.columns}
-            data={Store.records}
+            data={Store.fullRecords}
             isLoading={Store.loading}
             options={{
+              maxBodyHeight: 270,
+              filtering: true,
+              filterCellStyle: {
+                color: '#fff',
+              },
               minBodyHeight: 90,
               pageSize: 5,
               padding: 'dense',
@@ -69,7 +75,7 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
               headerStyle: {
                 backgroundColor: theme.palette.primary.dark, 
                 color: theme.palette.secondary.main,
-                fontWeight: 'bold'
+                fontWeight: 'bold',
               },
               searchFieldStyle: {
                 color: theme.palette.primary.light
@@ -111,12 +117,19 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
                 }
               },
               {
+                icon: tableIcons.Visibility,
+                tooltip: 'Ver ' + globalStore.module,
+                onClick: (event, rowData) => {
+                  console.log(rowData.id)
+                }
+              },
+              {
     		        icon: tableIcons.Edit,
-    		        tooltip: 'Editar Usuario',
+    		        tooltip: 'Editar ' + globalStore.module,
     		        onClick: (event, rowData) => {
                     Store.reset()
-                    globalStore.setIsUpdateSlide(true)
-                    globalStore.swipeOutForm('Actualizar ' + globalStore.module, 'update')
+                    globalStore.setFormMethod('update')
+                    globalStore.setSlideTitle('Editar ' + globalStore.module)
                     Store.getRecord(rowData.id)
                 }
     		      },

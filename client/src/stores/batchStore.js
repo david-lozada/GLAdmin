@@ -1,34 +1,34 @@
 import { observable, action, decorate } from 'mobx';
 import axios from '../axios';
 
-class TaxStore {
+class BatchStore {
 
   records = [];
   currentUser;
   loading;
   submiting;
   record = {
-    name: '',
-    percentage: ''
+    code: '',
+    description: ''
   };
   columns = [
       { title: "#", field: "id" },
-      { title: "Nombre", field: "name" },
-      { title: "Porcentaje", field: "percentage" },
+      { title: "Código", field: "code" },
+      { title: "Descripción", field: "description" },
   ];
   fields = [
     {
-      name: 'name',
-      label: 'Nombre',
-      placeholder: 'Ingrese Nombre',
+      name: 'code',
+      label: 'Código',
+      placeholder: 'Ingrese Código',
       rules: 'required|string|between:2,20',  
       type: 'text'
     }, {
-      name: 'percentage',
-      label: 'Porcentaje',
-      placeholder: 'Ingrese Porcentaje',
-      rules: 'required|string|between:2,4',  
-      type: 'number'
+      name: 'description',
+      label: 'Descripción',
+      placeholder: 'Ingrese Descripción',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'text'
     }, 
   ];
 
@@ -37,7 +37,7 @@ class TaxStore {
   */
   getAllRecords() {
     this.loading = true;
-    return axios.Tax.getAllRecords()
+    return axios.Batch.getAllRecords()
       .then(( res ) => {
         this.records = res
       })
@@ -57,8 +57,8 @@ class TaxStore {
   */
   reset() {
     this.record = {
-      name: '',
-      percentage: ''
+      code: '',
+      description: ''
     };
   }
   /**
@@ -66,7 +66,7 @@ class TaxStore {
   */
   save(record) {
     this.submiting = true;
-     return axios.Tax.save(record)
+     return axios.Batch.save(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -81,7 +81,7 @@ class TaxStore {
   */
   getRecord(id) {
     this.loading = true;
-    return axios.Tax.getRecord(id)
+    return axios.Batch.getRecord(id)
     .then(( res ) => {
       this.record = res
       this.loading = false;
@@ -96,7 +96,7 @@ class TaxStore {
   */
   update(record) {
     this.submiting = true;
-     return axios.Tax.update(record)
+     return axios.Batch.update(record)
       .then(action((res) => { 
         this.submiting = false;
         return res
@@ -111,7 +111,7 @@ class TaxStore {
   */
   delete(id) {
     this.loading = true;
-    return axios.Tax.delete(id) 
+    return axios.Batch.delete(id) 
     .then(( res ) => {
     this.loading = false;
       return res
@@ -160,7 +160,7 @@ class TaxStore {
 
 }
 
-decorate(TaxStore, {
+decorate(BatchStore, {
   records: observable,
   loading: observable,
   submiting: observable,
@@ -176,4 +176,4 @@ decorate(TaxStore, {
   update: action,
 })
 
-export default new TaxStore();
+export default new BatchStore();

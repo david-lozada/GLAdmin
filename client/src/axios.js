@@ -125,22 +125,56 @@ const Tax = {
     requests.put('/taxes/update',  tax )
 };
 
+const Batch = {
+  getAllRecords: () =>
+    requests.get('/batches/all'),
+  getRecord: (id) =>
+    requests.get('/batches/batch/'+id),
+  delete: (id) =>
+    requests.delete('/batches/delete/'+id),
+  save: (data) =>
+    requests.post('/batches/create', data ),
+  update: (batch) =>
+    requests.put('/batches/update',  batch )
+};
+
 const Stock = {
   getAllRecords: () =>
-    requests.get('/stock/all'),
+    requests.get('/stocks/all'),
   getRecord: (id) =>
-    requests.get('/stock/product/'+id),
+    requests.get('/stocks/stock/'+id),
   delete: (id) =>
-    requests.delete('/stock/delete/'+id),
+    requests.delete('/stocks/delete/'+id),
   save: (data) =>
-    requests.post('/stock/create', data ),
+    requests.post('/stocks/create', data ),
   update: (product) =>
-    requests.put('/stock/update',  product )
+    requests.put('/stocks/update',  product )
+};
+
+const Product = {
+  getAllRecords: () =>
+    requests.get('/products/all'),
+  getRecord: (id) =>
+    requests.get('/products/product/'+id),
+  delete: (id) =>
+    requests.delete('/products/delete/'+id),
+  save: (data) =>
+    requests.post('/products/create', data ),
+  update: (product) =>
+    requests.put('/products/update',  product )
 };
 
 const Role = {
   getRole: () =>
-    requests.get('/roles/all')
+    requests.get('/roles/current'),
+  getAllRecords: () =>
+    requests.get('/roles/all'),
+};
+
+
+const ForeignExchange = {
+  getForeignExchange: () =>
+    requests.get('/foreign-exchanges/current')
 };
 
 export default {
@@ -150,6 +184,9 @@ export default {
   Supplier,
   Company,
   Tax,
+  Batch,
   Stock,
+  Product,
+  ForeignExchange,
   Role,
 };
