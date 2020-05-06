@@ -11,13 +11,6 @@ module.exports = {
       existence: {
         type: Sequelize.INTEGER
       },
-      type: {
-        type: Sequelize.INTEGER
-      },
-      expiryDate: {
-        allowNull: true,
-        type: Sequelize.DATE
-      },
       available: {
         allowNull: true,
         type: Sequelize.BOOLEAN,

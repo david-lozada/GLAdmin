@@ -9,10 +9,20 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       type: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       quantity: {
+        allowNull: false,
         type: Sequelize.INTEGER
+      },
+      expiryDate: {
+        allowNull: true,
+        type: Sequelize.DATE
+      },
+      observation: {
+        allowNull: true,
+        type: Sequelize.TEXT
       },
       createdAt: {
         allowNull: false,

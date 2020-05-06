@@ -5,7 +5,7 @@ module.exports = {
       idProduct: {
         type: Sequelize.INTEGER,
       },
-      idForeignExchange: {
+      idForeignExchange: { //This one shouldn't be notNull, the user may input default price (Not dollar)
         type: Sequelize.INTEGER,
       },
       createdAt: {
