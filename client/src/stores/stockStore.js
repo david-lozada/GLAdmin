@@ -17,15 +17,15 @@ class StockStore {
     existence: '',
     idBatch: null,
     expiryDate: '',
-    available: true
+    available: true,
+    observation: '',
   };
   columns = [
-      { title: "#", field: "id" },
       { title: "Código", field: "code" },
-      { title: "Producto", field: "idProduct", lookup: {} },
+      { title: "Producto", field: "idProduct"},
+      { title: "Proveedor", field: "idSupplier"},
       { title: "Lote", field: "idBatch", lookup: {} },
       { title: "Existencia", field: "existence" },
-      { title: "Caducidad", field: "expiryDate" },
   ];
   fields = [
     {
@@ -77,14 +77,31 @@ class StockStore {
       placeholder: '',
       rules: 'notRequired|string|between:2,4',  
       type: 'checkbox'
-    }, 
+    }, {
+      name: 'observation',
+      label: 'Observación',
+      placeholder: '',
+      rules: 'notRequired|string|between:2,4',  
+      type: 'text'
+    },  
   ];
 
-
-  setColumnLookup(options, index) {
+  /**
+   * Function that adds columns options
+   * Params @options records from db @index column position @field name of the field to display
+   */
+  setColumnLookup(options, index, field) {
     const parsed = {}
     for(let option of options ){
-      Object.assign(parsed, {[option.id]: option.name})
+      Object.assign(parsed, 
+        {[option.id]: 
+          {
+            'name': option.name,
+            'code': option.code,
+            'fullname': `${option.firstName} ${option.lastName}`
+          }[field]
+        }
+      )
     }
     this.columns[index].lookup = parsed
   }
@@ -99,12 +116,12 @@ class StockStore {
     }
     this.fields[index].options = parsed
   }
-
-  setCurrencyFormat(rows) {
-    for(let row of rows){
-      row.price = numeral(row.price).format('0,0') + ' Bs'
-    }
-    return rows
+  /**
+   * Function to format number to currency
+   */
+  setCurrencyFormat(row) {
+    let amount = numeral(row).format('0,0') + ' Bs'
+    return amount
   }
 
   get fullRecords() {
@@ -112,8 +129,9 @@ class StockStore {
     for(let row of this.records) {
       let obj = { 
         id: row.id,
-        code: row.product.code, 
-        idProduct: row.idProduct, 
+        code: (row.product.code !== undefined) ? row.product.code : row.productData.productCode, 
+        idProduct: (row.product.name !== undefined) ? row.product.name : row.productData.productName, 
+        idSupplier: (row.supplier) ? `${row.supplier.firstName} ${row.supplier.lastName}` : null, 
         idBatch: row.idBatch,
         existence: row.existence,
         expiryDate: row.expiryDate
@@ -130,7 +148,7 @@ class StockStore {
     this.loading = true;
     return axios.Stock.getAllRecords()
       .then(( res ) => {
-        this.records = this.setCurrencyFormat(res)
+        this.records = res
       })
       .catch((err) => {
         console.log(err)
@@ -150,13 +168,13 @@ class StockStore {
   reset() {
     this.record = {
       type: 1,
-      idSupplier: '',
-      idProduct: '',
+      idSupplier: null,
+      idProduct: null,
       existence: '',
-      selectBatch: '',
-      idBatch: '',
+      idBatch: null,
       expiryDate: '',
-      available: true
+      available: true,
+      observation: '',
     };
   }
   /**

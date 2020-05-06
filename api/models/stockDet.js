@@ -16,6 +16,13 @@ module.exports = (sequelize, DataTypes) => {
           const parsedDate = moment(newDate).format('LLL');
           return parsedDate
         }
+      },
+      set: function(date) {
+        if(moment(date, 'YYYY-MM-DD').isValid()) {
+          this.setDataValue('expiryDate', date)
+        } else {
+          this.setDataValue('expiryDate', null)
+        }
       }
     },
     observation: DataTypes.TEXT,
@@ -24,12 +31,27 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     StockDet.belongsTo(Stock,  {as: 'stockDet', foreignKey: 'idStock'});
   };
-  StockDet.beforeCreate(async (stockDet, options) => {
-    if(moment(stockDet.expiryDate, 'YYYY-MM-DD').isValid()) {
-      stockDet.expiryDate = stockDet.expiryDate
-    } else {
-      stockDet.expiryDate = null
-    }
+  StockDet.afterCreate(async (stockDet, options) => {
+    //Look for stock parent with all details
+    const stock = await sequelize.models.Stock.findOne({
+      where: { id: stockDet.idStock },
+      include: [
+        { model: sequelize.models.StockDet, as: 'stockDet' }
+      ]
+    })
+    .then(function(stock) { 
+      let result = 0
+      //Loop through every detail 
+      for(let detail of stock.stockDet) {
+        //Concat quantity depending on type of stock (entry or exit)
+        result += (detail.type === 1) ? detail.quantity: -detail.quantity 
+      }
+      //Update existence on Stock
+      stock.existence = result
+      stock.save()
+    })
+    .catch(function(err) { console.log(err) })
+    return stock
   })
   return StockDet;
 };

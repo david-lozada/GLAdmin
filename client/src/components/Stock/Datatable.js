@@ -7,33 +7,8 @@ import { AddBox, ArrowDownward, Check, ChevronLeft, ChevronRight, Clear, DeleteO
         Edit, FilterList, FirstPage, LastPage, Remove, SaveAlt, Search, ViewColumn, Visibility } 
         from '@material-ui/icons';
 
-const DataTable = inject("userStore", "customerStore", "globalStore", 
-                            "supplierStore", "companyStore", "taxStore", "stockStore")(
-  observer(({ store, userStore, customerStore, globalStore, supplierStore, 
-                companyStore, taxStore, stockStore }) => {
-  var Store
-  switch(store){
-    case 'userStore':
-      Store = userStore
-      break
-    case 'customerStore':
-      Store = customerStore
-      break
-    case 'supplierStore':
-      Store = supplierStore
-      break
-    case 'companyStore':
-      Store = companyStore
-      break
-    case 'taxStore':
-      Store = taxStore
-      break
-    case 'stockStore':
-        Store = stockStore
-        break
-    default:
-      return null
-  }
+const DataTable = inject("globalStore", "stockStore")(
+  observer(({ globalStore, stockStore }) => {
 	const tableIcons = {
 	    Add: forwardRef((props, ref) => <AddBox color={"secondary"} {...props} ref={ref} />),
 	    Check: forwardRef((props, ref) => <Check color={"primary"} {...props} ref={ref} />),
@@ -59,9 +34,9 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
             style={{ backgroundColor: theme.palette.primary.dark, color: '#fff', padding: '0 2% 0 2%'}}
             icons={tableIcons}
             title={globalStore.module}
-            columns={Store.columns}
-            data={Store.fullRecords}
-            isLoading={Store.loading}
+            columns={stockStore.columns}
+            data={stockStore.fullRecords}
+            isLoading={stockStore.loading}
             options={{
               maxBodyHeight: 270,
               filtering: true,
@@ -111,7 +86,7 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
                 tooltip: 'Agregar ' + globalStore.module,
                 isFreeAction: true,
                 onClick: (event) => {
-                  Store.reset()
+                  stockStore.reset()
                   globalStore.setIsUpdateSlide(false)
                   globalStore.swipeOutForm('Agregar ' + globalStore.module, 'create')
                 }
@@ -127,10 +102,10 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
     		        icon: tableIcons.Edit,
     		        tooltip: 'Editar ' + globalStore.module,
     		        onClick: (event, rowData) => {
-                    Store.reset()
+                    stockStore.reset()
                     globalStore.setFormMethod('update')
                     globalStore.setSlideTitle('Editar ' + globalStore.module)
-                    Store.getRecord(rowData.id)
+                    stockStore.getRecord(rowData.id).then(() => stockStore.setField('type', 1))
                 }
     		      },
               {
@@ -140,8 +115,8 @@ const DataTable = inject("userStore", "customerStore", "globalStore",
                   alertify.confirm("!ALERTA¡", "Desea eliminar "+ globalStore.module +"?",
                   function(){
                     globalStore.setTableLoaded()
-                    Store.delete(rowData.id).then((res) => {
-                      Store.deleteRecord(rowData.id)
+                    stockStore.delete(rowData.id).then((res) => {
+                      stockStore.deleteRecord(rowData.id)
                       globalStore.setTableLoaded()
                       alertify.success(res.es)
                     })

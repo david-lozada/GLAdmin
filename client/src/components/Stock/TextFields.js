@@ -24,14 +24,6 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
   observer(({ globalStore, stockStore, supplierStore, productStore, batchStore }) => {
   const classes = useStyles(); 
   const [batchChecked, setBatchChecked] = React.useState(false)
-  const [def, setDef] = React.useState(null)
-  React.useEffect(() => {
-
-    return () => {
-      let defaultOption = (productStore.records !== [] || !productStore.records || productStore.records !== null) ? productStore.records[0] : null
-      setDef(defaultOption)
-    }
-  }, [productStore])
   /**
    *  Function used to change input value
   */
@@ -58,14 +50,14 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
             <FormControl className={classes.select}>
                 <InputLabel id={stockStore.fields[0].label}>{stockStore.fields[0].label}</InputLabel>
                 <Select
-                  style={{color: stockStore.record[stockStore.fields[0].name] === 1 ? '#04c62b' : '#ff0101'}}
+                  style={{color: (stockStore.record.type === 1 || stockStore.record.type === undefined) ? '#04c62b' : '#ff0101'}}
                   variant={"outlined"}
                   className={classes.input}
                   labelId={stockStore.fields[0].label}
                   id={stockStore.fields[0].name}
                   name={stockStore.fields[0].name}
                   required
-                  value={stockStore.record[stockStore.fields[0].name]}
+                  value={stockStore.record.type || ''}
                   onChange={handleFieldChange}
                   disabled={stockStore.submiting}
                 >
@@ -83,7 +75,6 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
                 getOptionLabel={(option) => option.name}
                 className={classes.select}
                 noOptionsText={"No hay opciones"}
-                value={def || null}
                 getOptionSelected={(option, value) => option.name === value.name}
                 onChange={(event, newValue) => {
                   if (!newValue || newValue === null) return
@@ -111,7 +102,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
         </Grid>
       </Grid>
       <Grid container item xs={6} spacing={2}>
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={6} lg={3}>
           <Tooltip title={stockStore.fields[3].label} placement={"top"}>
             <TextField
               InputProps={{className: classes.input}}
@@ -126,13 +117,13 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
               type={"text"}
               size={"small"}
               pattern={"[0-9]*"}
-              value={stockStore.record[stockStore.fields[3].name]}
+              value={stockStore.record.existence}
               onChange={handleInputValidation}
               disabled={stockStore.submiting}
               />
           </Tooltip>
         </Grid>
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={6} lg={3}>
           <Tooltip title={stockStore.fields[6].label} placement={"top"}>
             <TextField
               InputProps={{className: classes.input}}
@@ -144,7 +135,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
               color={"secondary"}
               type={"date"}
               size={"small"}
-              value={stockStore.record[stockStore.fields[6].name] || ''}
+              value={stockStore.record.expiryDate || ''}
               onChange={handleFieldChange}
               disabled={stockStore.submiting}
               />
@@ -166,17 +157,18 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
           </Tooltip>
         </Grid>
         <Fade in={batchChecked}>
-          <Grid item xs={12} md={6} lg={10}>
+          <Grid item xs={12} md={6} lg={4}>
             <Tooltip title={"Lote"} placement={"top"}>
               <Autocomplete
                 className={classes.select}
-                value={stockStore.record[stockStore.fields[5].name]}
+                value={stockStore.record.idBatch}
                 onChange={(event, newValue) => {
+                  if (!newValue) return
                   if (newValue && newValue.inputValue) {
                     stockStore.setField('idBatch', newValue.inputValue);
                     return;
                   }
-                  stockStore.setField('idBatch', newValue);
+                  stockStore.setField('idBatch', newValue.code);
                 }}
                 filterOptions={(options, params) => {
                   const filtered = filter(options, params);
@@ -211,6 +203,25 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
             </Tooltip>
           </Grid>
         </Fade>
+        <Grid item xs={12} md={6} lg={12}>
+          <Tooltip title={stockStore.fields[8].label} placement={"top"}>
+            <TextField
+              InputProps={{className: classes.input}}
+              fullWidth
+              variant={"outlined"}
+              margin={"normal"}
+              name={stockStore.fields[8].name}
+              id={stockStore.fields[8].name}
+              label={stockStore.fields[8].label}
+              color={"secondary"}
+              type={"text"}
+              size={"small"}
+              value={stockStore.record.observation || ''}
+              onChange={handleFieldChange}
+              disabled={stockStore.submiting}
+              />
+          </Tooltip>
+        </Grid>
       </Grid>
     </Grid>
   )}

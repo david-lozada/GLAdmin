@@ -32,30 +32,26 @@ const useStyles = makeStyles(theme => ({
 const Stock = inject("stockStore", "globalStore", "supplierStore", "batchStore", "productStore")(
   observer(({ stockStore, globalStore, supplierStore, batchStore, productStore }) => {
     React.useEffect(() => {
+      //Fetch all records from batch table
       batchStore.getAllRecords()
         .then(() => {
-          stockStore.setColumnLookup(batchStore.records, 3)
+          //Set lookup for batch column
+          stockStore.setColumnLookup(batchStore.records, 3, "code") 
         })
+      //Fetch all suppliers from db
       supplierStore.getAllRecords()
+       //Fetch all products from db
       productStore.getAllRecords()
-        .then(() => {
-          stockStore.setColumnLookup(productStore.records, 2)
-        })
+       //Fetch all stocks from db
       stockStore.getAllRecords()
-        .then(() => stockStore.setCurrencyFormat(stockStore.records))
+      //Clear all
       stockStore.reset()
     }, [stockStore, supplierStore, batchStore, productStore])
     globalStore.setModule('Inventario')
     globalStore.setSlideTitle('Movimiento de ' + globalStore.module)
   	const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-    // Get all users
-   /* const NEW_KEYS = ['112', 'F1'];
-    function handler({ key }) {
-      if (NEW_KEYS.includes(String(key))) {
-      }
-    }
-    useEventListener('keydown', handler);*/
+
     return (
       <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={2}>
