@@ -19,9 +19,5 @@ module.exports = (sequelize, DataTypes) => {
     Stock.belongsTo(Batch,  {as: 'batch', foreignKey: 'idBatch'});
     Stock.hasMany(StockDet,  {as: 'stockDet', foreignKey: 'idStock'});
   };
-
-  Stock.beforeCreate(async (stock, options) => {
-
-  })
   return Stock;
 };

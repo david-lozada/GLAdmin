@@ -60,7 +60,7 @@ const DataTable = inject("globalStore", "stockStore")(
               },
               exportButton: true,
               exportAllData: true,
-              exportFileName: 'Usuarios'
+              exportFileName: globalStore.module
             }}
             localization={{
               pagination: {
@@ -95,7 +95,9 @@ const DataTable = inject("globalStore", "stockStore")(
                 icon: tableIcons.Visibility,
                 tooltip: 'Ver ' + globalStore.module,
                 onClick: (event, rowData) => {
-                  console.log(rowData.id)
+                  stockStore.getRecord(rowData.id).then(() => {
+                    stockStore.setDialogOpen(true)
+                  })
                 }
               },
               {

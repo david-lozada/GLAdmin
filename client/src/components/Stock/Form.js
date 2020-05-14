@@ -50,7 +50,7 @@ const Form = inject("stockStore", "globalStore")(
       e.preventDefault()
       stockStore.save(stockStore.record)
         .then((res) => {
-          // stockStore.reset()
+          stockStore.reset()
           if (res.record){
             stockStore.addRecord(res.record)
           }

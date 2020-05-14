@@ -80,7 +80,7 @@ const DataTable = inject("userStore", "customerStore", "globalStore", "supplierS
               },
               exportButton: true,
               exportAllData: true,
-              exportFileName: 'Usuarios'
+              exportFileName: globalStore.module
             }}
             localization={{
               pagination: {

@@ -11,15 +11,14 @@ class ProductStore {
   record = {
     code: '',
     name: '',
-    price: '',
-    dollarPrice: '',
+    price: null,
+    dollarPrice: null,
     idTax: '',
     observation: '',
     image: '',
     available: false,
   };
   columns = [
-      { title: "#", field: "id" },
       { title: "Código", field: "code" },
       { title: "Nombre", field: "name" },
       { title: "Precio", field: "price" },

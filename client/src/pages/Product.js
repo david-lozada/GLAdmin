@@ -33,11 +33,11 @@ const Product = inject("productStore", "globalStore", "taxStore")(
   observer(({ productStore, globalStore, taxStore }) => {
     React.useEffect(() => {
       globalStore.swipeInForm()
-      productStore.getAllRecords()
       taxStore.getAllRecords()
       .then(() => { 
-          productStore.setColumnLookup(taxStore.records, 4)
+          productStore.setColumnLookup(taxStore.records, 3)
           productStore.setFieldOptions(taxStore.records, 2)
+          productStore.getAllRecords()
       })
     }, [productStore, taxStore, globalStore])
     globalStore.setModule('Producto')

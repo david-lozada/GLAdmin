@@ -17,9 +17,9 @@ class StockStore {
     existence: '',
     idBatch: null,
     expiryDate: '',
-    available: true,
     observation: '',
   };
+  dialogOpen = false;
   columns = [
       { title: "Código", field: "code" },
       { title: "Producto", field: "idProduct"},
@@ -85,6 +85,23 @@ class StockStore {
       type: 'text'
     },  
   ];
+
+  /**
+   *  Method to populate autocomplete
+   *  params {model} and {id} id of record
+   */
+  setAutocompleteValue(model, id) {
+    let result = model.find(row => row.id === id )
+    let index = model.indexOf(result)
+    return model[index]
+  }
+
+  /**
+   *  Open and close dialog to show full stock info
+   */
+  setDialogOpen(value) {
+    this.dialogOpen = value
+  };
 
   /**
    * Function that adds columns options
@@ -173,7 +190,6 @@ class StockStore {
       existence: '',
       idBatch: null,
       expiryDate: '',
-      available: true,
       observation: '',
     };
   }
@@ -184,6 +200,7 @@ class StockStore {
     this.submiting = true;
      return axios.Stock.save(record)
       .then(action((res) => { 
+        this.getAllRecords()
         return res
       }))
       .catch(action((err) => {
@@ -214,13 +231,12 @@ class StockStore {
     this.submiting = true;
      return axios.Stock.update(record)
       .then(action((res) => { 
-        this.submiting = false;
         return res
       }))
       .catch((err) => {
-        this.submiting = false;
         console.log(err)
       })
+      .finally(() => this.submiting = false)
   }
   /**
    *  Function used to delete user
@@ -260,7 +276,7 @@ class StockStore {
       }
       return null
     })
-    this.records = this.setCurrencyFormat(updated)
+    this.records = updated
   }
   /**
    *  Function used to delete record in list of records
@@ -285,6 +301,9 @@ decorate(StockStore, {
   validation: observable,
   columns: observable,
   fields: observable,
+  dialogOpen: observable,
+  productCombobox: observable,
+  supplierCombobox: observable,
   addRecord: action,
   updateRecord: action,
   deleteRecord: action,
@@ -298,6 +317,8 @@ decorate(StockStore, {
   setFiles: action,
   setColumnLookup: action,
   setCurrencyFormat: action,
+  setAutocompleteValue: action,
+  setDialogOpen: action,
   fullRecords: computed,
 })
 

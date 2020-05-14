@@ -31,7 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     StockDet.belongsTo(Stock,  {as: 'stockDet', foreignKey: 'idStock'});
   };
-  StockDet.afterCreate(async (stockDet, options) => {
+  StockDet.beforeCreate(async (stockDet, options) => {
+    var updated = false
     //Look for stock parent with all details
     const stock = await sequelize.models.Stock.findOne({
       where: { id: stockDet.idStock },
@@ -43,12 +44,14 @@ module.exports = (sequelize, DataTypes) => {
       let result = 0
       //Loop through every detail 
       for(let detail of stock.stockDet) {
-        //Concat quantity depending on type of stock (entry or exit)
+        //Concat quantity depending on type of stock (entry + or exit -)
         result += (detail.type === 1) ? detail.quantity: -detail.quantity 
       }
-      //Update existence on Stock
-      stock.existence = result
-      stock.save()
+      if (result > stock.existence) {
+        //Update existence on Stock
+        stock.existence = result
+        stock.save()
+      }
     })
     .catch(function(err) { console.log(err) })
     return stock

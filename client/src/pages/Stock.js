@@ -10,6 +10,7 @@ import { Container, Grid, Paper, Typography } from '@material-ui/core'
 // import useEventListener from '../components/useEventListener'
 import Form from '../components/Stock/Form'
 import DataTable from '../components/Stock/Datatable';
+import CustomDialog from '../components/Stock/CustomDialog';
 
 
 const useStyles = makeStyles(theme => ({
@@ -26,11 +27,15 @@ const useStyles = makeStyles(theme => ({
     overflow: 'auto',
     flexDirection: 'column',
     height: theme.spacing(28),
+  },
+  dialog: {
+    backgroundColor: theme.palette.primary.dark,
   }
 }));
 
 const Stock = inject("stockStore", "globalStore", "supplierStore", "batchStore", "productStore")(
   observer(({ stockStore, globalStore, supplierStore, batchStore, productStore }) => {
+    const classes = useStyles();
     React.useEffect(() => {
       //Fetch all records from batch table
       batchStore.getAllRecords()
@@ -44,14 +49,16 @@ const Stock = inject("stockStore", "globalStore", "supplierStore", "batchStore",
       productStore.getAllRecords()
        //Fetch all stocks from db
       stockStore.getAllRecords()
-      //Clear all
-      stockStore.reset()
+      return () => {
+        //Clear all
+        stockStore.reset()
+      }
     }, [stockStore, supplierStore, batchStore, productStore])
+    //Set module name
     globalStore.setModule('Inventario')
+    //Set name of form
     globalStore.setSlideTitle('Movimiento de ' + globalStore.module)
-  	const classes = useStyles();
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
     return (
       <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={2}>
@@ -72,6 +79,7 @@ const Stock = inject("stockStore", "globalStore", "supplierStore", "batchStore",
             <Grid item xs={12}>
                 <DataTable store={"stockStore"}/>
             </Grid>
+            <CustomDialog store={stockStore}/>
           </Grid>
       </Container>
     )

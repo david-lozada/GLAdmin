@@ -10,7 +10,7 @@ exports.create = async function (req, res) {
         //This async function returns batch id (either created or found) 
         batchCodeToId(data.idBatch).then(async(idBatch) => {
             //foundStock: looks for stock where parameters match
-            const stockFound = await Stock.findOne({ where: { idProduct: data.idProduct, idSupplier: data.idSupplier, idBatch: data.idBatch } }) 
+            const stockFound = await Stock.findOne({ where: { idProduct: data.idProduct, idSupplier: data.idSupplier, idBatch } }) 
             //Check if stock was found
             if (stockFound) { 
                 updateStock(stockFound.id, data).then((stock) => {

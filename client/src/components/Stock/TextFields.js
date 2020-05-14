@@ -1,8 +1,8 @@
 import React from 'react';
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { MenuItem, TextField, Grid, FormControl, 
-  InputLabel, Select, Tooltip, FormControlLabel, Checkbox, Fade } from '@material-ui/core';
+import { MenuItem, TextField, Grid, FormControl, InputLabel, Select, Tooltip, 
+  FormControlLabel, Checkbox, Fade, } from '@material-ui/core';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 
  
@@ -16,6 +16,9 @@ const useStyles = makeStyles(theme => ({
     color: '#fff',
     marginTop: theme.spacing(2),
     width: '100%'
+  }, 
+  checkbox: {
+    paddingTop: theme.spacing(2),
   }
 })); 
 const filter = createFilterOptions();
@@ -45,7 +48,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
   return (
     <Grid container spacing={2}>
      <Grid container item xs={6} spacing={1}>
-        <Grid item xs={12} md={6} lg={3}>
+        <Grid item xs={12} md={4} lg={4}>
           <Tooltip title={stockStore.fields[0].label} placement={"top"} size={"small"}>
             <FormControl className={classes.select}>
                 <InputLabel id={stockStore.fields[0].label}>{stockStore.fields[0].label}</InputLabel>
@@ -67,15 +70,16 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
               </FormControl>
           </Tooltip>
         </Grid>
-        <Grid item xs={12} md={6} lg={9}>
+        <Grid item xs={12} md={8} lg={8}>
           <Tooltip title={stockStore.fields[2].label} placement={"top"}>
               <Autocomplete
-                id="combobox-product" 
+                id={"combobox-product" }
                 options={productStore.records}
                 getOptionLabel={(option) => option.name}
                 className={classes.select}
                 noOptionsText={"No hay opciones"}
                 getOptionSelected={(option, value) => option.name === value.name}
+                value={stockStore.setAutocompleteValue(productStore.records, stockStore.record.idProduct) || null}
                 onChange={(event, newValue) => {
                   if (!newValue || newValue === null) return
                   stockStore.setField('idProduct', newValue.id)
@@ -84,7 +88,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
               />
           </Tooltip>
         </Grid>
-        <Grid item xs={12} md={6} lg={12}>
+        <Grid item xs={12} md={12} lg={12}>
           <Tooltip title={stockStore.fields[1].label} placement={"top"}>
             <Autocomplete
                 id="combobox-supplier" 
@@ -92,6 +96,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
                 getOptionLabel={(option) => `${option.firstName} ${option.lastName}`}
                 className={classes.select}
                 name={stockStore.fields[1].name}
+                value={stockStore.setAutocompleteValue(supplierStore.records, stockStore.record.idSupplier) || null}
                 onChange={(event, newValue) => {
                   if (!newValue || newValue === null) return
                   stockStore.setField('idSupplier', newValue.id)
@@ -102,7 +107,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
         </Grid>
       </Grid>
       <Grid container item xs={6} spacing={2}>
-        <Grid item xs={12} md={6} lg={3}>
+        <Grid item xs={12} md={3} lg={3}>
           <Tooltip title={stockStore.fields[3].label} placement={"top"}>
             <TextField
               InputProps={{className: classes.input}}
@@ -123,7 +128,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
               />
           </Tooltip>
         </Grid>
-        <Grid item xs={12} md={6} lg={3}>
+        <Grid item xs={12} md={3} lg={3}>
           <Tooltip title={stockStore.fields[6].label} placement={"top"}>
             <TextField
               InputProps={{className: classes.input}}
@@ -141,9 +146,10 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
               />
           </Tooltip>
         </Grid>
-        <Grid item xs={12} md={6} lg={2}>
+        <Grid item xs={12} md={2} lg={2}>
           <Tooltip title={"Lote"} placement={"top"}>
             <FormControlLabel
+              className={classes.checkbox}
               control={
                 <Checkbox
                   checked={batchChecked}
@@ -157,11 +163,11 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
           </Tooltip>
         </Grid>
         <Fade in={batchChecked}>
-          <Grid item xs={12} md={6} lg={4}>
+          <Grid item xs={12} md={4} lg={4}>
             <Tooltip title={"Lote"} placement={"top"}>
               <Autocomplete
                 className={classes.select}
-                value={stockStore.record.idBatch}
+                value={(stockStore.record.batch) ? stockStore.record.batch.code : ''}
                 onChange={(event, newValue) => {
                   if (!newValue) return
                   if (newValue && newValue.inputValue) {
@@ -203,10 +209,12 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
             </Tooltip>
           </Grid>
         </Fade>
-        <Grid item xs={12} md={6} lg={12}>
+        <Grid item xs={12} md={12} lg={12}>
           <Tooltip title={stockStore.fields[8].label} placement={"top"}>
             <TextField
-              InputProps={{className: classes.input}}
+              InputProps={{
+                className:classes.input
+              }}
               fullWidth
               variant={"outlined"}
               margin={"normal"}

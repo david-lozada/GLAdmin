@@ -17,6 +17,7 @@ class GlobalStore {
   }
   tableLoading = false;
   foreignExchange = null;
+  searchDrawer = false;
 
   constructor() {
     reaction(
@@ -29,6 +30,10 @@ class GlobalStore {
         }
       }
     );
+  }
+
+  setSearchDrawer(open) {
+    this.searchDrawer = open
   }
 
   // Set values for table and form grids
@@ -88,6 +93,7 @@ decorate(GlobalStore, {
   gridCells: observable,
   slideTitle: observable,
   formMethod: observable,
+  searchDrawer: observable,
   setFormMethod: action,
   setSlideTitle: action,
   swipeOutForm: action,
@@ -95,6 +101,7 @@ decorate(GlobalStore, {
   setIsUpdateSlide: action,
   setToken: action,
   setModule: action,
-  setAppLoaded: action
+  setAppLoaded: action,
+  setSearchDrawer: action
 })
 export default new GlobalStore();
