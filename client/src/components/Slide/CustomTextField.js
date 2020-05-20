@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { FormControlLabel, Checkbox, MenuItem, TextField, Tooltip } from '@material-ui/core';
 import { TextValidator, SelectValidator } from 'react-material-ui-form-validator';
 import FileBase from 'react-file-base64';
-import numeral from 'numeral'
+// import numeral from 'numeral'
  
 const useStyles = makeStyles(theme => ({ 
   input: {
@@ -76,7 +76,7 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                         id={field.name}
                         onChange={handleFieldChange}
                         value={Store.record[field.name]}
-                        checked={Store.record[field.name] ? true : false}
+                        checked={Store.record[field.name] || true}
                     />
                   }
                   label={field.label}
@@ -197,7 +197,7 @@ const CustomTextField = inject("userStore", "globalStore", "customerStore", "sup
                   autoComplete={field.name}
                   color={"secondary"}
                   type={"text"}
-                  value={numeral(Store.record[field.name]).format('0,0')}
+                  value={Store.record[field.name]}
                   InputProps={{className: classes.input}}
                   onChange={handleFieldChange}
                   disabled={Store.submiting}

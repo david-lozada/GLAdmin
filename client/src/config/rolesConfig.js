@@ -8,6 +8,11 @@ export default {
         name: 'Inventario'
       },
       {
+        component: 'PurchaseOrder', 
+        url: '/purchase-order',
+        name: 'Pedido a Proveedor'
+      },
+      {
         component: 'Customer', 
         url: '/customers',
         name: 'Clientes'
@@ -41,6 +46,11 @@ export default {
         component: 'User', 
         url: '/users',
         name: 'Usuarios'
+      },
+      {
+        component: 'Settings', 
+        url: '/settings',
+        name: 'Configuraciones'
       }
     ],
   },
@@ -50,6 +60,11 @@ export default {
         component: 'Stock', 
         url: '/stocks',
         name: 'Inventario'
+      },
+      {
+        component: 'PurchaseOrder', 
+        url: '/purchase-order',
+        name: 'Pedido a Proveedor'
       },
       {
         component: 'Customer', 
@@ -80,6 +95,11 @@ export default {
         component: 'User', 
         url: '/users',
         name: 'Usuarios'
+      },
+      {
+        component: 'Settings', 
+        url: '/settings',
+        name: 'Configuraciones'
       }
     ],
   },

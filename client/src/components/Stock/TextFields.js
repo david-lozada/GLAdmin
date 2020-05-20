@@ -60,7 +60,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
                   id={stockStore.fields[0].name}
                   name={stockStore.fields[0].name}
                   required
-                  value={stockStore.record.type || ''}
+                  value={stockStore.record.type || 1}
                   onChange={handleFieldChange}
                   disabled={stockStore.submiting}
                 >
@@ -154,7 +154,7 @@ const TextFields = inject("globalStore", "stockStore", "supplierStore", "product
                 <Checkbox
                   checked={batchChecked}
                   onChange={handleBatchSelect}
-                  name="loteCheck"
+                  name="batchCheck"
                   color="secondary"
                 />
               }

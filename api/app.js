@@ -36,6 +36,7 @@ var taxesRouter = require('./routes/taxes');
 var batchesRouter = require('./routes/batches');
 var rolesRouter = require('./routes/roles');
 var stocksRouter = require('./routes/stocks');
+var purchaseOrderRouter = require('./routes/purchaseOrders');
 var productsRouter = require('./routes/products');
 var foreignExchangesRouter = require('./routes/foreignExchanges');
 
@@ -49,6 +50,7 @@ app.use('/taxes', taxesRouter);
 app.use('/batches', batchesRouter);
 app.use('/roles', rolesRouter);
 app.use('/stocks', stocksRouter);
+app.use('/purchase-orders', purchaseOrderRouter);
 app.use('/products', productsRouter);
 app.use('/foreign-exchanges', foreignExchangesRouter);
 // End Routes

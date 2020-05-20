@@ -43,7 +43,9 @@ exports.getProduct = async function(req, res) {
 // Get all products
 exports.getAllProducts = async function(req, res) {
     try {
-        let products = await Product.findAll();
+        let products = await Product.findAll({
+            where: { available: true }
+        });
         if (products) {
             return res.status(200).json(products);
         }
@@ -58,8 +60,9 @@ exports.delete = async function(req, res) {
         const product = await Product.findOne({
             where: { id: req.params.id }
         })
-        const deleted = await product.destroy()
-        if (deleted) {
+        if (product) {
+            product.available = false
+            product.save()
             return res.status(200).json({
                 en: 'Product has been deleted',
                 es: 'El Producto fue eliminado'

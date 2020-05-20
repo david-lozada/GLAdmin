@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTheme } from '@material-ui/core/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, CartesianGrid } from 'recharts';
 import Title from './Title';
 
 // Generate Sales Data
@@ -17,7 +17,7 @@ const data = [
   createData('15:00', 2000),
   createData('18:00', 2400),
   createData('21:00', 2400),
-  createData('24:00', undefined),
+  createData('24:00', 3000),
 ];
 
 export default function Chart() {
@@ -25,7 +25,7 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>Hoy</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -36,17 +36,18 @@ export default function Chart() {
             left: 24,
           }}
         >
-          <XAxis dataKey="time" stroke={theme.palette.text.secondary} />
-          <YAxis stroke={theme.palette.text.secondary}>
+          <XAxis dataKey="time" stroke={theme.palette.primary.light} />
+          <YAxis stroke={theme.palette.primary.light}>
             <Label
               angle={270}
-              position="left"
-              style={{ textAnchor: 'middle', fill: theme.palette.text.primary }}
+              position={"left"}
+              style={{ textAnchor: 'middle', fill: theme.palette.primary.light }}
             >
               Sales ($)
             </Label>
           </YAxis>
-          <Line type="monotone" dataKey="amount" stroke={theme.palette.primary.main} dot={false} />
+          <CartesianGrid stroke={theme.palette.primary.main} strokeDasharray={"5 5"}/>
+          <Line type="monotone" dataKey="amount" stroke={theme.palette.secondary.main} dot={true} />
         </LineChart>
       </ResponsiveContainer>
     </React.Fragment>

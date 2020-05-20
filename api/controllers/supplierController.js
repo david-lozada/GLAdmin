@@ -43,7 +43,9 @@ exports.getSupplier = async function(req, res) {
 // Get all suppliers
 exports.getAllSuppliers = async function(req, res) {
     try {
-        let suppliers = await Supplier.findAll();
+        let suppliers = await Supplier.findAll({
+            where: { available: true }
+        });
         if (suppliers) {
             return res.status(200).json(suppliers);
         }
@@ -58,8 +60,9 @@ exports.delete = async function(req, res) {
         const supplier = await Supplier.findOne({
             where: { id: req.params.id }
         })
-        const deleted = await supplier.destroy()
-        if (deleted) {
+        if (supplier) {
+            supplier.available = false
+            supplier.save()
             return res.status(200).json({
                 en: 'Supplier has been deleted',
                 es: 'El proveedor fué eliminado'

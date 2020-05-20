@@ -6,7 +6,7 @@ import { Dashboard as DashboardIcon, LocalShipping, People as PeopleIcon,
           PeopleOutline as PeopleOutlineIcon,/* Assignment as AssignmentIcon, */
           Business as BusinessIcon, MonetizationOn as MonetizationOnIcon,
           ListAlt as ListAltIcon, Fastfood as FastfoodIcon, 
-          LocalOffer as LocalOfferIcon  } from '@material-ui/icons';
+          LocalOffer as LocalOfferIcon, Settings as SettingsIcon  } from '@material-ui/icons';
 
 const link = { textDecoration: 'none', color: 'inherit' }
 const Navegation = ({routes, match}) => (
@@ -25,7 +25,8 @@ const Navegation = ({routes, match}) => (
               'Stock': <Tooltip title={'Inventario'} placement={"right"}><ListAltIcon color={"primary"}/></Tooltip>,
               'Tax': <Tooltip title={'Impuestos'} placement={"right"}><MonetizationOnIcon color={"primary"}/></Tooltip>,
               'Batch': <Tooltip title={'Lotes'} placement={"right"}><LocalOfferIcon color={"primary"}/></Tooltip>,
-              'Product': <Tooltip title={'Productos'} placement={"right"}><FastfoodIcon color={"primary"}/></Tooltip>
+              'Product': <Tooltip title={'Productos'} placement={"right"}><FastfoodIcon color={"primary"}/></Tooltip>,
+              'Settings': <Tooltip title={'Configuraciones'} placement={"right"}><SettingsIcon color={"primary"}/></Tooltip>
             }[route.component]
           }
           </ListItemIcon>

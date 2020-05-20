@@ -147,20 +147,17 @@ class ProductStore {
     this.loading = true;
     return axios.Product.getAllRecords()
       .then(( res ) => {
-        this.records = res
+        this.records = this.setCurrencyFormat(res)
       })
-      .catch((err) => {
-        console.log(err)
-      })
-      .finally(() => {
-        this.loading = false;
-      })
+      .catch((err) => console.log(err))
+      .finally(() => this.loading = false)
   }
   /**
    *  Function used to set value of record on input change
   */
   setField(name, value) {
     this.record[name] = value
+    console.log(value)
   }
   /**
    *  Function used to clear form inputs
@@ -199,12 +196,9 @@ class ProductStore {
     return axios.Product.getRecord(id)
     .then(( res ) => {
       this.record = res
-      this.loading = false;
     })
-    .catch((err) => {
-      this.loading = false;
-      console.log(err)
-    })
+    .catch((err) => console.log(err))
+    .finally(() => this.loading = false)
   }
   /**
    *  Function used to update user info
@@ -241,8 +235,7 @@ class ProductStore {
    *  Function used to add a record to list of records
   */
   addRecord(record) {
-    const records = this.records
-    delete record.password
+    const records = this.setCurrencyFormat(this.records)
     this.records = [ ...records, record ]
   }
   /**
@@ -260,7 +253,7 @@ class ProductStore {
       }
       return null
     })
-    this.records = updated
+    this.records = this.setCurrencyFormat(updated)
   }
   /**
    *  Function used to delete record in list of records

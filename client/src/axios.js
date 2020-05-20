@@ -147,8 +147,21 @@ const Stock = {
     requests.delete('/stocks/delete/'+id),
   save: (data) =>
     requests.post('/stocks/create', data ),
-  update: (product) =>
-    requests.put('/stocks/update',  product )
+  update: (stock) =>
+    requests.put('/stocks/update',  stock )
+};
+
+const PurchaseOrder = {
+  getAllRecords: () =>
+    requests.get('/purchase-orders/all'),
+  getRecord: (id) =>
+    requests.get('/purchase-orders/purchase-order/'+id),
+  delete: (id) =>
+    requests.delete('/purchase-orders/delete/'+id),
+  save: (data) =>
+    requests.post('/purchase-orders/create', data ),
+  update: (purchaseOrder) =>
+    requests.put('/purchase-orders/update',  purchaseOrder )
 };
 
 const Product = {
@@ -174,7 +187,9 @@ const Role = {
 
 const ForeignExchange = {
   getForeignExchange: () =>
-    requests.get('/foreign-exchanges/current')
+    requests.get('/foreign-exchanges/current'),
+  save: (data) =>
+    requests.post('/foreign-exchanges/create', data ),
 };
 
 export default {
@@ -188,5 +203,6 @@ export default {
   Stock,
   Product,
   ForeignExchange,
+  PurchaseOrder,
   Role,
 };

@@ -3,11 +3,11 @@ import React from 'react';
 import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import { makeStyles } from '@material-ui/core/styles';
-import { Container, Grid, Fade } from '@material-ui/core'
+import { Container, Grid, Fade, Slide } from '@material-ui/core'
 
 // Components
 import DataTable from '../components/DataTable'
-import Slide from '../components/Slide/'
+import CustomSlide from '../components/Slide/'
 import useEventListener from '../components/useEventListener'
 
 
@@ -51,12 +51,14 @@ const Batch = inject("batchStore", "globalStore")(
     return (
       <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={1}> 
-            <Grid item xs={globalStore.gridCells.table}> 
-              <DataTable store={"batchStore"}/>
-            </Grid>
-            <Fade in={globalStore.gridCells.isOpen}>
+            <Slide direction="up" in={(globalStore.gridCells.table) ? true : false}>
+              <Grid item xs={globalStore.gridCells.table}> 
+                <DataTable store={"batchStore"}/>
+              </Grid>
+            </Slide>
+            <Fade in={(globalStore.gridCells.form) ? true : false}>
               <Grid item xs={globalStore.gridCells.form}> 
-                <Slide store={"batchStore"}/>
+                <CustomSlide store={"batchStore"}/>
               </Grid>
             </Fade>
           </Grid>

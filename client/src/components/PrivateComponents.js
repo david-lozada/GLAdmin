@@ -12,6 +12,8 @@ import TaxComponent from '../pages/Tax'
 import BatchComponent from '../pages/Batch'
 import StockComponent from '../pages/Stock'
 import ProductComponent from '../pages/Product'
+import PurchaseOrderComponent from '../pages/PurchaseOrder'
+import SettingsComponent from '../pages/Settings'
 import Page404Component from '../pages/Page404'
 
 
@@ -44,6 +46,12 @@ const Stock = () => (
 const Product = () => (
     <Route path="/home/products" component={ProductComponent} />
 );
+const PurchaseOrder = () => (
+    <Route path="/home/purchase-order" component={PurchaseOrderComponent} />
+);
+const Settings = () => (
+    <Route path="/home/settings" component={SettingsComponent} />
+);
 const Page404 = () => (
     <Route component={Page404Component} />
 );
@@ -58,5 +66,7 @@ export {
   Batch,
   Stock,
   Product,
+  PurchaseOrder,
+  Settings,
   Page404
 }

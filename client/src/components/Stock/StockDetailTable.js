@@ -22,7 +22,7 @@ const StyledTableRow = withStyles((theme) => ({
 const CustomTable = inject("stockStore")(
   observer(({ stockStore }) => {
     // React.useEffect(() => {
-      const rows = stockStore.record.stockDet
+      const rows = stockStore.record.stockDet || []
     // }, [])
   const classes = useStyles();
 

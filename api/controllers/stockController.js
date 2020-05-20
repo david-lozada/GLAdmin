@@ -21,6 +21,7 @@ exports.create = async function (req, res) {
                     });
                 })
             } else {
+                Object.assign(data, { idBatch })
                 //Method that creates stock and detail together
                 createStockWithDetail(data).then(async(stock) => {
                     // Get just created stock in order to get related models
@@ -51,12 +52,16 @@ exports.create = async function (req, res) {
  */
 batchCodeToId = async function(code) {
     console.log(code)
-    if (!code || code === '') return null
-    const [batch, created] = await Batch.findOrCreate({
-      where: { code },
-      defaults: { code }
-    })
-    return batch.id
+    try {
+        if (!code || code === '') return null
+        const [batch, created] = await Batch.findOrCreate({
+          where: { code },
+          defaults: { code }
+        })
+        return batch.id
+    } catch(err) {
+        console.log(err)
+    }
 }
 
 /**
@@ -70,7 +75,7 @@ createStockWithDetail = async function(data) {
             idSupplier: data.idSupplier,
             idBatch: data.idBatch,
             existence: data.existence,
-            available: data.available,
+            available: true, 
             stockDet: [{//Association
                 type: data.type,
                 quantity: data.existence,
@@ -128,6 +133,7 @@ exports.getStock = async function(req, res) {
                 { model: StockDet, as: 'stockDet' }
             ]
         });
+        console.log(stock)
         if (stock) {
             return res.status(200).json(stock);
         }

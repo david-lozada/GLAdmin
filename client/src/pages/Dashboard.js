@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import { observer, inject } from "mobx-react"
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-// import Chart from '../components/Chart';
+import Chart from '../components/Chart';
 import Deposits from '../components/Deposits';
 import Orders from '../components/Orders';
 import { Container, Grid, Paper } from '@material-ui/core'
@@ -40,7 +40,7 @@ const Dashboard = inject("globalStore")(
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                {/*<Chart />*/}
+                <Chart />
               </Paper>
             </Grid>
             {/* Recent Deposits */}

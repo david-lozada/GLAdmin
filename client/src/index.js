@@ -17,6 +17,8 @@ import batchStore from "./stores/batchStore";
 import roleStore from "./stores/roleStore";
 import stockStore from "./stores/stockStore";
 import productStore from "./stores/productStore";
+import purchaseOrderStore from "./stores/purchaseOrderStore";
+import sttForeignExchangeStore from "./stores/sttForeignExchangeStore";
 
 const stores = {
     authStore,
@@ -30,6 +32,8 @@ const stores = {
     roleStore,
     stockStore,
     productStore,
+    purchaseOrderStore,
+    sttForeignExchangeStore,
 };
 
 ReactDOM.render(

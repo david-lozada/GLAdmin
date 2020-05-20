@@ -7,8 +7,9 @@ module.exports = (sequelize, DataTypes) => {
     quantity: DataTypes.INTEGER,
     observation: DataTypes.TEXT
   }, {});
-  PurchaseOrderDet.associate = function(models) {
+  PurchaseOrderDet.associate = function({ PurchaseOrder }) {
     // associations can be defined here
+    PurchaseOrderDet.belongsTo(PurchaseOrder,  {as: 'purchaseOrder', foreignKey: 'idPurchaseOrder'});
   };
   return PurchaseOrderDet;
 };

@@ -1,7 +1,4 @@
 'use strict';
-// Dependencies
-const moment = require('moment')
-moment.locale('es');
 
 module.exports = (sequelize, DataTypes) => {
   const Stock = sequelize.define('Stock', {

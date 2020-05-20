@@ -1,91 +1,60 @@
 import { observable, action, decorate, computed } from 'mobx';
 import axios from '../axios';
 import numeral from 'numeral'
+import alertify from 'alertifyjs'
 
 class StockStore {
 
   records = [];
-  currentUser; 
+  recordDetails = [];
   loading;
   submiting;
   suppliers;
-  taxes;
   record = {
-    type: 1,
     idSupplier: null,
-    idProduct: null,
-    existence: '',
-    idBatch: null,
-    expiryDate: '',
-    observation: '',
+    products: null,
   };
   dialogOpen = false;
   columns = [
-      { title: "Código", field: "code" },
-      { title: "Producto", field: "idProduct"},
-      { title: "Proveedor", field: "idSupplier"},
-      { title: "Lote", field: "idBatch", lookup: {} },
-      { title: "Existencia", field: "existence" },
+      { title: "Proveedor", field: "idSupplier" },
+      { title: "Fecha", field: "date" },
+      { title: "Estado", field: "status"},
+  ]
+  columnsDetails = [
+      { title: "Código", field: "code", editable: 'never' },
+      { title: "Producto", field: "name", editable: 'never' },
+      { title: "Unidades", field: "quantity"},
+      { title: "Observación", field: "observation"},
   ];
   fields = [
     {
-      name: 'type',
-      label: 'Tipo',
-      placeholder: 'Ingrese Tipo',
-      rules: 'required|string|between:2,20',  
-      type: 'select'
-    }, {
       name: 'idSupplier',
       label: 'Proveedor',
-      placeholder: 'Ingrese Proveedor',
-      rules: 'required|string|between:2,4',  
-      type: 'text'
+    }, {
+      name: 'address',
+      label: 'Dirección',
+    }, {
+      name: 'documentNumber',
+      label: 'RIF / Cédula',
     }, {
       name: 'idProduct',
       label: 'Producto',
-      placeholder: 'Ingrese Producto',
-      rules: 'required|string|between:2,4',  
-      type: 'text'
     }, {
-      name: 'existence',
-      label: 'Unidades',
-      placeholder: 'Ingrese Unidades',
-      rules: 'required|string|between:2,4',  
-      type: 'number'
-    }, {
-      name: 'selectBatch',
-      label: 'Seleccione Lote',
-      placeholder: 'Ingrese Lote',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'select',
-      options: {}
-    }, {
-      name: 'idBatch',
-      label: 'Lote',
-      placeholder: 'Ingrese Lote',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'text'
-    }, {
-      name: 'expiryDate',
-      label: 'Fecha de Caducidad',
-      placeholder: 'Ingrese Fecha de Caducidad',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'date'
-    }, {
-      name: 'available',
-      label: 'Disponible',
-      placeholder: '',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'checkbox'
-    }, {
-      name: 'observation',
-      label: 'Observación',
-      placeholder: '',
-      rules: 'notRequired|string|between:2,4',  
-      type: 'text'
-    },  
+      name: 'code',
+      label: 'Código',
+    }, 
   ];
+  grid = {
+    create: 12,
+    table: false
+  }
 
+  moveGrids() {
+    this.grid = {
+      create: (this.grid.create === 12) ? false : 12, 
+      table: (this.grid.table === false) ? 12 : false,
+    }
+  }
   /**
    *  Method to populate autocomplete
    *  params {model} and {id} id of record
@@ -163,13 +132,9 @@ class StockStore {
   */
   getAllRecords() {
     this.loading = true;
-    return axios.Stock.getAllRecords()
-      .then(( res ) => {
-        this.records = res
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    return axios.PurchaseOrder.getAllRecords()
+      .then(( res ) => this.records = res)
+      .catch((err) => console.log(err))
       .finally(() => this.loading = false)
   }
   /**
@@ -177,6 +142,7 @@ class StockStore {
   */
   setField(name, value) {
     this.record[name] = value
+    console.log(this.record[name])
   }
   /**
    *  Function used to clear form inputs
@@ -215,9 +181,13 @@ class StockStore {
   getRecord(id) {
     this.loading = true;
     return axios.Stock.getRecord(id)
-      .then((res) => this.record = res)
-      .catch((err) => console.log(err))
-      .finally(() => this.loading = false)
+    .then(( res ) => {
+      this.record = res
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+    .finally(() => this.loading = false)
   }
   /**
    *  Function used to update user info
@@ -247,14 +217,13 @@ class StockStore {
     })
     .finally(() => this.loading = false)
   }
+
   /**
    *  Function used to add a record to list of records
   */
   addRecord(record) {
     const records = this.records
-    delete record.password
     this.records = [ ...records, record ]
-    this.setCurrencyFormat(this.records)
   }
   /**
    *  Function used to update record in list of records
@@ -283,6 +252,46 @@ class StockStore {
     records.splice(index, 1)
     this.records = [...records]
   }
+  /**
+   *  Function used to add a record to list of records that is going to be saved
+  */
+  addRecordDetail(record) {
+    Object.assign(record, { quantity: 0, observation: '' })
+    const records = this.recordDetails
+    const found = records.find(row => row.id === record.id)
+    if (found) {
+      alertify.warning('El producto ya ha sido agregado')
+    } else {
+      this.recordDetails = [ ...records, record ]
+    }
+  }
+  /**
+   *  Function used to update record in list of records
+  */
+  updateRecordDetail(record) {
+    const records = this.recordDetails
+    var updated = []
+    records.map(row => {
+      if (row.id === record.id) {
+        row = record
+        updated.push(row)
+      } else {
+        updated.push(row)
+      }
+      return null
+    })
+    this.recordDetails = updated
+  }
+  /**
+   *  Function used to delete record in list of records
+  */
+  deleteRecordDetail(record) {
+    const records = [...this.recordDetails]
+    const toDelete = records.find(row => row.id === record)
+    const index = records.indexOf(toDelete)
+    records.splice(index, 1)
+    this.recordDetails = [...records]
+  }
 
 }
 
@@ -291,15 +300,20 @@ decorate(StockStore, {
   loading: observable,
   submiting: observable,
   record: observable,
+  recordDetails: observable,
   suppliers: observable,
   taxes: observable,
   validation: observable,
   columns: observable,
+  columnsDetails: observable,
   fields: observable,
   dialogOpen: observable,
   productCombobox: observable,
   supplierCombobox: observable,
+  grid: observable,
+  moveGrids: action,
   addRecord: action,
+  addRecordDetail: action,
   updateRecord: action,
   deleteRecord: action,
   reset: action,
