@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+**/node_modules/
+.pnp
+.pnp.js
+
+# Build and IDE logs
+dist/
+**/dist/
+build/
+**/build/
+.idea/
+.vscode/
+.DS_Store
+*.log
+*.txt
+
+# Environment variables (Sensitive)
+.env*
+!*/.env.example
+
+# Vite specific
+.vite/
+**/ .vite/
+
+# Database (Heavy/Local)
+api/database.sqlite
+
+# Electron
+client/dist/
+!client/public/

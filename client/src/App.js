@@ -27,12 +27,10 @@ const App = inject("userStore", "globalStore")(
   	}, [userStore, globalStore, history])
     return (
         <ThemeProvider theme={theme}>
-        <Router>
           <Switch>
             <ProtectedLogin exact path="/"  auth={globalStore.token} component={Welcome} />
             <ProtectedRoute path="/home" auth={globalStore.token} component={Frame} />
           </Switch>
-        </Router>
       </ThemeProvider>
     );
 })

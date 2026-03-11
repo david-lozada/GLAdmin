@@ -1,12 +1,8 @@
 {
   "development": {
-    "username": "root",
-    "password": null,
-    "database": "administrative",
-    "host": "127.0.0.1",
-    "dialect": "mysql",
-    "operatorsAliases": false,
-    "timezone": "-04:00"
+    "dialect": "sqlite",
+    "storage": "./database.sqlite",
+    "operatorsAliases": false
   },
   "test": {
     "username": "root",
